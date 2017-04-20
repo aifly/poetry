@@ -1,0 +1,68 @@
+﻿@import "../../../assets/css/base.scss";
+
+$viewW:640px;
+.zmiti-result-main-ui{
+  .zmiti-result-scroll{
+    width:$viewW;
+    overflow: hidden;
+    @include pos(r);
+    .zmiti-score-C{
+      width:490px;
+      margin: 36px auto 0;
+      @include pos(r);
+      span{
+        right: 0;
+        @include pos(a);
+        font-size: 36px;
+        color:#ffc000;
+      }
+    }
+
+    .zmiti-transform-C{
+      width:500px;
+      padding: 50px 46px;
+      background: #f1f1f1;
+      margin: 0 auto;
+      box-sizing:border-box;
+      font-size: 30px;
+      @include br(30px);
+      color:#666666;
+      line-height: 70px;
+    }
+
+    .zmiti-tip{
+        width:500px;
+        text-align: center;
+        margin: 30px auto 0;
+        @include pos(r);
+        color:#ccc;
+        &:before,&:after{
+          @include pos(a);
+          content:'';
+          width:120px;
+          height: 1px;
+          background: -webkit-gradient(linear, left top, right top, from(rgba(204, 204, 204, 1)), color-stop(0.5, rgba(204, 204, 204, 1)), to(rgba(204, 204, 204, .2)));
+          left: 0;
+          top: 18px;
+        }
+        &:after{
+          left:auto;
+          right: 0;
+          background: -webkit-gradient(linear, left top, right top, from(rgba(204, 204, 204, .2)), color-stop(0.5, rgba(204, 204, 204, .5)), to(rgba(204, 204, 204, 1)));
+        }
+    }
+
+
+    .zmiti-submit-btn{
+      width:500px;
+      height: 70px;
+      text-align: center;
+      @include br(35px);
+      margin: 82px auto 0;
+      color:#fff;
+      line-height: 70px;
+      font-size: 36px;
+
+    }
+  }
+}

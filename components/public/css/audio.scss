@@ -1,0 +1,23 @@
+@import "../../../assets/css/base.scss";
+$viewW:640px;
+.zmiti-audio-main-ui{
+   width: 500px;
+   height: 62px;
+   border:1px solid #91aa9d;
+   @include br(30px);
+   margin: 38px auto 0;
+   .zmiti-audio-C{
+    width:440px;
+    margin: 0 auto;
+    height: 100%;
+    @include displayBox(horizontal);
+    &>aside{
+      -webkit-box-flex:1; 
+      img{width:70px;vertical-align: top;}
+      &:last-of-type{
+        text-align: right;
+      }
+    }
+   }
+}
+
