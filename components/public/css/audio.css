@@ -24,6 +24,7 @@
 .zmiti-audio-main-ui {
   width: 500px;
   height: 62px;
+  line-height: 62px;
   border: 1px solid #91aa9d;
   border-radius: 30px;
   margin: 38px auto 0; }
@@ -36,10 +37,12 @@
     -webkit-box-pack: center;
     -webkit-box-orient: horizontal; }
     .zmiti-audio-main-ui .zmiti-audio-C > aside {
-      -webkit-box-flex: 1; }
+      -webkit-box-flex: 1;
+      color: #ccc; }
       .zmiti-audio-main-ui .zmiti-audio-C > aside img {
         width: 70px;
-        vertical-align: top; }
+        vertical-align: middle;
+        margin-right: 10px; }
       .zmiti-audio-main-ui .zmiti-audio-C > aside:last-of-type {
         text-align: right; }
 

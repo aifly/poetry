@@ -17,10 +17,10 @@ class ZmitiHeaderApp extends Component {
 				<header className='zmiti-index-header'>
 					<section>
 						<section className='zmiti-headimg'>
-							<img src='./assets/images/zmiti.jpg'/>
+							<img src={this.props.headimgurl||'./assets/images/zmiti.jpg'}/>
 						</section>
 						<section className='zmiti-user-info'>
-							<div>fly</div>
+							<div>{this.props.nickname||'zmiti'}</div>
 							<div><img src='./assets/images/currency.png' /><span>{this.props.score}积分</span></div>
 							<div className='zmiti-line'><img src='./assets/images/line.png'/></div>
 						</section>

@@ -2,6 +2,27 @@
 
 $viewW:640px;
 .zmiti-result-main-ui{
+  @include pos(a);
+  left: 0;
+  width:$viewW;
+  height: 100%;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+  @include transform(translate3d($viewW/3,0,0));
+  @include transition(.3s);
+  opacity:0;
+
+  &.show{
+    @include transform(translate3d(0,0,0));
+    opacity:1;
+    z-index: 3;
+  }
+  &.hide{
+    @include transform(translate3d(-$viewW/3,0,0));
+    opacity:0;
+    z-index: 1; 
+  }
   .zmiti-result-scroll{
     width:$viewW;
     overflow: hidden;
@@ -63,6 +84,17 @@ $viewW:640px;
       line-height: 70px;
       font-size: 36px;
 
+    }
+
+    .zmiti-reset{
+       
+       width:300px;
+       margin: 30px auto;
+       height:70px;
+       line-height: 70px;
+       text-align: center;
+       font-size: 30px;
+       text-decoration: underline;
     }
   }
 }

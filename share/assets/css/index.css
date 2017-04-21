@@ -1,0 +1,115 @@
+/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {
+    background-color: #fff;
+    border-color: #bf1616;
+    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);
+}*/
+.lt-full {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0; }
+
+.zmiti-text-overflow {
+  overflow: hidden;
+  white-space: nowrap;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  -webkit-text-overflow: ellipsis; }
+
+.zmiti-break-all {
+  word-wrap: break-word;
+  word-break: break-all; }
+
+.zmiti-share-main-ui {
+  width: 640px;
+  background: #fff;
+  position: absolute;
+  -webkit-transform: translate3d(213.33333px, 0, 0);
+  transform: translate3d(213.33333px, 0, 0);
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  opacity: 0;
+  left: 0;
+  top: 0;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden; }
+  .zmiti-share-main-ui.show {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    z-index: 5;
+    opacity: 1; }
+  .zmiti-share-main-ui .zmiti-order-btn {
+    width: 190px;
+    height: 60px;
+    border-radius: 30px;
+    border: 1px solid #ccc;
+    position: absolute;
+    top: 25px;
+    right: 40px;
+    text-align: center;
+    line-height: 60px; }
+    .zmiti-share-main-ui .zmiti-order-btn span {
+      width: 8px;
+      background: #cecece;
+      display: inline-block;
+      height: 40px;
+      margin: 0 2px;
+      position: relative;
+      top: 4px;
+      border-top-right-radius: 6px;
+      border-top-left-radius: 6px;
+      -webkit-transform-origin: bottom;
+      transform-origin: bottom;
+      -webkit-transform: scale(1, 0.7);
+      transform: scale(1, 0.7); }
+      .zmiti-share-main-ui .zmiti-order-btn span:nth-of-type(1) {
+        -webkit-transform: scale(1, 0.5);
+        transform: scale(1, 0.5); }
+      .zmiti-share-main-ui .zmiti-order-btn span:nth-of-type(2) {
+        -webkit-transform: scale(1, 0.9);
+        transform: scale(1, 0.9); }
+    .zmiti-share-main-ui .zmiti-order-btn label {
+      margin-left: 5px; }
+  .zmiti-share-main-ui .zmiti-share-forecast {
+    width: 500px;
+    margin: 0 auto; }
+  .zmiti-share-main-ui .zmiti-share-pre {
+    width: 280px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 88px;
+    color: #a72a2a; }
+    .zmiti-share-main-ui .zmiti-share-pre img {
+      vertical-align: middle;
+      width: 80px; }
+  .zmiti-share-main-ui .zmiti-share-send {
+    width: 462px;
+    margin: 60px auto; }
+  .zmiti-share-main-ui .zmiti-share-btn {
+    width: 464px;
+    height: 88px;
+    line-height: 88px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 30px;
+    color: #fff;
+    border-radius: 44px; }
+  .zmiti-share-main-ui .zmiti-read-other {
+    text-align: center;
+    margin: 20px 0;
+    color: #999999;
+    font-size: 26px;
+    padding-bottom: 30px; }
+    .zmiti-share-main-ui .zmiti-read-other span {
+      color: #956a35;
+      text-decoration: underline; }
+  .zmiti-share-main-ui .zmiti-mask {
+    position: fixed;
+    left: 0;
+    top: -20px;
+    width: 100%;
+    z-index: 100; }
+
+/*# sourceMappingURL=index.css.map */

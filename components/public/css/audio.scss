@@ -3,6 +3,7 @@ $viewW:640px;
 .zmiti-audio-main-ui{
    width: 500px;
    height: 62px;
+   line-height: 62px;
    border:1px solid #91aa9d;
    @include br(30px);
    margin: 38px auto 0;
@@ -13,7 +14,8 @@ $viewW:640px;
     @include displayBox(horizontal);
     &>aside{
       -webkit-box-flex:1; 
-      img{width:70px;vertical-align: top;}
+      img{width:70px;vertical-align: middle;margin-right: 10px;}
+      color:#ccc;
       &:last-of-type{
         text-align: right;
       }

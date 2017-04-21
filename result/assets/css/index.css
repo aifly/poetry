@@ -21,55 +21,86 @@
   word-wrap: break-word;
   word-break: break-all; }
 
-.zmiti-result-main-ui .zmiti-result-scroll {
+.zmiti-result-main-ui {
+  position: absolute;
+  left: 0;
   width: 640px;
-  overflow: hidden;
-  position: relative; }
-  .zmiti-result-main-ui .zmiti-result-scroll .zmiti-score-C {
-    width: 490px;
-    margin: 36px auto 0;
+  height: 100%;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+  -webkit-transform: translate3d(213.33333px, 0, 0);
+  transform: translate3d(213.33333px, 0, 0);
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  opacity: 0; }
+  .zmiti-result-main-ui.show {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+    z-index: 3; }
+  .zmiti-result-main-ui.hide {
+    -webkit-transform: translate3d(-213.33333px, 0, 0);
+    transform: translate3d(-213.33333px, 0, 0);
+    opacity: 0;
+    z-index: 1; }
+  .zmiti-result-main-ui .zmiti-result-scroll {
+    width: 640px;
+    overflow: hidden;
     position: relative; }
-    .zmiti-result-main-ui .zmiti-result-scroll .zmiti-score-C span {
-      right: 0;
-      position: absolute;
-      font-size: 36px;
-      color: #ffc000; }
-  .zmiti-result-main-ui .zmiti-result-scroll .zmiti-transform-C {
-    width: 500px;
-    padding: 50px 46px;
-    background: #f1f1f1;
-    margin: 0 auto;
-    box-sizing: border-box;
-    font-size: 30px;
-    border-radius: 30px;
-    color: #666666;
-    line-height: 70px; }
-  .zmiti-result-main-ui .zmiti-result-scroll .zmiti-tip {
-    width: 500px;
-    text-align: center;
-    margin: 30px auto 0;
-    position: relative;
-    color: #ccc; }
-    .zmiti-result-main-ui .zmiti-result-scroll .zmiti-tip:before, .zmiti-result-main-ui .zmiti-result-scroll .zmiti-tip:after {
-      position: absolute;
-      content: '';
-      width: 120px;
-      height: 1px;
-      background: -webkit-gradient(linear, left top, right top, from(#cccccc), color-stop(0.5, #cccccc), to(rgba(204, 204, 204, 0.2)));
-      left: 0;
-      top: 18px; }
-    .zmiti-result-main-ui .zmiti-result-scroll .zmiti-tip:after {
-      left: auto;
-      right: 0;
-      background: -webkit-gradient(linear, left top, right top, from(rgba(204, 204, 204, 0.2)), color-stop(0.5, rgba(204, 204, 204, 0.5)), to(#cccccc)); }
-  .zmiti-result-main-ui .zmiti-result-scroll .zmiti-submit-btn {
-    width: 500px;
-    height: 70px;
-    text-align: center;
-    border-radius: 35px;
-    margin: 82px auto 0;
-    color: #fff;
-    line-height: 70px;
-    font-size: 36px; }
+    .zmiti-result-main-ui .zmiti-result-scroll .zmiti-score-C {
+      width: 490px;
+      margin: 36px auto 0;
+      position: relative; }
+      .zmiti-result-main-ui .zmiti-result-scroll .zmiti-score-C span {
+        right: 0;
+        position: absolute;
+        font-size: 36px;
+        color: #ffc000; }
+    .zmiti-result-main-ui .zmiti-result-scroll .zmiti-transform-C {
+      width: 500px;
+      padding: 50px 46px;
+      background: #f1f1f1;
+      margin: 0 auto;
+      box-sizing: border-box;
+      font-size: 30px;
+      border-radius: 30px;
+      color: #666666;
+      line-height: 70px; }
+    .zmiti-result-main-ui .zmiti-result-scroll .zmiti-tip {
+      width: 500px;
+      text-align: center;
+      margin: 30px auto 0;
+      position: relative;
+      color: #ccc; }
+      .zmiti-result-main-ui .zmiti-result-scroll .zmiti-tip:before, .zmiti-result-main-ui .zmiti-result-scroll .zmiti-tip:after {
+        position: absolute;
+        content: '';
+        width: 120px;
+        height: 1px;
+        background: -webkit-gradient(linear, left top, right top, from(#cccccc), color-stop(0.5, #cccccc), to(rgba(204, 204, 204, 0.2)));
+        left: 0;
+        top: 18px; }
+      .zmiti-result-main-ui .zmiti-result-scroll .zmiti-tip:after {
+        left: auto;
+        right: 0;
+        background: -webkit-gradient(linear, left top, right top, from(rgba(204, 204, 204, 0.2)), color-stop(0.5, rgba(204, 204, 204, 0.5)), to(#cccccc)); }
+    .zmiti-result-main-ui .zmiti-result-scroll .zmiti-submit-btn {
+      width: 500px;
+      height: 70px;
+      text-align: center;
+      border-radius: 35px;
+      margin: 82px auto 0;
+      color: #fff;
+      line-height: 70px;
+      font-size: 36px; }
+    .zmiti-result-main-ui .zmiti-result-scroll .zmiti-reset {
+      width: 300px;
+      margin: 30px auto;
+      height: 70px;
+      line-height: 70px;
+      text-align: center;
+      font-size: 30px;
+      text-decoration: underline; }
 
 /*# sourceMappingURL=index.css.map */

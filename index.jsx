@@ -12,23 +12,25 @@ var obserable = new Obserable();
 
 import ZmitiIndexApp from './index/index.jsx';
 import ZmitiResultApp from './result/index.jsx';
+import ZmitiShareApp from './share/index.jsx';
 
 import ZmitiLoadingApp from './loading/index.jsx';
 export class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			msg:'等待录音……',
-			audioSrc:'',
+			audioSrc:'',//当前录音的id
 			showUI:true,
 			score:120,
+			duration:0,//录音时长。
+			transformResult:'',
 			poetryContent:'\u5c0f\u7c736\u6b63\u5f0f\u53d1\u5e03\uff1a\u56db\u66f2\u9762\u673a\u8eab\u5b9a\u4ef72499\u5143',
-			isEntryResult:true,
+			isEntryResult:false,
 			theme:{
 				backgroundColor:'#4a5265'
 			}
 		}
-		
+		this.viewH = document.documentElement.clientHeight;
 	}
 	render() {
 		var data = {
@@ -36,9 +38,10 @@ export class App extends Component {
 			IScroll
 		}
 		return (
-			<div className={'zmiti-main-ui '+(this.state.showUI?' show':'')}>
-				{!this.state.isEntryResult && <ZmitiIndexApp {...this.state} {...data}></ZmitiIndexApp>}
-				{this.state.isEntryResult && <ZmitiResultApp {...this.state} {...data}></ZmitiResultApp>}
+			<div className={'zmiti-main-ui '+(this.state.showUI?' show':'')} style={{height:this.viewH}}>
+				<ZmitiIndexApp {...this.state} {...data}></ZmitiIndexApp>
+				<ZmitiResultApp {...this.state} {...data}></ZmitiResultApp>
+				<ZmitiShareApp {...this.state} {...data}></ZmitiShareApp>
 			</div>
 		);
 	}
@@ -125,14 +128,19 @@ export class App extends Component {
 				   		headimgurl:headimgurl
 				   	}
 
+				   	s.setState({
+				   		nickname,
+				   		headimgurl
+				   	});
+
 				   	$.ajax({
 				   		url:'http://api.zmiti.com/v2/weixin/add_wxuser/',
 				   		type:'post',
 				   		data:{
 				   			wxopenid:s.openid,
 				   			worksid:'9170682890',
-				   			nickname:s.nickname,
-				   			headimgurl:s.headimgurl,
+				   			nickname:nickname,
+				   			headimgurl:headimgurl,
 				   			longitude:wx.posData.longitude,
 				   			latitude:wx.posData.latitude,
 				   			accuracy:wx.posData.accuracy,
@@ -146,24 +154,29 @@ export class App extends Component {
 				   			}
 				   		}
 				   	});
-
-				   	$.ajax({
-				   		url:'http://api.zmiti.com/v2/weixin/edit_wxuser/',
-				   		data:{
-				   			wxopenid:s.openid,
-				   			integral:10
-				   		},
-				   		error(){
-				   			alert('服务器接口错误');
-				   		},
-				   		success(data){
-				   			if(data.getret === 0 ){
-				   				alert('获取10积分 ')
-				   			}else{
-				   				alert('getret  : '+ data.getret + ' msg : ' + data.getmsg);	
-				   			}
-				   		}
-				   	});
+				   	if(!localStorage.getItem('nickname')){
+				   		   	$.ajax({
+						   		url:'http://api.zmiti.com/v2/weixin/edit_wxuser/',
+						   		data:{
+						   			wxopenid:s.openid,
+						   			integral:10
+						   		},
+						   		error(){
+						   			alert('服务器接口错误');
+						   		},
+						   		success(data){
+						   			if(data.getret === 0 ){
+						   				alert('获取10积分 ')
+						   			}else{
+						   				alert('getret  : '+ data.getret + ' msg : ' + data.getmsg);	
+						   			}
+						   		}
+						   	});
+				   	}
+				   	else{
+				   		//alert('已经获得积分了啊！！！！！');
+				   	}
+				
 
 				   	//获取用户积分
 					//
@@ -340,6 +353,31 @@ export class App extends Component {
 		        //var localId = res.localId; // 返回音频的本地ID
 		    }
 		});
+
+
+		obserable.on('entryResult',(data)=>{
+			this.setState({
+				isEntryResult:data
+			})
+		});
+
+		obserable.on('countdownDuration',()=>{//录音倒计时
+			this.setState({
+				duration:this.state.duration + 1
+			});
+		});
+
+		obserable.on('getLocalId',(data)=>{
+			this.setState({
+				audioSrc:data
+			})
+		});
+
+		obserable.on('getTransformResult',(data)=>{
+			this.setState({
+				transformResult:data
+			});
+		})
 
 
 		this.setState({
