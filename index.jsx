@@ -144,38 +144,20 @@ export class App extends Component {
 				   			longitude:wx.posData.longitude,
 				   			latitude:wx.posData.latitude,
 				   			accuracy:wx.posData.accuracy,
-				   			wxappid:appData.wxappid
+				   			wxappid:appData.wxappid,
+				   			integral:localStorage.getItem('nickname')?0:10
+				   		},
+				   		error(){
+				   			alert('服务器返回错误');
 				   		},
 				   		success(data){
 				   			if(data.getret === 0){
-				   				
 				   			}else{
 				   				alert('getret  : '+ data.getret + ' msg : ' + data.getmsg);
 				   			}
 				   		}
 				   	});
-				   	if(!localStorage.getItem('nickname')){
-				   		   	$.ajax({
-						   		url:'http://api.zmiti.com/v2/weixin/edit_wxuser/',
-						   		data:{
-						   			wxopenid:s.openid,
-						   			integral:10
-						   		},
-						   		error(){
-						   			alert('服务器接口错误');
-						   		},
-						   		success(data){
-						   			if(data.getret === 0 ){
-						   				alert('获取10积分 ')
-						   			}else{
-						   				alert('getret  : '+ data.getret + ' msg : ' + data.getmsg);	
-						   			}
-						   		}
-						   	});
-				   	}
-				   	else{
-				   		//alert('已经获得积分了啊！！！！！');
-				   	}
+				    
 				
 
 				   	//获取用户积分
@@ -191,7 +173,7 @@ export class App extends Component {
 								s.score = data.wxuserinfo.totalintegral;
 								s.setState({
 									score:s.score
-								})
+								});
 							}else{
 								alert('getret  : '+ data.getret + ' msg : ' + data.getmsg);	
 							}
