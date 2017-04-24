@@ -13,18 +13,24 @@ var obserable = new Obserable();
 import ZmitiIndexApp from './index/index.jsx';
 import ZmitiResultApp from './result/index.jsx';
 import ZmitiShareApp from './share/index.jsx';
+import ZmitiCoverApp from './cover/index.jsx';
+import ZmitiChooseApp from './choose/index.jsx';
+import ZmitiUserApp from './user/index.jsx';
 
 import ZmitiLoadingApp from './loading/index.jsx';
 export class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isFirst:false,//是否是从新开始的
 			audioSrc:'',//当前录音的id
 			showUI:true,
 			score:120,
 			duration:0,//录音时长。
 			transformResult:'',
-			poetryContent:'\u5c0f\u7c736\u6b63\u5f0f\u53d1\u5e03\uff1a\u56db\u66f2\u9762\u673a\u8eab\u5b9a\u4ef72499\u5143',
+			poetryTitle:'望岳',
+			poetryAuthor:'杜甫',
+			poetryContent:'岱宗夫如何，齐鲁青未了。\r\n造化钟神秀，阴阳割昏晓。\r\n荡胸生层云，决眦入归鸟。\r\n会当凌绝顶，一览众山小。\r\n',
 			isEntryResult:false,
 			theme:{
 				backgroundColor:'#4a5265'
@@ -39,9 +45,12 @@ export class App extends Component {
 		}
 		return (
 			<div className={'zmiti-main-ui '+(this.state.showUI?' show':'')} style={{height:this.viewH}}>
+				{this.state.isFirst &&<ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
+				{this.state.isFirst && <ZmitiChooseApp {...this.state} {...data}></ZmitiChooseApp>}
 				<ZmitiIndexApp {...this.state} {...data}></ZmitiIndexApp>
 				<ZmitiResultApp {...this.state} {...data}></ZmitiResultApp>
 				<ZmitiShareApp {...this.state} {...data}></ZmitiShareApp>
+				<ZmitiUserApp {...this.state} {...data}></ZmitiUserApp>
 			</div>
 		);
 	}
@@ -130,7 +139,8 @@ export class App extends Component {
 
 				   	s.setState({
 				   		nickname,
-				   		headimgurl
+				   		headimgurl,
+				   		showUI:true
 				   	});
 
 				   	$.ajax({
@@ -377,7 +387,11 @@ export class App extends Component {
 			this.setState({
 				transformResult:data
 			});
-		})
+		});
+
+		obserable.on('refreshPoetry',()=>{
+			this.refreshPoetry();
+		});
 
 
 		this.setState({
@@ -417,6 +431,9 @@ export class App extends Component {
 					s.headimgurl = dt.userinfo.headimgurl;
 					s.openid = dt.userinfo.openid;
 
+					s.refreshPoetry();
+					
+
 					if(wx.posData.longitude){
 						s.getPos(dt.userinfo.nickname,dt.userinfo.headimgurl);
 					}
@@ -450,13 +467,41 @@ export class App extends Component {
 			}
 		});
 		//this.connect();
+
+
 	}
+
+	refreshPoetry(){
+		var s = this;
+		$.ajax({
+			url:'http://api.zmiti.com/v2/weixin/get_shici/',
+			data:{
+				type:0,//0诗1词2，自定义
+				worksid:'9170682890',
+				shicinumber:1
+			},
+			success(data){
+				if(data.getret === 0){
+					if(data.shicilist.length>0){
+						s.state.poetryTitle = data.shicilist[0].title;
+						s.state.poetryAuthor = data.shicilist[0].author;
+						s.state.poetryContent = data.shicilist[0].originaltext;
+
+						s.forceUpdate();
+					}
+					else{
+						alert('没有获取到诗词，请刷新重试');
+					}
+				}
+			}
+		})
+	}
+
+
 
 	clearRender(){
 		clearInterval(this.talkTimer);
 	}
 }
 
-	ReactDOM.render(<App></App>,document.getElementById('fly-main-ui'));
-	
-
+ReactDOM.render(<App></App>,document.getElementById('fly-main-ui'));

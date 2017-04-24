@@ -26,7 +26,7 @@ class ZmitiHeaderApp extends Component {
 						</section>
 					</section>
 					<section>
-						{this.props.showRefreshBtn && <div className='zmiti-reload-poetry'>
+						{this.props.showRefreshBtn && <div onTouchTap={this.refreshPoetry.bind(this)} className='zmiti-reload-poetry'>
 													<img className={this.state.isRefresh?'zmiti-rotate':''} src='./assets/images/refresh.png'/>
 													换一首
 												</div>}
@@ -37,6 +37,13 @@ class ZmitiHeaderApp extends Component {
 				 </div>
 			</div>
 		);
+	}
+
+	refreshPoetry(){
+		let {obserable} = this.props;
+		obserable.trigger({
+			type:'refreshPoetry'
+		})
 	}
 
 	componentDidMount() {

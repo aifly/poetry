@@ -24,14 +24,19 @@ class ZmitiIndexApp extends Component {
 			background:'url(./assets/images/main-bg.jpg) no-repeat center bottom '
 		}
 
+		var s = this;
+		s.state.poetryContent = s.props.poetryContent.replace(/>amp;nbsp;/g,'').replace(/\n/ig,'<br/>');
+
 		return (
 			<div className={'zmiti-index-main-ui '+ (this.props.isEntryResult?'hide':'')}>
 				 <ZmitiHeaderApp {...this.props}></ZmitiHeaderApp>
-				
 				 <div className='zmiti-poetry-C' style={poetryStyle}>
-				 	 <article className='zmiti-poetry-content' dangerouslySetInnerHTML={this.createMarkup()}>
-				 	 	
-				 	 </article>
+				 	 <section>
+				 	 	<div className='zmiti-poetry-title'>{this.props.poetryTitle}</div>
+				 	 	<div className='zmiti-poetry-author'>{this.props.poetryAuthor}</div>
+					 	<article className='zmiti-poetry-content' dangerouslySetInnerHTML={this.createMarkup()}>
+					 	</article>
+				 	 </section>
 				 </div>
 				 <div className='zmiti-bottom-ui'>
 				 	{!this.state.isBeginRead && <div className='zmiti-tips' style={{background:'url(./assets/images/tip-bg.png) no-repeat center'}}>
@@ -126,7 +131,7 @@ class ZmitiIndexApp extends Component {
 
 				    	var poetryContent = s.props.poetryContent.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig,'');
 
-				    	var dataArr = res.translateResult.split('');
+				    	var dataArr = res.translateResult.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig,'').split('');
 						//dataArr.length = poetryContent.length;
 						var rightWords = 0;
 
@@ -142,7 +147,7 @@ class ZmitiIndexApp extends Component {
 							}
 						});
 
-						var score  =( rightWords / dataArr.length * 100 ) | 0;
+						var score  =( rightWords / poetryContent.length * 100 ) | 0;
 						if(res.translateResult.length > poetryContent.length && score>=100 ){
 							score  = 99;
 						}
@@ -151,6 +156,9 @@ class ZmitiIndexApp extends Component {
 				    		type:'getTransformResult',
 				    		data:resultHtml
 				    	});
+
+
+
 						obserable.trigger({
 							type:'entryResult',
 							data:true
@@ -161,9 +169,7 @@ class ZmitiIndexApp extends Component {
 		});
 	}
 	componentDidMount() {
-		var s = this;
-		s.state.poetryContent = s.props.poetryContent.replace(/>amp;nbsp;/g,'');
-		s.forceUpdate();
+		
 	}
 }
 export default PubCom(ZmitiIndexApp);

@@ -76,6 +76,10 @@ class ZmitiResultApp extends Component {
 		obserable.on('updateScore',(data)=>{
 			this.setState({
 				score:data
+			},()=>{
+				setTimeout(()=>{
+					this.scroll.refresh();
+				},500)
 			});
 			obserable.trigger({
 				type:'getScale',

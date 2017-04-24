@@ -78,11 +78,11 @@
   animation: $v;
 }
 
-@mixin transform3d {
+@mixin transform3d($v:800px) {
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
-  perspective: 800px;
-  -webkit-perspective: 800px;
+  perspective: $v;
+  -webkit-perspective: $v;
 }
 
 @mixin displayBox($v) {

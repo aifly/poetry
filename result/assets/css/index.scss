@@ -4,6 +4,7 @@ $viewW:640px;
 .zmiti-result-main-ui{
   @include pos(a);
   left: 0;
+  
   width:$viewW;
   height: 100%;
   top: 0;

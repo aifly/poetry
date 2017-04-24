@@ -1,0 +1,103 @@
+﻿@import "../../../assets/css/base.scss";
+$viewW:640px;
+.zmiti-cover-main-ui{
+  width:$viewW;
+  height: 100%;
+  background: #fff;
+  @include pos(a);
+  left: 0;
+  top:0;
+  z-index: 4;
+
+  &.hide{
+    @include transition(.3s);
+    @include transform(translate3d(-$viewW /3 ,0,0));
+    opacity:0;
+    z-index: 0;
+  }
+
+  .zmiti-cover-top{
+    @include pos(a);
+    left: 0;
+    top: 0;
+  }
+  .zmiti-cover-bottom{
+    @include pos(a);
+    bottom: 0;
+    left: 0;
+  }
+
+  .zmiti-cover-shici{
+    @include pos(a);
+    text-align: center;
+    width:100%;
+    top: 68%;
+    @include transform(translate3d(0,100px,0));
+    opacity:0;
+    &.active{
+      @include transition(1s 2s);
+      @include transform(translate3d(0,0,0));
+      opacity:1;
+    }
+    img{
+      width:260px;
+    }
+  }
+
+  .zmiti-cover-begin{
+    @include pos(a);
+    width:200px;
+    left: 50%;
+    margin-left: -100px;
+    bottom: 50px;
+    z-index: 10;
+    @include transform(translate3d(0,100px,0));
+    opacity:0;
+    &.active{
+      @include transition(.4s 3s);
+      @include transform(translate3d(0,0,0));
+      opacity:1;
+    }
+
+    img:first-of-type{
+      @include animation(rotate 5s  infinite 1s);
+    }
+    img:last-of-type{
+      @include pos(a);
+      top: 0;
+      width: 100px;
+      left: 50%;
+      top: 65%;
+      margin: -50px 0 0 -50px;
+    }
+  }
+
+  .zmiti-cover-canvas{
+    @include pos(a);
+    left: 50%;
+    text-align: center;
+    @include transform3d(400px);
+    img{
+      width:70%;
+      margin-top: 100px;
+      @include transform(translate3d(0,0,400px));
+    }
+    top: 40%;
+    @include transform(translate3d(-50%,-50%,0) scale(0) );
+    &.active{
+       img{
+          @include transition(.5s 1.2s);  
+          @include transitionTimingFunction(cubic-bezier(0.11, 1.07, 0.82, 1.07));
+          @include transform(translate3d(0,0,10px));    
+       }
+      @include transition(.5s .5s);
+      @include transform(translate3d(-50%,-50%,0) scale(1));
+    }
+  }
+}
+
+@-webkit-keyframes rotate{
+  to{
+     @include transform(rotate(360deg));
+  }
+}

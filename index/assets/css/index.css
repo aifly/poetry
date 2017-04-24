@@ -46,10 +46,19 @@
     display: -webkit-box;
     -webkit-box-align: center;
     -webkit-box-pack: center;
-    -webkit-box-orient: horizontal; }
+    -webkit-box-orient: horizontal;
+    text-align: center; }
+    .zmiti-index-main-ui .zmiti-poetry-C .zmiti-poetry-author {
+      margin-top: 10px; }
+    .zmiti-index-main-ui .zmiti-poetry-C .zmiti-poetry-title {
+      font-size: 30px;
+      -webkit-transform: scale(1.5);
+      transform: scale(1.5); }
     .zmiti-index-main-ui .zmiti-poetry-C .zmiti-poetry-content {
       -webkit-box-flex: 1;
       text-align: center;
+      -webkit-transform: scale(1.2);
+      transform: scale(1.2);
       width: 580px;
       margin: 80px auto; }
   .zmiti-index-main-ui .zmiti-seal {

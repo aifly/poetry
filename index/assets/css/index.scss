@@ -26,12 +26,19 @@ $viewW:640px;
       margin-left: ($viewW - $poetryW) /2;
       top: 128px;
       @include displayBox(horizontal);
-
+      text-align: center;
+      .zmiti-poetry-author{
+        margin-top: 10px;
+      }
+      .zmiti-poetry-title{
+        font-size:30px;
+        @include transform(scale(1.5));
+      }
 
       .zmiti-poetry-content{
         -webkit-box-flex:1;
         text-align: center;
-        
+        @include transform(scale(1.2)); 
         width:580px;
         margin: 80px auto;
       }

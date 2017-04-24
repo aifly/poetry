@@ -50,8 +50,16 @@ input, textarea {
   outline: none; }
 
 .zmiti-main-ui {
-  opacity: 1; }
+  width: 640px;
+  height: 100%;
+  overflow: hidden;
+  opacity: 0; }
   .zmiti-main-ui.show {
+    -webkit-transition: 0.3s opacity;
+    transition: 0.3s opacity;
     opacity: 1; }
+
+html, body {
+  -webkit-user-select: none; }
 
 /*# sourceMappingURL=index.css.map */
