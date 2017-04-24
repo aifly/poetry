@@ -8,31 +8,5 @@
   @include pos(a);
   z-index: 10;
 
-  .zmiti-user-info{
-	@include pos(r);
-	margin-top: 100px;
-	width:100%;
-	text-align: center;
-	
-  }
-
-  .zmiti-user-headrimg{
-  	width:100px;
-  	margin: 0 auto;
-  	img{
-		width:100px;
-		@include br(50%);
-	}
-  	@include pos(r);
-  	  &:before{
-	    content:'';
-	    @include pos(a);
-	    width:100%;
-	    height: 100%;
-	    left:0;
-	    top: 0;
-	    @include br(50%);
-	    box-shadow: 0 3px 4px rgba(0,0,0,.4);
-	  }
-  }
+  
 }

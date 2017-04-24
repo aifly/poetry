@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import './css/header.css';
 
-export  default class ZmitiUserHeader extends Component {
+export  default class ZmitiUserHeaderApp extends Component {
 	render() {
 
 		var mainStyle = {

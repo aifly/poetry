@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import './assets/css/index.css';
 import $ from 'jquery';
 
-import ZmitiUserHeader  from './components/header.jsx';
+
+import ZmitiUserCenterApp  from './components/usercenter.jsx';
+import ZmitiCourseListApp  from './components/courselist.jsx';
+import ZmitiCourseDetailApp  from './components/coursedetail.jsx';
 
 export default class ZmitiUserApp extends Component {
 	constructor(props) {
@@ -17,11 +20,9 @@ export default class ZmitiUserApp extends Component {
 
 		return (
 			<div className='zmiti-user-main-ui'>
-				<ZmitiUserHeader></ZmitiUserHeader>
-				<section className='zmiti-user-info'>
-					<div className='zmiti-user-headrimg'><img src={this.props.headimgurl|| './assets/images/user/zmiti.jpg'}/></div>
-					<div>{this.props.nickname||'zmiti'}</div>
-				</section>
+				<ZmitiUserCenterApp></ZmitiUserCenterApp>
+				<ZmitiCourseListApp></ZmitiCourseListApp>
+				<ZmitiCourseDetailApp></ZmitiCourseDetailApp>
 			</div>
 		);
 	}
