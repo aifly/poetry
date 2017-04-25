@@ -16,6 +16,13 @@ $viewW:640px;
  		@include transform(translate3d(0,0,0));
  		z-index: 20;
  	}
+ 	.zmiti-coursedetail-title{
+ 		@include pos(a);
+ 		max-width: 300px;
+ 		top:30px;
+ 		left:30px;
+ 		
+ 	}
 
 	.zmiti-courcedetail-scroll{
 		margin-top: 120px;

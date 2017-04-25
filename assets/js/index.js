@@ -112,7 +112,7 @@
 
 	var _userIndexJsx2 = _interopRequireDefault(_userIndexJsx);
 
-	var _loadingIndexJsx = __webpack_require__(229);
+	var _loadingIndexJsx = __webpack_require__(235);
 
 	var _loadingIndexJsx2 = _interopRequireDefault(_loadingIndexJsx);
 
@@ -36331,11 +36331,11 @@
 
 	var _componentsCoursedetailJsx2 = _interopRequireDefault(_componentsCoursedetailJsx);
 
-	var _componentsGradeJsx = __webpack_require__(232);
+	var _componentsGradeJsx = __webpack_require__(229);
 
 	var _componentsGradeJsx2 = _interopRequireDefault(_componentsGradeJsx);
 
-	var _componentsRankinglistJsx = __webpack_require__(235);
+	var _componentsRankinglistJsx = __webpack_require__(232);
 
 	var _componentsRankinglistJsx2 = _interopRequireDefault(_componentsRankinglistJsx);
 
@@ -37215,6 +37215,11 @@
 	                { className: 'zmiti-coursedetail-main-ui ' + className },
 	                _react2['default'].createElement(_headerJsx2['default'], headerProps),
 	                _react2['default'].createElement(
+	                    'div',
+	                    { className: 'zmiti-coursedetail-title zmiti-text-overflow' },
+	                    this.state.title
+	                ),
+	                _react2['default'].createElement(
 	                    'section',
 	                    { className: 'zmiti-courcedetail-scroll', style: { height: this.viewH - 120 }, ref: 'zmiti-courcedetail-scroll' },
 	                    _react2['default'].createElement(
@@ -37330,134 +37335,13 @@
 
 
 	// module
-	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-coursedetail-main-ui {\r\n  position: absolute;\r\n  width: 640px;\r\n  height: 100%;\r\n  background: #fff;\r\n  left: 0;\r\n  top: 0;\r\n  z-index: 0;\r\n  -webkit-transform: translate3d(640px, 0, 0);\r\n  transform: translate3d(640px, 0, 0);\r\n  -webkit-transition: 0.4s;\r\n  transition: 0.4s; }\r\n  .zmiti-coursedetail-main-ui.active {\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0);\r\n    z-index: 20; }\r\n  .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll {\r\n    margin-top: 120px;\r\n    overflow: hidden;\r\n    position: relative;\r\n    box-sizing: border-box; }\r\n    .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:first-of-type {\r\n      width: 4px;\r\n      height: 50px;\r\n      background: #91aa9d;\r\n      border-radius: 2px;\r\n      margin-left: 124px; }\r\n    .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type {\r\n      display: -webkit-box;\r\n      -webkit-box-align: center;\r\n      -webkit-box-pack: center;\r\n      -webkit-box-orient: horizontal; }\r\n      .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside {\r\n        -webkit-box-flex: 1; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-courcedetail-date {\r\n          color: #ccc; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-courcedetail-nickname {\r\n          display: inline-block;\r\n          position: relative;\r\n          top: 6px;\r\n          max-width: 220px; }\r\n          .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-courcedetail-nickname.zmiti-first-user {\r\n            max-width: 160px; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-headimgurl {\r\n          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-first-author {\r\n          margin-left: 20px;\r\n          border: 1px solid #ccc;\r\n          padding: 10px;\r\n          color: #663300;\r\n          border-radius: 10px; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside:first-of-type {\r\n          margin-left: 20px; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside:last-of-type {\r\n          text-align: right;\r\n          margin-right: 20px;\r\n          color: #cc6633; }\r\n    .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li img {\r\n      width: 50px;\r\n      margin: 0 20px;\r\n      border-radius: 50%; }\r\n\r\n/*# sourceMappingURL=coursedetail.css.map */", ""]);
+	exports.push([module.id, ".lt-full{width:100%;height:100%;position:absolute;left:0;top:0}.zmiti-text-overflow{overflow:hidden;white-space:nowrap;word-break:break-all;text-overflow:ellipsis;-webkit-text-overflow:ellipsis}.zmiti-break-all{word-wrap:break-word;word-break:break-all}.zmiti-coursedetail-main-ui{position:absolute;width:640px;height:100%;background:#fff;left:0;top:0;z-index:0;-webkit-transform:translate3d(640px, 0, 0);transform:translate3d(640px, 0, 0);-webkit-transition:.4s;transition:.4s}.zmiti-coursedetail-main-ui.active{-webkit-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0);z-index:20}.zmiti-coursedetail-main-ui .zmiti-coursedetail-title{position:absolute;max-width:300px;top:30px;left:30px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll{margin-top:120px;overflow:hidden;position:relative;box-sizing:border-box}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:first-of-type{width:4px;height:50px;background:#91aa9d;border-radius:2px;margin-left:124px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type{display:-webkit-box;-webkit-box-align:center;-webkit-box-pack:center;-webkit-box-orient:horizontal}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside{-webkit-box-flex:1}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside .zmiti-courcedetail-date{color:#ccc}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside .zmiti-courcedetail-nickname{display:inline-block;position:relative;top:6px;max-width:220px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside .zmiti-courcedetail-nickname.zmiti-first-user{max-width:160px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside .zmiti-headimgurl{box-shadow:0 3px 10px rgba(0,0,0,0.3)}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside .zmiti-first-author{margin-left:20px;border:1px solid #ccc;padding:10px;color:#663300;border-radius:10px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside:first-of-type{margin-left:20px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside:last-of-type{text-align:right;margin-right:20px;color:#cc6633}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li img{width:50px;margin:0 20px;border-radius:50%}\r\n/*# sourceMappingURL=coursedetail.css.map */\r\n", ""]);
 
 	// exports
 
 
 /***/ },
 /* 229 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _componentsPublicPubJsx = __webpack_require__(193);
-
-	__webpack_require__(230);
-
-	var ZmitiLoadingApp = (function (_Component) {
-		_inherits(ZmitiLoadingApp, _Component);
-
-		function ZmitiLoadingApp(props) {
-			_classCallCheck(this, ZmitiLoadingApp);
-
-			_get(Object.getPrototypeOf(ZmitiLoadingApp.prototype), 'constructor', this).call(this, props);
-
-			this.doc = document;
-			this.viewW = this.doc.documentElement.clientWidth;
-			this.viewH = this.doc.documentElement.clientHeight;
-		}
-
-		_createClass(ZmitiLoadingApp, [{
-			key: 'render',
-			value: function render() {
-				var mainStyle = {
-					background: 'url(./assets/images/loading.jpg) no-repeat center / cover'
-				};
-				return _react2['default'].createElement(
-					'div',
-					{ className: 'zmiti-loading-ui', style: mainStyle },
-					_react2['default'].createElement(
-						'a',
-						{ href: '#' },
-						_react2['default'].createElement('section', { className: 'zmiti-head', style: { background: 'url(' + (this.props.myHeadImg || './assets/images/zmiti.jpg') + ') no-repeat center / cover' } }),
-						_react2['default'].createElement('div', { className: 'line1' }),
-						_react2['default'].createElement('div', { className: 'line2' }),
-						_react2['default'].createElement('div', { className: 'line3' }),
-						_react2['default'].createElement(
-							'div',
-							{ className: 'zmiti-progress' },
-							this.props.progress
-						)
-					)
-				);
-			}
-		}, {
-			key: 'componentDidMount',
-			value: function componentDidMount() {}
-		}, {
-			key: 'r',
-			value: function r(m, n) {
-				return m + Math.random() * (n - m);
-			}
-		}]);
-
-		return ZmitiLoadingApp;
-	})(_react.Component);
-
-	exports['default'] = (0, _componentsPublicPubJsx.PubCom)(ZmitiLoadingApp);
-	module.exports = exports['default'];
-
-/***/ },
-/* 230 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(231);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(190)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/css-loader/index.js!./index.css", function() {
-				var newContent = require("!!../../../node_modules/css-loader/index.js!./index.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 231 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(189)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-loading-ui {\r\n  position: fixed;\r\n  left: 50%;\r\n  top: 0;\r\n  margin-left: -320px;\r\n  z-index: 100;\r\n  width: 640px;\r\n  height: 100%; }\r\n  .zmiti-loading-ui a {\r\n    text-align: center;\r\n    line-height: 180px;\r\n    color: #fff;\r\n    display: block;\r\n    width: 180px;\r\n    height: 180px;\r\n    position: fixed;\r\n    left: 50%;\r\n    top: 50%;\r\n    border-radius: 50%;\r\n    margin: -90px 0 0 -90px; }\r\n    .zmiti-loading-ui a .zmiti-head {\r\n      width: 60px;\r\n      height: 60px;\r\n      border-radius: 50%;\r\n      position: absolute;\r\n      top: 50%;\r\n      left: 50%;\r\n      margin-left: -30px;\r\n      margin-top: -30px; }\r\n    .zmiti-loading-ui a .zmiti-progress {\r\n      width: 100%;\r\n      position: relative;\r\n      z-index: 10;\r\n      top: 90px; }\r\n  .zmiti-loading-ui a .line1 {\r\n    width: 80px;\r\n    height: 80px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -42px 0 0 -42px;\r\n    border: 2px solid #fff;\r\n    border-radius: 80px 80px 80px 80px;\r\n    border-right-color: transparent;\r\n    border-top-color: transparent; }\r\n  .zmiti-loading-ui a .line2 {\r\n    width: 100px;\r\n    height: 100px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -52px 0 0 -52px;\r\n    border: 2px solid #fff;\r\n    border-radius: 100px 100px 100px 100px;\r\n    border-right-color: transparent;\r\n    border-left-color: transparent; }\r\n  .zmiti-loading-ui a .line3 {\r\n    width: 120px;\r\n    height: 120px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -62px 0 0 -62px;\r\n    border: 2px solid #fff;\r\n    border-radius: 120px 120px 120px 120px;\r\n    border-right-color: transparent; }\r\n@-webkit-keyframes line1 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n@keyframes line1 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n  .zmiti-loading-ui a .line1 {\r\n    -webkit-animation: line1 14s ease-in-out 1s infinite alternate;\r\n    animation: line1 15s ease-in-out 1s infinite alternate; }\r\n@-webkit-keyframes line2 {\r\n  from {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); }\r\n  to {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); } }\r\n@keyframes line2 {\r\n  from {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); }\r\n  to {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); } }\r\n  .zmiti-loading-ui a .line2 {\r\n    -webkit-animation: line2 3s ease-in-out infinite;\r\n    animation: line2 3s ease-in-out infinite; }\r\n@-webkit-keyframes line3 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n@keyframes line3 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n  .zmiti-loading-ui a .line3 {\r\n    -webkit-animation: line3 20s ease-in-out infinite;\r\n    animation: line3 20s ease-in-out infinite; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
-
-	// exports
-
-
-/***/ },
-/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37482,7 +37366,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(233);
+	__webpack_require__(230);
 
 	var _headerJsx = __webpack_require__(220);
 
@@ -37583,13 +37467,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 233 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(234);
+	var content = __webpack_require__(231);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -37609,7 +37493,7 @@
 	}
 
 /***/ },
-/* 234 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -37623,7 +37507,7 @@
 
 
 /***/ },
-/* 235 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37648,7 +37532,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(236);
+	__webpack_require__(233);
 
 	var _headerJsx = __webpack_require__(220);
 
@@ -37818,13 +37702,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 236 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(237);
+	var content = __webpack_require__(234);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -37844,7 +37728,7 @@
 	}
 
 /***/ },
-/* 237 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -37853,6 +37737,127 @@
 
 	// module
 	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-rankinglist-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  position: absolute;\r\n  background: #fff;\r\n  z-index: 0;\r\n  left: 0;\r\n  top: 0;\r\n  -webkit-transform: translate3d(640px, 0, 0);\r\n  transform: translate3d(640px, 0, 0);\r\n  -webkit-transition: 0.4s;\r\n  transition: 0.4s; }\r\n  .zmiti-rankinglist-main-ui.active {\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0);\r\n    z-index: 20; }\r\n  .zmiti-rankinglist-main-ui .zmiti-rankinglist-title {\r\n    position: absolute;\r\n    width: 100%;\r\n    top: 100px;\r\n    width: 640px;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li {\r\n      -webkit-box-flex: 1;\r\n      text-align: center;\r\n      font-weight: bold; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:last-of-type {\r\n        text-align: right;\r\n        margin-right: 40px; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) {\r\n        text-align: center; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-desc span:nth-of-type(2) {\r\n          border-top-color: #000; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-desc span:nth-of-type(1) {\r\n          border-bottom-color: #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-asc span:nth-of-type(2) {\r\n          border-top-color: #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-asc span:nth-of-type(1) {\r\n          border-bottom-color: #000; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) {\r\n        position: relative; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2) span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) span:nth-of-type(1) {\r\n          position: absolute;\r\n          width: 0;\r\n          height: 0;\r\n          margin-top: 5px;\r\n          margin-left: 10px;\r\n          border-left: 12px solid transparent;\r\n          border-right: 12px solid transparent;\r\n          border-bottom: 12px solid #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2) span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) span:nth-of-type(2) {\r\n          position: absolute;\r\n          width: 0;\r\n          height: 0;\r\n          margin-left: 10px;\r\n          margin-top: 20px;\r\n          border-left: 12px solid transparent;\r\n          border-right: 12px solid transparent;\r\n          border-top: 12px solid #ccc; }\r\n  .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll {\r\n    position: relative;\r\n    bottom: 0;\r\n    width: 100%;\r\n    margin: 150px auto 0;\r\n    overflow: hidden;\r\n    box-sizing: border-box; }\r\n    .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li {\r\n      width: 96%;\r\n      margin: 0 auto;\r\n      display: -webkit-box;\r\n      -webkit-box-align: center;\r\n      -webkit-box-pack: center;\r\n      -webkit-box-orient: horizontal;\r\n      height: 90px;\r\n      line-height: 90px;\r\n      border-bottom: 1px solid #ccc; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside {\r\n        -webkit-box-flex: 1; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:first-of-type {\r\n          margin-left: 20px;\r\n          max-width: 200px; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:nth-of-type(2) {\r\n          text-align: center;\r\n          margin-left: -32px; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:last-of-type {\r\n          margin-right: 40px;\r\n          text-align: right; }\r\n\r\n/*# sourceMappingURL=rankinglist.css.map */", ""]);
+
+	// exports
+
+
+/***/ },
+/* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _componentsPublicPubJsx = __webpack_require__(193);
+
+	__webpack_require__(236);
+
+	var ZmitiLoadingApp = (function (_Component) {
+		_inherits(ZmitiLoadingApp, _Component);
+
+		function ZmitiLoadingApp(props) {
+			_classCallCheck(this, ZmitiLoadingApp);
+
+			_get(Object.getPrototypeOf(ZmitiLoadingApp.prototype), 'constructor', this).call(this, props);
+
+			this.doc = document;
+			this.viewW = this.doc.documentElement.clientWidth;
+			this.viewH = this.doc.documentElement.clientHeight;
+		}
+
+		_createClass(ZmitiLoadingApp, [{
+			key: 'render',
+			value: function render() {
+				var mainStyle = {
+					background: 'url(./assets/images/loading.jpg) no-repeat center / cover'
+				};
+				return _react2['default'].createElement(
+					'div',
+					{ className: 'zmiti-loading-ui', style: mainStyle },
+					_react2['default'].createElement(
+						'a',
+						{ href: '#' },
+						_react2['default'].createElement('section', { className: 'zmiti-head', style: { background: 'url(' + (this.props.myHeadImg || './assets/images/zmiti.jpg') + ') no-repeat center / cover' } }),
+						_react2['default'].createElement('div', { className: 'line1' }),
+						_react2['default'].createElement('div', { className: 'line2' }),
+						_react2['default'].createElement('div', { className: 'line3' }),
+						_react2['default'].createElement(
+							'div',
+							{ className: 'zmiti-progress' },
+							this.props.progress
+						)
+					)
+				);
+			}
+		}, {
+			key: 'componentDidMount',
+			value: function componentDidMount() {}
+		}, {
+			key: 'r',
+			value: function r(m, n) {
+				return m + Math.random() * (n - m);
+			}
+		}]);
+
+		return ZmitiLoadingApp;
+	})(_react.Component);
+
+	exports['default'] = (0, _componentsPublicPubJsx.PubCom)(ZmitiLoadingApp);
+	module.exports = exports['default'];
+
+/***/ },
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(237);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(190)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../../node_modules/css-loader/index.js!./index.css", function() {
+				var newContent = require("!!../../../node_modules/css-loader/index.js!./index.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(189)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-loading-ui {\r\n  position: fixed;\r\n  left: 50%;\r\n  top: 0;\r\n  margin-left: -320px;\r\n  z-index: 100;\r\n  width: 640px;\r\n  height: 100%; }\r\n  .zmiti-loading-ui a {\r\n    text-align: center;\r\n    line-height: 180px;\r\n    color: #fff;\r\n    display: block;\r\n    width: 180px;\r\n    height: 180px;\r\n    position: fixed;\r\n    left: 50%;\r\n    top: 50%;\r\n    border-radius: 50%;\r\n    margin: -90px 0 0 -90px; }\r\n    .zmiti-loading-ui a .zmiti-head {\r\n      width: 60px;\r\n      height: 60px;\r\n      border-radius: 50%;\r\n      position: absolute;\r\n      top: 50%;\r\n      left: 50%;\r\n      margin-left: -30px;\r\n      margin-top: -30px; }\r\n    .zmiti-loading-ui a .zmiti-progress {\r\n      width: 100%;\r\n      position: relative;\r\n      z-index: 10;\r\n      top: 90px; }\r\n  .zmiti-loading-ui a .line1 {\r\n    width: 80px;\r\n    height: 80px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -42px 0 0 -42px;\r\n    border: 2px solid #fff;\r\n    border-radius: 80px 80px 80px 80px;\r\n    border-right-color: transparent;\r\n    border-top-color: transparent; }\r\n  .zmiti-loading-ui a .line2 {\r\n    width: 100px;\r\n    height: 100px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -52px 0 0 -52px;\r\n    border: 2px solid #fff;\r\n    border-radius: 100px 100px 100px 100px;\r\n    border-right-color: transparent;\r\n    border-left-color: transparent; }\r\n  .zmiti-loading-ui a .line3 {\r\n    width: 120px;\r\n    height: 120px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -62px 0 0 -62px;\r\n    border: 2px solid #fff;\r\n    border-radius: 120px 120px 120px 120px;\r\n    border-right-color: transparent; }\r\n@-webkit-keyframes line1 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n@keyframes line1 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n  .zmiti-loading-ui a .line1 {\r\n    -webkit-animation: line1 14s ease-in-out 1s infinite alternate;\r\n    animation: line1 15s ease-in-out 1s infinite alternate; }\r\n@-webkit-keyframes line2 {\r\n  from {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); }\r\n  to {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); } }\r\n@keyframes line2 {\r\n  from {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); }\r\n  to {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); } }\r\n  .zmiti-loading-ui a .line2 {\r\n    -webkit-animation: line2 3s ease-in-out infinite;\r\n    animation: line2 3s ease-in-out infinite; }\r\n@-webkit-keyframes line3 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n@keyframes line3 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n  .zmiti-loading-ui a .line3 {\r\n    -webkit-animation: line3 20s ease-in-out infinite;\r\n    animation: line3 20s ease-in-out infinite; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
 
 	// exports
 

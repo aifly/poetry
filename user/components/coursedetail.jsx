@@ -136,6 +136,7 @@ export default class ZmitiCourseDetailApp extends React.Component {
     return (
 		<div className={'zmiti-coursedetail-main-ui '+ className}>
 			<ZmitiUserHeaderApp {...headerProps}></ZmitiUserHeaderApp>
+			<div className='zmiti-coursedetail-title zmiti-text-overflow'>{this.state.title}</div>
 			<section className='zmiti-courcedetail-scroll' style={{height:this.viewH - 120}} ref='zmiti-courcedetail-scroll'>
 				<ul style={{paddingBottom:30}}>
 					{this.state.userlist.map((item,i)=>{
