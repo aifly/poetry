@@ -71,6 +71,9 @@
           .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-headimg img {
             border-radius: 50%; }
         .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info {
+          width: auto;
+          text-align: left;
+          margin-top: 0;
           margin-left: 10px; }
           .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info .zmiti-line img {
             width: 100%;

@@ -37,7 +37,7 @@ html, body {
 
 body {
   font-family: "Helvetica Neue", 'Helvetica', "Microsoft YaHei", '微软雅黑', arial, sans-serif;
-  overflow-x: hidden;
+  overflow: hidden;
   font-size: 24px; }
 
 img {
@@ -58,6 +58,12 @@ input, textarea {
     -webkit-transition: 0.3s opacity;
     transition: 0.3s opacity;
     opacity: 1; }
+  .zmiti-main-ui .zmiti-main-C {
+    -webkit-transition: 0.4s;
+    transition: 0.4s; }
+  .zmiti-main-ui > section.hide {
+    -webkit-transform: translate3d(-213.33333px, 0, 0);
+    transform: translate3d(-213.33333px, 0, 0); }
 
 html, body {
   -webkit-user-select: none; }

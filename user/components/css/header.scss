@@ -12,6 +12,21 @@
 
 
 .zmiti-user-back{
+
+	&.active{
+		@include transform(scale(.95));
+		&:before{
+			content:'';
+			width:100%;
+			height: 100%;
+			@include pos(a);
+			left: 0;
+			top: 0;
+			@include br(60px);
+			box-shadow: 0 0 30px rgba(0,0,0,.2);
+		}
+	}
+	
 	width: 120px;
 	height: 60px;
 

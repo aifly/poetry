@@ -112,7 +112,7 @@
 
 	var _userIndexJsx2 = _interopRequireDefault(_userIndexJsx);
 
-	var _loadingIndexJsx = __webpack_require__(220);
+	var _loadingIndexJsx = __webpack_require__(229);
 
 	var _loadingIndexJsx2 = _interopRequireDefault(_loadingIndexJsx);
 
@@ -131,9 +131,16 @@
 				isFirst: false, //是否是从新开始的
 				audioSrc: '', //当前录音的id
 				showUI: true,
-				score: 120,
+				score: 120, //积分
+				openid: '',
+				worksid: '5296019810',
+				nickname: '',
+				headimgurl: '',
 				duration: 0, //录音时长。
 				transformResult: '',
+				latitude: '',
+				longitude: '',
+				usercity: '',
 				poetryTitle: '望岳',
 				poetryAuthor: '杜甫',
 				poetryContent: '岱宗夫如何，齐鲁青未了。\r\n造化钟神秀，阴阳割昏晓。\r\n荡胸生层云，决眦入归鸟。\r\n会当凌绝顶，一览众山小。\r\n',
@@ -155,11 +162,15 @@
 				return _react2['default'].createElement(
 					'div',
 					{ className: 'zmiti-main-ui ' + (this.state.showUI ? ' show' : ''), style: { height: this.viewH } },
-					this.state.isFirst && _react2['default'].createElement(_coverIndexJsx2['default'], _extends({}, this.state, data)),
-					this.state.isFirst && _react2['default'].createElement(_chooseIndexJsx2['default'], _extends({}, this.state, data)),
-					_react2['default'].createElement(_indexIndexJsx2['default'], _extends({}, this.state, data)),
-					_react2['default'].createElement(_resultIndexJsx2['default'], _extends({}, this.state, data)),
-					_react2['default'].createElement(_shareIndexJsx2['default'], _extends({}, this.state, data)),
+					_react2['default'].createElement(
+						'section',
+						{ className: 'zmiti-main-C ' + (this.state.showUser ? 'hide' : '') },
+						this.state.isFirst && _react2['default'].createElement(_coverIndexJsx2['default'], _extends({}, this.state, data)),
+						this.state.isFirst && _react2['default'].createElement(_chooseIndexJsx2['default'], _extends({}, this.state, data)),
+						_react2['default'].createElement(_indexIndexJsx2['default'], _extends({}, this.state, data)),
+						_react2['default'].createElement(_resultIndexJsx2['default'], _extends({}, this.state, data)),
+						_react2['default'].createElement(_shareIndexJsx2['default'], _extends({}, this.state, data))
+					),
 					_react2['default'].createElement(_userIndexJsx2['default'], _extends({}, this.state, data))
 				);
 			}
@@ -238,6 +249,7 @@
 		}, {
 			key: 'getPos',
 			value: function getPos(nickname, headimgurl) {
+
 				var s = this;
 				_jquery2['default'].ajax({
 					url: 'http://restapi.amap.com/v3/geocode/regeo?key=10df4af5d9266f83b404c007534f0001&location=' + wx.posData.longitude + ',' + wx.posData.latitude + '&poitype=&radius=100&extensions=base&batch=false&roadlevel=1' + '',
@@ -258,7 +270,10 @@
 							s.setState({
 								nickname: nickname,
 								headimgurl: headimgurl,
-								showUI: true
+								showUI: true,
+								latitude: wx.posData.latitude,
+								longitude: wx.posData.longitude,
+								usercity: (addressComponent.city[0] || addressComponent.province) + addressComponent.district
 							});
 
 							_jquery2['default'].ajax({
@@ -266,7 +281,7 @@
 								type: 'post',
 								data: {
 									wxopenid: s.openid,
-									worksid: '9170682890',
+									worksid: s.state.worksid,
 									nickname: nickname,
 									headimgurl: headimgurl,
 									longitude: wx.posData.longitude,
@@ -276,35 +291,37 @@
 									integral: localStorage.getItem('nickname') ? 0 : 10
 								},
 								error: function error() {
-									alert('服务器返回错误');
+									alert('add_wxuser: 服务器返回错误');
 								},
 								success: function success(data) {
-									if (data.getret === 0) {} else {
-										alert('getret  : ' + data.getret + ' msg : ' + data.getmsg);
+									if (data.getret === 0) {
+
+										_jquery2['default'].ajax({
+											url: 'http://api.zmiti.com/v2/weixin/get_wxuserdetaile',
+											data: {
+												wxopenid: s.openid
+											},
+											success: function success(data) {
+												if (data.getret === 0) {
+
+													s.score = data.wxuserinfo.totalintegral;
+
+													s.setState({
+														score: s.score
+													});
+												} else {
+													alert('getret  : ' + data.getret + ' msg : ' + data.getmsg);
+												}
+											}
+										});
+									} else {
+										alert('getret  : ' + data.getret + ' msg : ' + data.getmsg + ' .....');
 									}
 								}
 							});
 
 							//获取用户积分
 							//
-							_jquery2['default'].ajax({
-								url: 'http://api.zmiti.com/v2/weixin/get_wxuserdetaile',
-								data: {
-									wxopenid: s.openid
-								},
-								success: function success(data) {
-									if (data.getret === 0) {
-
-										s.score = data.wxuserinfo.totalintegral;
-										s.setState({
-											score: s.score
-										});
-									} else {
-										alert('getret  : ' + data.getret + ' msg : ' + data.getmsg);
-									}
-								}
-
-							});
 
 							_jquery2['default'].ajax({
 								url: 'http://api.zmiti.com/v2/msg/send_msg/',
@@ -319,7 +336,9 @@
 									//console.log(data);
 								}
 							});
-						}
+						} else {
+								alert('地址信息获取失败');
+							}
 					}
 				});
 			}
@@ -327,7 +346,7 @@
 			key: 'wxConfig',
 			value: function wxConfig(title, desc, img) {
 				var appId = arguments.length <= 3 || arguments[3] === undefined ? 'wxfacf4a639d9e3bcc' : arguments[3];
-				var worksid = arguments.length <= 4 || arguments[4] === undefined ? '9170682890' : arguments[4];
+				var worksid = arguments.length <= 4 || arguments[4] === undefined ? this.state.worksid : arguments[4];
 
 				var s = this;
 				var durl = location.href.split('#')[0]; //window.location;
@@ -339,7 +358,6 @@
 					jsonp: "callback",
 					jsonpCallback: "jsonFlickrFeed",
 					success: function success(data) {
-
 						wx.config({
 							debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 							appId: appId, // 必填，公众号的唯一标识
@@ -350,20 +368,21 @@
 						});
 
 						wx.ready(function () {
-
 							wx.getLocation({
 								type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+								fail: function fail() {},
 								success: function success(res) {
 									var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
 									var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
 									var speed = res.speed; // 速度，以米/每秒计
 									var accuracy = res.accuracy; // 位置精度
+
 									wx.posData = {
 										longitude: longitude,
 										latitude: latitude,
 										accuracy: accuracy
 									};
-									if (s.nickname || s.headimgurl) {
+									if ((s.nickname || s.headimgurl) && s.openid) {
 										s.getPos(s.nickname, s.headimgurl);
 									}
 								}
@@ -421,7 +440,83 @@
 				var _this = this;
 
 				var s = this;
-				this.wxConfig('微信API测试', '微信API测试', 'http://h5.zmiti.com/public/wxapi/assets/images/300.jpg');
+
+				_jquery2['default'].getJSON('./assets/js/data.json', function (d) {
+					_this.wxConfig('微信API测试', '微信API测试', 'http://h5.zmiti.com/public/wxapi/assets/images/300.jpg');
+					_this.setState({
+						worksid: d.worksid
+					}, function () {
+
+						_jquery2['default'].ajax({
+							url: 'http://api.zmiti.com/v2/weixin/getwxuserinfo/',
+							data: {
+								code: s.getQueryString('code'),
+								wxappid: d.wxappid,
+								wxappsecret: d.wxappsecret
+							},
+							error: function error() {
+								alert('error');
+							},
+							success: function success(dt) {
+
+								if (dt.getret === 0) {
+									_jquery2['default'].ajax({
+										url: 'http://api.zmiti.com/v2/works/update_pvnum/',
+										data: {
+											worksid: s.state.worksid
+										},
+										success: function success(data) {
+											if (data.getret === 0) {
+												console.log(data);
+											}
+										}
+									});
+									localStorage.setItem('nickname', dt.userinfo.nickname);
+									localStorage.setItem('headimgurl', dt.userinfo.headimgurl);
+									s.nickname = dt.userinfo.nickname;
+									s.headimgurl = dt.userinfo.headimgurl;
+
+									s.openid = dt.userinfo.openid;
+									s.setState({
+										openid: s.openid,
+										nickname: s.nickname,
+										headimgurl: s.headimgurl
+									});
+
+									s.refreshPoetry();
+
+									if (wx.posData && wx.posData.longitude) {
+										s.getPos(dt.userinfo.nickname, dt.userinfo.headimgurl);
+									}
+								} else {
+
+									if (s.isWeiXin()) {
+										_jquery2['default'].ajax({
+											url: 'http://api.zmiti.com/v2/weixin/getoauthurl/',
+											type: "post",
+											data: {
+												redirect_uri: window.location.href.split('?')[0],
+												scope: 'snsapi_userinfo',
+												worksid: s.state.worksid,
+												state: new Date().getTime() + ''
+											},
+											error: function error() {
+												alert('error');
+											},
+											success: function success(dt) {
+												if (dt.getret === 0) {
+													window.location.href = dt.url;
+												}
+											}
+										});
+									} else {
+										//alert('请在微信中打开');
+									}
+								}
+							}
+						});
+					});
+				});
 
 				wx.onVoicePlayEnd({
 					success: function success(res) {
@@ -435,6 +530,12 @@
 				obserable.on('entryResult', function (data) {
 					_this.setState({
 						isEntryResult: data
+					});
+				});
+
+				obserable.on('toggleUser', function (data) {
+					_this.setState({
+						showUser: data
 					});
 				});
 
@@ -461,74 +562,6 @@
 					_this.refreshPoetry();
 				});
 
-				this.setState({
-					score: this.score || 0
-				});
-
-				_jquery2['default'].ajax({
-					url: 'http://api.zmiti.com/v2/weixin/getwxuserinfo/',
-					data: {
-						code: s.getQueryString('code'),
-						wxappid: appData.wxappid,
-						wxappsecret: appData.wxappsecret
-					},
-					error: function error() {
-						alert('error');
-					},
-					success: function success(dt) {
-
-						if (dt.getret === 0) {
-
-							_jquery2['default'].ajax({
-								url: 'http://api.zmiti.com/v2/works/update_pvnum/',
-								data: {
-									worksid: '9170682890'
-								},
-								success: function success(data) {
-									if (data.getret === 0) {
-										console.log(data);
-									}
-								}
-							});
-
-							localStorage.setItem('nickname', dt.userinfo.nickname);
-							localStorage.setItem('headimgurl', dt.userinfo.headimgurl);
-							s.nickname = dt.userinfo.nickname;
-							s.headimgurl = dt.userinfo.headimgurl;
-							s.openid = dt.userinfo.openid;
-
-							s.refreshPoetry();
-
-							if (wx.posData.longitude) {
-								s.getPos(dt.userinfo.nickname, dt.userinfo.headimgurl);
-							}
-						} else {
-
-							if (s.isWeiXin()) {
-								_jquery2['default'].ajax({
-									url: 'http://api.zmiti.com/v2/weixin/getoauthurl/',
-									type: "post",
-									data: {
-										redirect_uri: window.location.href.split('?')[0],
-										scope: 'snsapi_userinfo',
-										worksid: '9170682890',
-										state: new Date().getTime() + ''
-									},
-									error: function error() {
-										alert('error');
-									},
-									success: function success(dt) {
-										if (dt.getret === 0) {
-											window.location.href = dt.url;
-										}
-									}
-								});
-							} else {
-								//alert('请在微信中打开');
-							}
-						}
-					}
-				});
 				//this.connect();
 			}
 		}, {
@@ -539,7 +572,7 @@
 					url: 'http://api.zmiti.com/v2/weixin/get_shici/',
 					data: {
 						type: 0, //0诗1词2，自定义
-						worksid: '9170682890',
+						worksid: s.state.worksid,
 						shicinumber: 1
 					},
 					success: function success(data) {
@@ -548,6 +581,7 @@
 								s.state.poetryTitle = data.shicilist[0].title;
 								s.state.poetryAuthor = data.shicilist[0].author;
 								s.state.poetryContent = data.shicilist[0].originaltext;
+								s.state.workdataid = data.shicilist[0].workdataid;
 
 								s.forceUpdate();
 							} else {
@@ -34457,7 +34491,7 @@
 
 
 	// module
-	exports.push([module.id, "@charset \"UTF-8\";\r\n/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\nhtml, body, div, p, ul, li, ol, dl, dt, dd, header, footer, video, h1, h2, h3, h4, canvas, section, figure {\r\n  padding: 0;\r\n  margin: 0; }\r\n\r\na {\r\n  text-decoration: none; }\r\n\r\nli {\r\n  list-style: none; }\r\n\r\nhtml, body {\r\n  height: 100%; }\r\n\r\nbody {\r\n  font-family: \"Helvetica Neue\", 'Helvetica', \"Microsoft YaHei\", '\\5FAE\\8F6F\\96C5\\9ED1', arial, sans-serif;\r\n  overflow-x: hidden;\r\n  font-size: 24px; }\r\n\r\nimg {\r\n  border: none;\r\n  vertical-align: middle;\r\n  width: 100%;\r\n  height: auto; }\r\n\r\ninput, textarea {\r\n  outline: none; }\r\n\r\n.zmiti-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  overflow: hidden;\r\n  opacity: 0; }\r\n  .zmiti-main-ui.show {\r\n    -webkit-transition: 0.3s opacity;\r\n    transition: 0.3s opacity;\r\n    opacity: 1; }\r\n\r\nhtml, body {\r\n  -webkit-user-select: none; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
+	exports.push([module.id, "@charset \"UTF-8\";\r\n/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\nhtml, body, div, p, ul, li, ol, dl, dt, dd, header, footer, video, h1, h2, h3, h4, canvas, section, figure {\r\n  padding: 0;\r\n  margin: 0; }\r\n\r\na {\r\n  text-decoration: none; }\r\n\r\nli {\r\n  list-style: none; }\r\n\r\nhtml, body {\r\n  height: 100%; }\r\n\r\nbody {\r\n  font-family: \"Helvetica Neue\", 'Helvetica', \"Microsoft YaHei\", '\\5FAE\\8F6F\\96C5\\9ED1', arial, sans-serif;\r\n  overflow: hidden;\r\n  font-size: 24px; }\r\n\r\nimg {\r\n  border: none;\r\n  vertical-align: middle;\r\n  width: 100%;\r\n  height: auto; }\r\n\r\ninput, textarea {\r\n  outline: none; }\r\n\r\n.zmiti-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  overflow: hidden;\r\n  opacity: 0; }\r\n  .zmiti-main-ui.show {\r\n    -webkit-transition: 0.3s opacity;\r\n    transition: 0.3s opacity;\r\n    opacity: 1; }\r\n  .zmiti-main-ui .zmiti-main-C {\r\n    -webkit-transition: 0.4s;\r\n    transition: 0.4s; }\r\n  .zmiti-main-ui > section.hide {\r\n    -webkit-transform: translate3d(-213.33333px, 0, 0);\r\n    transform: translate3d(-213.33333px, 0, 0); }\r\n\r\nhtml, body {\r\n  -webkit-user-select: none; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
 
 	// exports
 
@@ -35221,7 +35255,7 @@
 							null,
 							_react2['default'].createElement(
 								'section',
-								{ className: 'zmiti-headimg' },
+								{ className: 'zmiti-headimg', onTouchTap: this.showUserCenter.bind(this) },
 								_react2['default'].createElement('img', { src: this.props.headimgurl || './assets/images/zmiti.jpg' })
 							),
 							_react2['default'].createElement(
@@ -35267,6 +35301,43 @@
 						_react2['default'].createElement('img', { src: './assets/images/house.png' })
 					)
 				);
+			}
+		}, {
+			key: 'showUserCenter',
+			value: function showUserCenter() {
+				var obserable = this.props.obserable;
+
+				obserable.trigger({
+					type: 'toggleUserCenter',
+					data: true
+				});
+				obserable.trigger({
+					type: 'toggleUser',
+					data: true
+				});
+				var s = this;
+				_jquery2['default'].ajax({
+					url: 'http://api.zmiti.com/v2/weixin/get_userrank/',
+					data: {
+						wxopenid: s.props.openid
+					},
+					error: function error() {
+						alert('服务器返回错误');
+					},
+					success: function success(data) {
+						if (data.getret === 0) {
+							obserable.trigger({
+								type: 'setIntegralRank',
+								data: {
+									integral: data.integral,
+									rank: data.rank
+								}
+							});
+						} else {
+							alert('getret  : ' + data.getret + ' msg : ' + data.getmsg);
+						}
+					}
+				});
 			}
 		}, {
 			key: 'refreshPoetry',
@@ -35326,7 +35397,7 @@
 
 
 	// module
-	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-header-main-ui {\r\n  width: 640px; }\r\n  .zmiti-header-main-ui .zmiti-index-header {\r\n    width: 580px;\r\n    height: 78px;\r\n    margin: 18px auto;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-header-main-ui .zmiti-index-header > section {\r\n      -webkit-box-flex: 1; }\r\n      .zmiti-header-main-ui .zmiti-index-header > section:last-of-type {\r\n        text-align: right; }\r\n        .zmiti-header-main-ui .zmiti-index-header > section:last-of-type .zmiti-reload-poetry {\r\n          border: 1px solid #bbb;\r\n          text-align: center;\r\n          padding: 10px 0;\r\n          border-radius: 30px; }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:last-of-type .zmiti-reload-poetry img {\r\n            width: 30px;\r\n            margin-right: 6px;\r\n            vertical-align: bottom; }\r\n            .zmiti-header-main-ui .zmiti-index-header > section:last-of-type .zmiti-reload-poetry img.zmiti-rotate {\r\n              -webkit-animation: rotate 1s linear infinite;\r\n              animation: rotate 1s linear infinite; }\r\n      .zmiti-header-main-ui .zmiti-index-header > section:first-of-type {\r\n        display: -webkit-box;\r\n        -webkit-box-align: center;\r\n        -webkit-box-pack: center;\r\n        -webkit-box-orient: horizontal;\r\n        -webkit-box-pack: start;\r\n        -webkit-box-align: start; }\r\n        .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-headimg {\r\n          width: 78px;\r\n          height: 78px;\r\n          border-radius: 50%;\r\n          position: relative; }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-headimg:before {\r\n            content: '';\r\n            position: absolute;\r\n            width: 100%;\r\n            height: 100%;\r\n            left: 0;\r\n            top: 0;\r\n            border-radius: 50%;\r\n            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.4); }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-headimg img {\r\n            border-radius: 50%; }\r\n        .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info {\r\n          margin-left: 10px; }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info .zmiti-line img {\r\n            width: 100%;\r\n            vertical-align: top; }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info > div:nth-of-type(1) {\r\n            font-size: 28px; }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info > div:nth-of-type(2) {\r\n            font-size: 30px;\r\n            color: #7d6548;\r\n            margin: 5px 0 10px 0; }\r\n            .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info > div:nth-of-type(2) img {\r\n              width: 40px;\r\n              margin-right: 10px;\r\n              vertical-align: top; }\r\n\r\n@-webkit-keyframes rotate {\r\n  to {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); } }\r\n\r\n/*# sourceMappingURL=header.css.map */", ""]);
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-header-main-ui {\r\n  width: 640px; }\r\n  .zmiti-header-main-ui .zmiti-index-header {\r\n    width: 580px;\r\n    height: 78px;\r\n    margin: 18px auto;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-header-main-ui .zmiti-index-header > section {\r\n      -webkit-box-flex: 1; }\r\n      .zmiti-header-main-ui .zmiti-index-header > section:last-of-type {\r\n        text-align: right; }\r\n        .zmiti-header-main-ui .zmiti-index-header > section:last-of-type .zmiti-reload-poetry {\r\n          border: 1px solid #bbb;\r\n          text-align: center;\r\n          padding: 10px 0;\r\n          border-radius: 30px; }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:last-of-type .zmiti-reload-poetry img {\r\n            width: 30px;\r\n            margin-right: 6px;\r\n            vertical-align: bottom; }\r\n            .zmiti-header-main-ui .zmiti-index-header > section:last-of-type .zmiti-reload-poetry img.zmiti-rotate {\r\n              -webkit-animation: rotate 1s linear infinite;\r\n              animation: rotate 1s linear infinite; }\r\n      .zmiti-header-main-ui .zmiti-index-header > section:first-of-type {\r\n        display: -webkit-box;\r\n        -webkit-box-align: center;\r\n        -webkit-box-pack: center;\r\n        -webkit-box-orient: horizontal;\r\n        -webkit-box-pack: start;\r\n        -webkit-box-align: start; }\r\n        .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-headimg {\r\n          width: 78px;\r\n          height: 78px;\r\n          border-radius: 50%;\r\n          position: relative; }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-headimg:before {\r\n            content: '';\r\n            position: absolute;\r\n            width: 100%;\r\n            height: 100%;\r\n            left: 0;\r\n            top: 0;\r\n            border-radius: 50%;\r\n            box-shadow: 0 3px 4px rgba(0, 0, 0, 0.4); }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-headimg img {\r\n            border-radius: 50%; }\r\n        .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info {\r\n          width: auto;\r\n          text-align: left;\r\n          margin-top: 0;\r\n          margin-left: 10px; }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info .zmiti-line img {\r\n            width: 100%;\r\n            vertical-align: top; }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info > div:nth-of-type(1) {\r\n            font-size: 28px; }\r\n          .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info > div:nth-of-type(2) {\r\n            font-size: 30px;\r\n            color: #7d6548;\r\n            margin: 5px 0 10px 0; }\r\n            .zmiti-header-main-ui .zmiti-index-header > section:first-of-type > section.zmiti-user-info > div:nth-of-type(2) img {\r\n              width: 40px;\r\n              margin-right: 10px;\r\n              vertical-align: top; }\r\n\r\n@-webkit-keyframes rotate {\r\n  to {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); } }\r\n\r\n/*# sourceMappingURL=header.css.map */", ""]);
 
 	// exports
 
@@ -35442,12 +35513,52 @@
 			value: function submit() {
 				var obserable = this.props.obserable;
 
-				obserable.trigger({
-					type: 'showMainUI'
+				var s = this;
+				wx.uploadVoice({
+					localId: s.props.audioSrc, // 需要上传的音频的本地ID，由stopRecord接口获得
+					isShowProgressTips: 1, // 默认为1，显示进度提示
+					fail: function fail() {
+						alert('上传失败');
+					},
+					success: function success(res) {
+						var serverId = res.serverId; // 返回音频的服务器端ID
+						obserable.trigger({
+							type: 'showMainUI'
+						});
+						s.setState({
+							entryShare: true
+						});
+						alert(s.props.worksid + ' -- ' + s.props.workdataid + ' openid' + s.props.openid);
+						_jquery2['default'].ajax({
+							url: 'http://api.zmiti.com/v2/weixin/post_shiciresult/',
+							type: 'post',
+							data: {
+								worksid: s.props.worksid,
+								workdataid: s.props.workdataid,
+								wxopenid: s.props.openid,
+								parentwxopenid: s.props.parentwxopenid,
+								mediaid: serverId,
+								score: s.state.score,
+								changetext: s.props.transformResult.replace(/<[^>]+>/g, ""),
+								usercity: s.props.usercity,
+								longitude: s.props.longitude,
+								latitude: s.props.latitude,
+								wxname: s.props.nickname,
+								workdatatitle: s.props.poetryTitle
+							},
+							error: function error() {
+								alert('post_shiciresult error 接口错误');
+							},
+							success: function success(data) {
+								if (data.getret === 0) {
+									alert('提交成功');
+								}
+							}
+						});
+					}
 				});
-				this.setState({
-					entryShare: true
-				});
+
+				/**/
 			}
 		}, {
 			key: 'createMarkup',
@@ -36208,17 +36319,25 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _componentsUsercenterJsx = __webpack_require__(223);
+	var _componentsUsercenterJsx = __webpack_require__(217);
 
 	var _componentsUsercenterJsx2 = _interopRequireDefault(_componentsUsercenterJsx);
 
-	var _componentsCourselistJsx = __webpack_require__(226);
+	var _componentsCourselistJsx = __webpack_require__(223);
 
 	var _componentsCourselistJsx2 = _interopRequireDefault(_componentsCourselistJsx);
 
-	var _componentsCoursedetailJsx = __webpack_require__(229);
+	var _componentsCoursedetailJsx = __webpack_require__(226);
 
 	var _componentsCoursedetailJsx2 = _interopRequireDefault(_componentsCoursedetailJsx);
+
+	var _componentsGradeJsx = __webpack_require__(232);
+
+	var _componentsGradeJsx2 = _interopRequireDefault(_componentsGradeJsx);
+
+	var _componentsRankinglistJsx = __webpack_require__(235);
+
+	var _componentsRankinglistJsx2 = _interopRequireDefault(_componentsRankinglistJsx);
 
 	var ZmitiUserApp = (function (_Component) {
 		_inherits(ZmitiUserApp, _Component);
@@ -36236,15 +36355,27 @@
 
 				return _react2['default'].createElement(
 					'div',
-					{ className: 'zmiti-user-main-ui' },
-					_react2['default'].createElement(_componentsUsercenterJsx2['default'], null),
-					_react2['default'].createElement(_componentsCourselistJsx2['default'], null),
-					_react2['default'].createElement(_componentsCoursedetailJsx2['default'], null)
+					{ className: 'zmiti-user-main-ui ' + (this.state.show ? 'active' : '') },
+					_react2['default'].createElement(_componentsUsercenterJsx2['default'], this.props),
+					_react2['default'].createElement(_componentsCourselistJsx2['default'], this.props),
+					_react2['default'].createElement(_componentsCoursedetailJsx2['default'], this.props),
+					_react2['default'].createElement(_componentsGradeJsx2['default'], this.props),
+					_react2['default'].createElement(_componentsRankinglistJsx2['default'], this.props)
 				);
 			}
 		}, {
 			key: 'componentDidMount',
-			value: function componentDidMount() {}
+			value: function componentDidMount() {
+				var _this = this;
+
+				var obserable = this.props.obserable;
+
+				obserable.on('toggleUserCenter', function (data) {
+					_this.setState({
+						show: data
+					});
+				});
+			}
 		}]);
 
 		return ZmitiUserApp;
@@ -36288,7 +36419,7 @@
 
 
 	// module
-	exports.push([module.id, ".lt-full{width:100%;height:100%;position:absolute;left:0;top:0}.zmiti-text-overflow{overflow:hidden;white-space:nowrap;word-break:break-all;text-overflow:ellipsis;-webkit-text-overflow:ellipsis}.zmiti-break-all{word-wrap:break-word;word-break:break-all}.zmiti-user-main-ui{width:100%;height:100%;overflow:hidden;background:#fff;position:absolute;z-index:10}\r\n/*# sourceMappingURL=index.css.map */\r\n", ""]);
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-user-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  overflow: hidden;\r\n  background: #fff;\r\n  position: absolute;\r\n  z-index: 10;\r\n  -webkit-transform: translate3d(640px, 0, 0);\r\n  transform: translate3d(640px, 0, 0);\r\n  -webkit-transition: 0.4s;\r\n  transition: 0.4s; }\r\n  .zmiti-user-main-ui.active {\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0); }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
 
 	// exports
 
@@ -36300,8 +36431,10 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-		value: true
+	  value: true
 	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -36319,38 +36452,201 @@
 
 	__webpack_require__(218);
 
-	var ZmitiUserHeaderApp = (function (_Component) {
-		_inherits(ZmitiUserHeaderApp, _Component);
+	var _headerJsx = __webpack_require__(220);
 
-		function ZmitiUserHeaderApp() {
-			_classCallCheck(this, ZmitiUserHeaderApp);
+	var _headerJsx2 = _interopRequireDefault(_headerJsx);
 
-			_get(Object.getPrototypeOf(ZmitiUserHeaderApp.prototype), 'constructor', this).apply(this, arguments);
-		}
+	var ZmitiUserCenterApp = (function (_React$Component) {
+	  _inherits(ZmitiUserCenterApp, _React$Component);
 
-		_createClass(ZmitiUserHeaderApp, [{
-			key: 'render',
-			value: function render() {
+	  function ZmitiUserCenterApp(props) {
+	    _classCallCheck(this, ZmitiUserCenterApp);
 
-				var mainStyle = {
-					background: 'url(./assets/images/user/user-top-bg.png) no-repeat center top '
-				};
-				return _react2['default'].createElement(
-					'header',
-					{ className: 'zmiti-user-header', style: mainStyle },
-					_react2['default'].createElement(
-						'div',
-						{ className: 'zmiti-user-back' },
-						'返回'
-					)
-				);
-			}
-		}]);
+	    _get(Object.getPrototypeOf(ZmitiUserCenterApp.prototype), 'constructor', this).call(this, props);
+	    this.state = {
+	      mainState: 0,
+	      integral: 0,
+	      rank: 1
+	    };
+	  }
 
-		return ZmitiUserHeaderApp;
-	})(_react.Component);
+	  _createClass(ZmitiUserCenterApp, [{
+	    key: 'render',
+	    value: function render() {
+	      var headerProps = _extends({
+	        type: 'usercenter'
+	      }, this.props);
+	      var className = '';
+	      if (this.state.mainState === -1) {
+	        className = 'hide';
+	      }
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'zmiti-user-center-main-ui ' + className },
+	        _react2['default'].createElement(_headerJsx2['default'], headerProps),
+	        _react2['default'].createElement(
+	          'section',
+	          { className: 'zmiti-user-info' },
+	          _react2['default'].createElement(
+	            'div',
+	            { className: 'zmiti-user-headrimg' },
+	            _react2['default'].createElement('img', { src: this.props.headimgurl || './assets/images/user/zmiti.jpg' })
+	          ),
+	          _react2['default'].createElement(
+	            'div',
+	            null,
+	            this.props.nickname || 'zmiti'
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'zmiti-user-line' },
+	          _react2['default'].createElement('img', { src: './assets/images/user/user-line.png' })
+	        ),
+	        _react2['default'].createElement(
+	          'section',
+	          { className: 'zmiti-user-score' },
+	          _react2['default'].createElement(
+	            'aside',
+	            null,
+	            _react2['default'].createElement(
+	              'div',
+	              null,
+	              _react2['default'].createElement('img', { src: './assets/images/user/currency.png' })
+	            ),
+	            _react2['default'].createElement(
+	              'div',
+	              null,
+	              this.state.integral,
+	              '积分'
+	            )
+	          ),
+	          _react2['default'].createElement(
+	            'aside',
+	            null,
+	            _react2['default'].createElement(
+	              'div',
+	              null,
+	              _react2['default'].createElement('span', null),
+	              _react2['default'].createElement('span', null),
+	              _react2['default'].createElement('span', null)
+	            ),
+	            _react2['default'].createElement(
+	              'div',
+	              { className: '' },
+	              _react2['default'].createElement(
+	                'span',
+	                null,
+	                this.state.rank
+	              ),
+	              '名'
+	            )
+	          )
+	        ),
+	        _react2['default'].createElement(
+	          'section',
+	          { className: 'zmiti-user-list-nav' },
+	          _react2['default'].createElement(
+	            'div',
+	            null,
+	            _react2['default'].createElement(
+	              'a',
+	              { href: 'javascript:void(0)', onTouchTap: this.entryCourse.bind(this) },
+	              '诗(词、文)的历程'
+	            )
+	          ),
+	          _react2['default'].createElement(
+	            'div',
+	            null,
+	            _react2['default'].createElement(
+	              'a',
+	              { href: 'javascript:void(0)', onTouchTap: this.entryGrade.bind(this) },
+	              '个人评分排行榜'
+	            )
+	          ),
+	          _react2['default'].createElement(
+	            'div',
+	            null,
+	            _react2['default'].createElement(
+	              'a',
+	              { href: 'javascript:void(0)', onTouchTap: this.entryRanking.bind(this) },
+	              '诗(词、文)排行榜'
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }, {
+	    key: 'entryCourse',
+	    value: function entryCourse() {
+	      var obserable = this.props.obserable;
 
-	exports['default'] = ZmitiUserHeaderApp;
+	      obserable.trigger({
+	        type: 'toggleUserIndex',
+	        data: -1
+	      });
+
+	      obserable.trigger({
+	        type: 'toggleCourseList',
+	        data: 0
+	      });
+	    }
+	  }, {
+	    key: 'entryGrade',
+	    value: function entryGrade() {
+	      var obserable = this.props.obserable;
+
+	      obserable.trigger({
+	        type: 'toggleUserIndex',
+	        data: -1
+	      });
+	      obserable.trigger({
+	        type: 'toggleGrade',
+	        data: 0
+	      });
+	    }
+	  }, {
+	    key: 'entryRanking',
+	    value: function entryRanking() {
+	      var obserable = this.props.obserable;
+
+	      obserable.trigger({
+	        type: 'toggleUserIndex',
+	        data: -1
+	      });
+
+	      obserable.trigger({
+	        type: 'toggleRanking',
+	        data: 0
+	      });
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this = this;
+
+	      var obserable = this.props.obserable;
+
+	      var s = this;
+	      obserable.on('toggleUserIndex', function (data) {
+	        _this.setState({
+	          mainState: data
+	        });
+	      });
+
+	      obserable.on('setIntegralRank', function (data) {
+	        _this.setState({
+	          integral: data.integral,
+	          rank: data.rank
+	        });
+	      });
+	    }
+	  }]);
+
+	  return ZmitiUserCenterApp;
+	})(_react2['default'].Component);
+
+	exports['default'] = ZmitiUserCenterApp;
 	module.exports = exports['default'];
 
 /***/ },
@@ -36369,8 +36665,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/css-loader/index.js!./header.css", function() {
-				var newContent = require("!!../../../node_modules/css-loader/index.js!./header.css");
+			module.hot.accept("!!../../../node_modules/css-loader/index.js!./usercenter.css", function() {
+				var newContent = require("!!../../../node_modules/css-loader/index.js!./usercenter.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -36388,7 +36684,7 @@
 
 
 	// module
-	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-user-header {\r\n  width: 100%;\r\n  height: 400px;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-user-back {\r\n  width: 120px;\r\n  height: 60px;\r\n  border: 1px solid #ccc;\r\n  line-height: 60px;\r\n  text-align: center;\r\n  border-radius: 60px;\r\n  position: absolute;\r\n  font-size: 30px;\r\n  right: 24px;\r\n  top: 24px; }\r\n\r\n/*# sourceMappingURL=header.css.map */", ""]);
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-user-center-main-ui {\r\n  position: absolute;\r\n  top: 0;\r\n  -webkit-transition: 0.4s;\r\n  transition: 0.4s; }\r\n  .zmiti-user-center-main-ui .zmiti-user-info {\r\n    position: relative;\r\n    margin-top: 100px;\r\n    width: 100%;\r\n    text-align: center; }\r\n  .zmiti-user-center-main-ui .zmiti-user-headrimg {\r\n    width: 100px;\r\n    margin: 0 auto;\r\n    position: relative; }\r\n    .zmiti-user-center-main-ui .zmiti-user-headrimg img {\r\n      width: 100px;\r\n      border-radius: 50%; }\r\n    .zmiti-user-center-main-ui .zmiti-user-headrimg:before {\r\n      content: '';\r\n      position: absolute;\r\n      width: 100%;\r\n      height: 100%;\r\n      left: 0;\r\n      top: 0;\r\n      border-radius: 50%;\r\n      box-shadow: 0 3px 4px rgba(0, 0, 0, 0.4); }\r\n  .zmiti-user-center-main-ui.hide {\r\n    -webkit-transform: translate3d(-320px, 0, 0);\r\n    transform: translate3d(-320px, 0, 0);\r\n    z-index: 6; }\r\n  .zmiti-user-center-main-ui .zmiti-user-line {\r\n    margin-top: 20px; }\r\n  .zmiti-user-center-main-ui .zmiti-user-score {\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal;\r\n    margin-top: 20px; }\r\n    .zmiti-user-center-main-ui .zmiti-user-score > aside {\r\n      -webkit-box-flex: 1;\r\n      text-align: center;\r\n      font-size: 30px; }\r\n      .zmiti-user-center-main-ui .zmiti-user-score > aside img {\r\n        width: 40px; }\r\n      .zmiti-user-center-main-ui .zmiti-user-score > aside:first-of-type {\r\n        border-right: 1px solid #ccc; }\r\n      .zmiti-user-center-main-ui .zmiti-user-score > aside:last-of-type div:first-of-type span {\r\n        width: 8px;\r\n        background: #cecece;\r\n        display: inline-block;\r\n        height: 40px;\r\n        margin: 0 2px;\r\n        position: relative;\r\n        top: 4px;\r\n        border-top-right-radius: 6px;\r\n        border-top-left-radius: 6px;\r\n        -webkit-transform-origin: bottom;\r\n        transform-origin: bottom;\r\n        -webkit-transform: scale(1, 0.7);\r\n        transform: scale(1, 0.7); }\r\n        .zmiti-user-center-main-ui .zmiti-user-score > aside:last-of-type div:first-of-type span:nth-of-type(1) {\r\n          -webkit-transform: scale(1, 0.5);\r\n          transform: scale(1, 0.5); }\r\n        .zmiti-user-center-main-ui .zmiti-user-score > aside:last-of-type div:first-of-type span:nth-of-type(2) {\r\n          -webkit-transform: scale(1, 0.9);\r\n          transform: scale(1, 0.9); }\r\n      .zmiti-user-center-main-ui .zmiti-user-score > aside:last-of-type span {\r\n        font-size: 32px; }\r\n  .zmiti-user-center-main-ui .zmiti-user-list-nav {\r\n    width: 600px;\r\n    margin: 100px auto; }\r\n    .zmiti-user-center-main-ui .zmiti-user-list-nav > div {\r\n      width: 100%;\r\n      height: 90px;\r\n      border-bottom: 1px solid #ccc;\r\n      line-height: 90px;\r\n      box-sizing: border-box;\r\n      position: relative; }\r\n      .zmiti-user-center-main-ui .zmiti-user-list-nav > div a {\r\n        padding-left: 10px;\r\n        color: inherit;\r\n        display: block;\r\n        width: 100%;\r\n        height: 100%; }\r\n      .zmiti-user-center-main-ui .zmiti-user-list-nav > div:after {\r\n        content: '';\r\n        position: absolute;\r\n        width: 20px;\r\n        height: 20px;\r\n        -webkit-transform: rotate(45deg);\r\n        transform: rotate(45deg);\r\n        border: 2px solid #ccc;\r\n        top: 40px;\r\n        border-left: none;\r\n        border-bottom: none;\r\n        right: 10px; }\r\n\r\n/*# sourceMappingURL=usercenter.css.map */", ""]);
 
 	// exports
 
@@ -36417,9 +36713,655 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	__webpack_require__(221);
+
+	var ZmitiUserHeaderApp = (function (_Component) {
+		_inherits(ZmitiUserHeaderApp, _Component);
+
+		function ZmitiUserHeaderApp(props) {
+			_classCallCheck(this, ZmitiUserHeaderApp);
+
+			_get(Object.getPrototypeOf(ZmitiUserHeaderApp.prototype), 'constructor', this).call(this, props);
+			this.state = {};
+		}
+
+		_createClass(ZmitiUserHeaderApp, [{
+			key: 'render',
+			value: function render() {
+				var _this = this;
+
+				var mainStyle = {
+					background: 'url(./assets/images/user/user-top-bg.png) no-repeat center top '
+				};
+				return _react2['default'].createElement(
+					'header',
+					{ className: 'zmiti-user-header', style: mainStyle },
+					_react2['default'].createElement(
+						'div',
+						{ onTouchStart: function () {
+								_this.setState({ active: true });
+							}, onTouchEnd: function () {
+								_this.setState({ active: false });
+							}, className: 'zmiti-user-back ' + (this.state.active ? 'active' : ''), onTouchTap: this.back.bind(this) },
+						'返回'
+					)
+				);
+			}
+		}, {
+			key: 'back',
+			value: function back() {
+				var _props = this.props;
+				var type = _props.type;
+				var obserable = _props.obserable;
+
+				switch (type) {//退回到读诗的页面
+					case 'usercenter':
+						obserable.trigger({
+							type: 'toggleUserCenter',
+							data: false
+						});
+						obserable.trigger({
+							type: 'toggleUser',
+							data: false
+						});
+						break;
+					case 'courselist':
+						//打开诗词历程页面
+						obserable.trigger({
+							type: 'toggleCourseList',
+							data: 1
+						});
+						obserable.trigger({
+							type: 'toggleUserIndex',
+							data: 0
+						});
+
+						break;
+					case 'grade':
+
+						obserable.trigger({
+							type: 'toggleUserIndex',
+							data: 0
+						});
+						obserable.trigger({
+							type: 'toggleGrade',
+							data: 1
+						});
+
+						break;
+					case 'ranking':
+						obserable.trigger({
+							type: 'toggleUserIndex',
+							data: 0
+						});
+
+						obserable.trigger({
+							type: 'toggleRanking',
+							data: -1
+						});
+						break;
+					case "courseDetail":
+						obserable.trigger({
+							type: 'toggleCourseList',
+							data: 0
+						});
+						obserable.trigger({
+							type: 'toggleCourseDetail',
+							data: 1
+						});
+						break;
+				}
+			}
+		}]);
+
+		return ZmitiUserHeaderApp;
+	})(_react.Component);
+
+	exports['default'] = ZmitiUserHeaderApp;
+	module.exports = exports['default'];
+
+/***/ },
+/* 221 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(222);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(190)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../../node_modules/css-loader/index.js!./header.css", function() {
+				var newContent = require("!!../../../node_modules/css-loader/index.js!./header.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 222 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(189)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-user-header {\r\n  width: 100%;\r\n  height: 400px;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-user-back {\r\n  width: 120px;\r\n  height: 60px;\r\n  border: 1px solid #ccc;\r\n  line-height: 60px;\r\n  text-align: center;\r\n  border-radius: 60px;\r\n  position: absolute;\r\n  font-size: 30px;\r\n  right: 24px;\r\n  top: 24px; }\r\n  .zmiti-user-back.active {\r\n    -webkit-transform: scale(0.95);\r\n    transform: scale(0.95); }\r\n    .zmiti-user-back.active:before {\r\n      content: '';\r\n      width: 100%;\r\n      height: 100%;\r\n      position: absolute;\r\n      left: 0;\r\n      top: 0;\r\n      border-radius: 60px;\r\n      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2); }\r\n\r\n/*# sourceMappingURL=header.css.map */", ""]);
+
+	// exports
+
+
+/***/ },
+/* 223 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	__webpack_require__(224);
+
+	var _headerJsx = __webpack_require__(220);
+
+	var _headerJsx2 = _interopRequireDefault(_headerJsx);
+
+	var _iscroll = __webpack_require__(186);
+
+	var _iscroll2 = _interopRequireDefault(_iscroll);
+
+	var ZmitiCourseListApp = (function (_React$Component) {
+	  _inherits(ZmitiCourseListApp, _React$Component);
+
+	  function ZmitiCourseListApp(props) {
+	    _classCallCheck(this, ZmitiCourseListApp);
+
+	    _get(Object.getPrototypeOf(ZmitiCourseListApp.prototype), 'constructor', this).call(this, props);
+	    this.state = {
+	      mainState: 1,
+	      courselist: [{ title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }]
+	    };
+	    this.viewH = document.documentElement.clientHeight;
+	  }
+
+	  _createClass(ZmitiCourseListApp, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this = this;
+
+	      var className = '';
+	      if (this.state.mainState === 0) {
+	        className = 'active';
+	      } else if (this.state.mainState === -1) {
+	        className = 'hide';
+	      }
+
+	      var headerProps = _extends({
+	        type: 'courselist'
+	      }, this.props);
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'zmiti-courselist-main-ui ' + className },
+	        _react2['default'].createElement(_headerJsx2['default'], headerProps),
+	        _react2['default'].createElement(
+	          'section',
+	          { className: 'zmiti-courselist-scroll', ref: 'zmiti-courselist-scroll', style: { height: this.viewH - 120 } },
+	          _react2['default'].createElement(
+	            'ul',
+	            { style: { paddingBottom: 30 } },
+	            this.state.courselist.map(function (item, i) {
+	              return _react2['default'].createElement(
+	                'li',
+	                { key: i, onTouchTap: _this.entryDetail.bind(_this, i) },
+	                _react2['default'].createElement(
+	                  'aside',
+	                  { className: 'zmiti-text-overflow' },
+	                  '《',
+	                  item.title,
+	                  '》'
+	                ),
+	                _react2['default'].createElement(
+	                  'aside',
+	                  null,
+	                  _react2['default'].createElement(
+	                    'i',
+	                    null,
+	                    item.read,
+	                    '人已读'
+	                  )
+	                )
+	              );
+	            })
+	          )
+	        )
+	      );
+	    }
+	  }, {
+	    key: 'entryDetail',
+	    value: function entryDetail(index) {
+	      var obserable = this.props.obserable;
+
+	      obserable.trigger({
+	        type: 'toggleCourseList',
+	        data: -1
+	      });
+	      obserable.trigger({
+	        type: 'toggleCourseDetail',
+	        data: 0
+	      });
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+
+	      this.scroll = new _iscroll2['default'](this.refs['zmiti-courselist-scroll'], {
+	        scrollbars: true
+	      });
+
+	      var obserable = this.props.obserable;
+
+	      obserable.on('toggleCourseList', function (data) {
+	        _this2.setState({
+	          mainState: data
+	        });
+	      });
+	    }
+	  }]);
+
+	  return ZmitiCourseListApp;
+	})(_react2['default'].Component);
+
+	exports['default'] = ZmitiCourseListApp;
+	module.exports = exports['default'];
+
+/***/ },
+/* 224 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(225);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(190)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../../node_modules/css-loader/index.js!./courselist.css", function() {
+				var newContent = require("!!../../../node_modules/css-loader/index.js!./courselist.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 225 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(189)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-courselist-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  position: absolute;\r\n  background: #fff;\r\n  z-index: 1;\r\n  left: 0;\r\n  top: 0;\r\n  -webkit-transform: translate3d(640px, 0, 0);\r\n  transform: translate3d(640px, 0, 0);\r\n  -webkit-transition: 0.4s;\r\n  transition: 0.4s; }\r\n  .zmiti-courselist-main-ui.active {\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0);\r\n    z-index: 20; }\r\n  .zmiti-courselist-main-ui.hide {\r\n    -webkit-transform: translate3d(-640px, 0, 0);\r\n    transform: translate3d(-640px, 0, 0);\r\n    z-index: 20; }\r\n  .zmiti-courselist-main-ui .zmiti-courselist-scroll {\r\n    position: relative;\r\n    bottom: 0;\r\n    width: 100%;\r\n    margin: 120px auto 0;\r\n    overflow: hidden;\r\n    box-sizing: border-box; }\r\n    .zmiti-courselist-main-ui .zmiti-courselist-scroll li {\r\n      width: 96%;\r\n      margin: 0 auto;\r\n      display: -webkit-box;\r\n      -webkit-box-align: center;\r\n      -webkit-box-pack: center;\r\n      -webkit-box-orient: horizontal;\r\n      height: 90px;\r\n      line-height: 90px;\r\n      border-bottom: 1px solid #ccc; }\r\n      .zmiti-courselist-main-ui .zmiti-courselist-scroll li aside {\r\n        -webkit-box-flex: 1; }\r\n        .zmiti-courselist-main-ui .zmiti-courselist-scroll li aside:first-of-type {\r\n          margin-left: 20px;\r\n          max-width: 300px; }\r\n        .zmiti-courselist-main-ui .zmiti-courselist-scroll li aside:last-of-type {\r\n          margin-right: 20px;\r\n          text-align: right; }\r\n\r\n/*# sourceMappingURL=courselist.css.map */", ""]);
+
+	// exports
+
+
+/***/ },
+/* 226 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	    value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	__webpack_require__(227);
+
+	var _iscroll = __webpack_require__(186);
+
+	var _iscroll2 = _interopRequireDefault(_iscroll);
+
+	var _headerJsx = __webpack_require__(220);
+
+	var _headerJsx2 = _interopRequireDefault(_headerJsx);
+
+	var ZmitiCourseDetailApp = (function (_React$Component) {
+	    _inherits(ZmitiCourseDetailApp, _React$Component);
+
+	    function ZmitiCourseDetailApp(props) {
+	        _classCallCheck(this, ZmitiCourseDetailApp);
+
+	        _get(Object.getPrototypeOf(ZmitiCourseDetailApp.prototype), 'constructor', this).call(this, props);
+	        this.state = {
+	            title: '静夜思',
+	            userlist: [{
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "静夜思静夜思静夜思静夜思静夜思",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "中华人民共和国中华人民共和国",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }, {
+	                date: '04/24',
+	                headimgurl: './assets/images/user/zmiti.jpg',
+	                nickname: "zmiti",
+	                audioSrc: '',
+	                score: 99
+	            }]
+
+	        };
+	        this.viewH = document.documentElement.clientHeight;
+	    }
+
+	    _createClass(ZmitiCourseDetailApp, [{
+	        key: 'render',
+	        value: function render() {
+	            var className = '';
+	            if (this.state.mainState === 0) {
+	                className = 'active';
+	            }
+	            var headerProps = _extends({
+	                type: 'courseDetail'
+	            }, this.props);
+	            return _react2['default'].createElement(
+	                'div',
+	                { className: 'zmiti-coursedetail-main-ui ' + className },
+	                _react2['default'].createElement(_headerJsx2['default'], headerProps),
+	                _react2['default'].createElement(
+	                    'section',
+	                    { className: 'zmiti-courcedetail-scroll', style: { height: this.viewH - 120 }, ref: 'zmiti-courcedetail-scroll' },
+	                    _react2['default'].createElement(
+	                        'ul',
+	                        { style: { paddingBottom: 30 } },
+	                        this.state.userlist.map(function (item, i) {
+	                            return _react2['default'].createElement(
+	                                'li',
+	                                { key: i },
+	                                _react2['default'].createElement('div', null),
+	                                _react2['default'].createElement(
+	                                    'div',
+	                                    null,
+	                                    _react2['default'].createElement(
+	                                        'aside',
+	                                        null,
+	                                        _react2['default'].createElement(
+	                                            'span',
+	                                            { className: 'zmiti-courcedetail-date' },
+	                                            item.date
+	                                        ),
+	                                        _react2['default'].createElement('img', { className: 'zmiti-headimgurl', src: item.headimgurl || './assets/images/user/zmiti.jpg' }),
+	                                        _react2['default'].createElement(
+	                                            'span',
+	                                            { className: 'zmiti-text-overflow zmiti-courcedetail-nickname ' + (i === 0 ? 'zmiti-first-user' : '') },
+	                                            item.nickname
+	                                        ),
+	                                        i === 0 && _react2['default'].createElement(
+	                                            'span',
+	                                            { className: 'zmiti-first-author' },
+	                                            '创始者'
+	                                        ),
+	                                        _react2['default'].createElement('img', { src: './assets/images/user/voice.png' })
+	                                    ),
+	                                    _react2['default'].createElement(
+	                                        'aside',
+	                                        null,
+	                                        _react2['default'].createElement(
+	                                            'i',
+	                                            null,
+	                                            item.score,
+	                                            '分'
+	                                        )
+	                                    )
+	                                )
+	                            );
+	                        })
+	                    )
+	                )
+	            );
+	        }
+	    }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            var _this = this;
+
+	            this.scroll = new _iscroll2['default'](this.refs['zmiti-courcedetail-scroll'], {
+	                scrollbars: true
+	            });
+
+	            setTimeout(function () {
+	                _this.scroll.refresh();
+	            }, 500);
+
+	            var obserable = this.props.obserable;
+
+	            obserable.on('toggleCourseDetail', function (data) {
+	                _this.setState({
+	                    mainState: data
+	                });
+	            });
+	        }
+	    }]);
+
+	    return ZmitiCourseDetailApp;
+	})(_react2['default'].Component);
+
+	exports['default'] = ZmitiCourseDetailApp;
+	module.exports = exports['default'];
+
+/***/ },
+/* 227 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(228);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(190)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../../node_modules/css-loader/index.js!./coursedetail.css", function() {
+				var newContent = require("!!../../../node_modules/css-loader/index.js!./coursedetail.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 228 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(189)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-coursedetail-main-ui {\r\n  position: absolute;\r\n  width: 640px;\r\n  height: 100%;\r\n  background: #fff;\r\n  left: 0;\r\n  top: 0;\r\n  z-index: 0;\r\n  -webkit-transform: translate3d(640px, 0, 0);\r\n  transform: translate3d(640px, 0, 0);\r\n  -webkit-transition: 0.4s;\r\n  transition: 0.4s; }\r\n  .zmiti-coursedetail-main-ui.active {\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0);\r\n    z-index: 20; }\r\n  .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll {\r\n    margin-top: 120px;\r\n    overflow: hidden;\r\n    position: relative;\r\n    box-sizing: border-box; }\r\n    .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:first-of-type {\r\n      width: 4px;\r\n      height: 50px;\r\n      background: #91aa9d;\r\n      border-radius: 2px;\r\n      margin-left: 124px; }\r\n    .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type {\r\n      display: -webkit-box;\r\n      -webkit-box-align: center;\r\n      -webkit-box-pack: center;\r\n      -webkit-box-orient: horizontal; }\r\n      .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside {\r\n        -webkit-box-flex: 1; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-courcedetail-date {\r\n          color: #ccc; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-courcedetail-nickname {\r\n          display: inline-block;\r\n          position: relative;\r\n          top: 6px;\r\n          max-width: 220px; }\r\n          .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-courcedetail-nickname.zmiti-first-user {\r\n            max-width: 160px; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-headimgurl {\r\n          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-first-author {\r\n          margin-left: 20px;\r\n          border: 1px solid #ccc;\r\n          padding: 10px;\r\n          color: #663300;\r\n          border-radius: 10px; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside:first-of-type {\r\n          margin-left: 20px; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside:last-of-type {\r\n          text-align: right;\r\n          margin-right: 20px;\r\n          color: #cc6633; }\r\n    .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li img {\r\n      width: 50px;\r\n      margin: 0 20px;\r\n      border-radius: 50%; }\r\n\r\n/*# sourceMappingURL=coursedetail.css.map */", ""]);
+
+	// exports
+
+
+/***/ },
+/* 229 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
 	var _componentsPublicPubJsx = __webpack_require__(193);
 
-	__webpack_require__(221);
+	__webpack_require__(230);
 
 	var ZmitiLoadingApp = (function (_Component) {
 		_inherits(ZmitiLoadingApp, _Component);
@@ -36475,13 +37417,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 221 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(222);
+	var content = __webpack_require__(231);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -36501,7 +37443,7 @@
 	}
 
 /***/ },
-/* 222 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -36515,180 +37457,7 @@
 
 
 /***/ },
-/* 223 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	__webpack_require__(224);
-
-	var _headerJsx = __webpack_require__(217);
-
-	var _headerJsx2 = _interopRequireDefault(_headerJsx);
-
-	var ZmitiUserCenterApp = (function (_React$Component) {
-		_inherits(ZmitiUserCenterApp, _React$Component);
-
-		function ZmitiUserCenterApp(props) {
-			_classCallCheck(this, ZmitiUserCenterApp);
-
-			_get(Object.getPrototypeOf(ZmitiUserCenterApp.prototype), 'constructor', this).call(this, props);
-		}
-
-		_createClass(ZmitiUserCenterApp, [{
-			key: 'render',
-			value: function render() {
-				return _react2['default'].createElement(
-					'div',
-					{ className: 'zmiti-user-center-main-ui' },
-					_react2['default'].createElement(_headerJsx2['default'], null),
-					_react2['default'].createElement(
-						'section',
-						{ className: 'zmiti-user-info' },
-						_react2['default'].createElement(
-							'div',
-							{ className: 'zmiti-user-headrimg' },
-							_react2['default'].createElement('img', { src: this.props.headimgurl || './assets/images/user/zmiti.jpg' })
-						),
-						_react2['default'].createElement(
-							'div',
-							null,
-							this.props.nickname || 'zmiti'
-						)
-					),
-					_react2['default'].createElement(
-						'div',
-						{ className: 'zmiti-user-line' },
-						_react2['default'].createElement('img', { src: './assets/images/user/user-line.png' })
-					),
-					_react2['default'].createElement(
-						'section',
-						{ className: 'zmiti-user-score' },
-						_react2['default'].createElement(
-							'aside',
-							null,
-							_react2['default'].createElement(
-								'div',
-								null,
-								_react2['default'].createElement('img', { src: './assets/images/user/currency.png' })
-							),
-							_react2['default'].createElement(
-								'div',
-								null,
-								'110积分'
-							)
-						),
-						_react2['default'].createElement(
-							'aside',
-							null,
-							_react2['default'].createElement(
-								'div',
-								null,
-								_react2['default'].createElement('span', null),
-								_react2['default'].createElement('span', null),
-								_react2['default'].createElement('span', null)
-							),
-							_react2['default'].createElement(
-								'div',
-								{ className: '' },
-								_react2['default'].createElement(
-									'span',
-									null,
-									'11'
-								),
-								'名'
-							)
-						)
-					),
-					_react2['default'].createElement(
-						'section',
-						{ className: 'zmiti-user-list-nav' },
-						_react2['default'].createElement(
-							'div',
-							null,
-							'诗(词、文)的历程'
-						),
-						_react2['default'].createElement(
-							'div',
-							null,
-							'个人评分排行榜'
-						),
-						_react2['default'].createElement(
-							'div',
-							null,
-							'诗(词、文)排行榜'
-						)
-					)
-				);
-			}
-		}]);
-
-		return ZmitiUserCenterApp;
-	})(_react2['default'].Component);
-
-	exports['default'] = ZmitiUserCenterApp;
-	module.exports = exports['default'];
-
-/***/ },
-/* 224 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(225);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(190)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/css-loader/index.js!./usercenter.css", function() {
-				var newContent = require("!!../../../node_modules/css-loader/index.js!./usercenter.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 225 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(189)();
-	// imports
-
-
-	// module
-	exports.push([module.id, ".lt-full{width:100%;height:100%;position:absolute;left:0;top:0}.zmiti-text-overflow{overflow:hidden;white-space:nowrap;word-break:break-all;text-overflow:ellipsis;-webkit-text-overflow:ellipsis}.zmiti-break-all{word-wrap:break-word;word-break:break-all}.zmiti-user-info{position:relative;margin-top:100px;width:100%;text-align:center}.zmiti-user-headrimg{width:100px;margin:0 auto;position:relative}.zmiti-user-headrimg img{width:100px;border-radius:50%}.zmiti-user-headrimg:before{content:'';position:absolute;width:100%;height:100%;left:0;top:0;border-radius:50%;box-shadow:0 3px 4px rgba(0,0,0,0.4)}.zmiti-user-center-main-ui .zmiti-user-line{margin-top:20px}.zmiti-user-center-main-ui .zmiti-user-score{display:-webkit-box;-webkit-box-align:center;-webkit-box-pack:center;-webkit-box-orient:horizontal;margin-top:20px}.zmiti-user-center-main-ui .zmiti-user-score>aside{-webkit-box-flex:1;text-align:center;font-size:30px}.zmiti-user-center-main-ui .zmiti-user-score>aside img{width:40px}.zmiti-user-center-main-ui .zmiti-user-score>aside:first-of-type{border-right:1px solid #ccc}.zmiti-user-center-main-ui .zmiti-user-score>aside:last-of-type div:first-of-type span{width:8px;background:#cecece;display:inline-block;height:40px;margin:0 2px;position:relative;top:4px;border-top-right-radius:6px;border-top-left-radius:6px;-webkit-transform-origin:bottom;transform-origin:bottom;-webkit-transform:scale(1, 0.7);transform:scale(1, 0.7)}.zmiti-user-center-main-ui .zmiti-user-score>aside:last-of-type div:first-of-type span:nth-of-type(1){-webkit-transform:scale(1, 0.5);transform:scale(1, 0.5)}.zmiti-user-center-main-ui .zmiti-user-score>aside:last-of-type div:first-of-type span:nth-of-type(2){-webkit-transform:scale(1, 0.9);transform:scale(1, 0.9)}.zmiti-user-center-main-ui .zmiti-user-score>aside:last-of-type span{font-size:32px}.zmiti-user-center-main-ui .zmiti-user-list-nav{width:600px;margin:100px auto}.zmiti-user-center-main-ui .zmiti-user-list-nav>div{width:100%;height:90px;border-bottom:1px solid #ccc;line-height:90px;padding-left:10px;box-sizing:border-box;position:relative}.zmiti-user-center-main-ui .zmiti-user-list-nav>div:after{content:'';position:absolute;width:20px;height:20px;-webkit-transform:rotate(45deg);transform:rotate(45deg);border:2px solid #ccc;top:40px;border-left:none;border-bottom:none;right:10px}\r\n/*# sourceMappingURL=usercenter.css.map */\r\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 226 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36697,6 +37466,8 @@
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
@@ -36711,9 +37482,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(227);
+	__webpack_require__(233);
 
-	var _headerJsx = __webpack_require__(217);
+	var _headerJsx = __webpack_require__(220);
 
 	var _headerJsx2 = _interopRequireDefault(_headerJsx);
 
@@ -36721,39 +37492,52 @@
 
 	var _iscroll2 = _interopRequireDefault(_iscroll);
 
-	var ZmitiCourseListApp = (function (_React$Component) {
-	  _inherits(ZmitiCourseListApp, _React$Component);
+	//个人评分
 
-	  function ZmitiCourseListApp(props) {
-	    _classCallCheck(this, ZmitiCourseListApp);
+	var ZmitiGradeApp = (function (_React$Component) {
+	  _inherits(ZmitiGradeApp, _React$Component);
 
-	    _get(Object.getPrototypeOf(ZmitiCourseListApp.prototype), 'constructor', this).call(this, props);
+	  function ZmitiGradeApp(props) {
+	    _classCallCheck(this, ZmitiGradeApp);
+
+	    _get(Object.getPrototypeOf(ZmitiGradeApp.prototype), 'constructor', this).call(this, props);
 	    this.state = {
-	      courselist: [{ title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }, { title: '静夜思', read: 140 }]
+	      gradelist: [{ title: '静夜思静夜思静夜思静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }]
 	    };
 	    this.viewH = document.documentElement.clientHeight;
 	  }
 
-	  _createClass(ZmitiCourseListApp, [{
+	  _createClass(ZmitiGradeApp, [{
 	    key: 'render',
 	    value: function render() {
+
+	      var className = '';
+
+	      if (this.state.mainState === 0) {
+	        className = 'active';
+	      }
+
+	      var headerProps = _extends({
+	        type: 'grade'
+	      }, this.props);
+
 	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'zmiti-courselist-main-ui' },
-	        _react2['default'].createElement(_headerJsx2['default'], null),
+	        { className: 'zmiti-grade-main-ui ' + className },
+	        _react2['default'].createElement(_headerJsx2['default'], headerProps),
 	        _react2['default'].createElement(
 	          'section',
-	          { className: 'zmiti-courselist-scroll', ref: 'zmiti-courselist-scroll', style: { height: this.viewH - 120 } },
+	          { className: 'zmiti-grade-scroll', ref: 'zmiti-grade-scroll', style: { height: this.viewH - 120 } },
 	          _react2['default'].createElement(
 	            'ul',
 	            { style: { paddingBottom: 30 } },
-	            this.state.courselist.map(function (item, i) {
+	            this.state.gradelist.map(function (item, i) {
 	              return _react2['default'].createElement(
 	                'li',
 	                { key: i },
 	                _react2['default'].createElement(
 	                  'aside',
-	                  null,
+	                  { className: 'zmiti-text-overflow' },
 	                  '《',
 	                  item.title,
 	                  '》'
@@ -36764,8 +37548,8 @@
 	                  _react2['default'].createElement(
 	                    'i',
 	                    null,
-	                    item.read,
-	                    '人已读'
+	                    item.score,
+	                    '分'
 	                  )
 	                )
 	              );
@@ -36777,26 +37561,35 @@
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      this.scroll = new _iscroll2['default'](this.refs['zmiti-courselist-scroll'], {
+	      var _this = this;
+
+	      this.scroll = new _iscroll2['default'](this.refs['zmiti-grade-scroll'], {
 	        scrollbars: true
+	      });
+	      var obserable = this.props.obserable;
+
+	      obserable.on('toggleGrade', function (data) {
+	        _this.setState({
+	          mainState: data
+	        });
 	      });
 	    }
 	  }]);
 
-	  return ZmitiCourseListApp;
+	  return ZmitiGradeApp;
 	})(_react2['default'].Component);
 
-	exports['default'] = ZmitiCourseListApp;
+	exports['default'] = ZmitiGradeApp;
 	module.exports = exports['default'];
 
 /***/ },
-/* 227 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(228);
+	var content = __webpack_require__(234);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -36805,8 +37598,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/css-loader/index.js!./courselist.css", function() {
-				var newContent = require("!!../../../node_modules/css-loader/index.js!./courselist.css");
+			module.hot.accept("!!../../../node_modules/css-loader/index.js!./grade.css", function() {
+				var newContent = require("!!../../../node_modules/css-loader/index.js!./grade.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -36816,7 +37609,7 @@
 	}
 
 /***/ },
-/* 228 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -36824,13 +37617,13 @@
 
 
 	// module
-	exports.push([module.id, ".lt-full{width:100%;height:100%;position:absolute;left:0;top:0}.zmiti-text-overflow{overflow:hidden;white-space:nowrap;word-break:break-all;text-overflow:ellipsis;-webkit-text-overflow:ellipsis}.zmiti-break-all{word-wrap:break-word;word-break:break-all}.zmiti-courselist-main-ui{width:100%;height:100%;position:absolute;background:#fff;z-index:1;left:0;top:0}.zmiti-courselist-main-ui .zmiti-courselist-scroll{position:relative;bottom:0;width:100%;margin:120px auto 0;overflow:hidden;box-sizing:border-box}.zmiti-courselist-main-ui .zmiti-courselist-scroll li{width:96%;margin:0 auto;display:-webkit-box;-webkit-box-align:center;-webkit-box-pack:center;-webkit-box-orient:horizontal;height:90px;line-height:90px;border-bottom:1px solid #ccc}.zmiti-courselist-main-ui .zmiti-courselist-scroll li aside{-webkit-box-flex:1}.zmiti-courselist-main-ui .zmiti-courselist-scroll li aside:first-of-type{margin-left:20px}.zmiti-courselist-main-ui .zmiti-courselist-scroll li aside:last-of-type{margin-right:20px;text-align:right}\r\n/*# sourceMappingURL=courselist.css.map */\r\n", ""]);
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-grade-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  position: absolute;\r\n  background: #fff;\r\n  z-index: 13;\r\n  left: 0;\r\n  top: 0;\r\n  -webkit-transform: translate3d(640px, 0, 0);\r\n  transform: translate3d(640px, 0, 0);\r\n  -webkit-transition: 0.4s;\r\n  transition: 0.4s; }\r\n  .zmiti-grade-main-ui.active {\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0);\r\n    z-index: 20; }\r\n  .zmiti-grade-main-ui .zmiti-grade-scroll {\r\n    position: relative;\r\n    bottom: 0;\r\n    width: 100%;\r\n    margin: 120px auto 0;\r\n    overflow: hidden;\r\n    box-sizing: border-box; }\r\n    .zmiti-grade-main-ui .zmiti-grade-scroll li {\r\n      width: 96%;\r\n      margin: 0 auto;\r\n      display: -webkit-box;\r\n      -webkit-box-align: center;\r\n      -webkit-box-pack: center;\r\n      -webkit-box-orient: horizontal;\r\n      height: 90px;\r\n      line-height: 90px;\r\n      border-bottom: 1px solid #ccc; }\r\n      .zmiti-grade-main-ui .zmiti-grade-scroll li aside {\r\n        -webkit-box-flex: 1; }\r\n        .zmiti-grade-main-ui .zmiti-grade-scroll li aside:first-of-type {\r\n          margin-left: 20px;\r\n          max-width: 300px; }\r\n        .zmiti-grade-main-ui .zmiti-grade-scroll li aside:last-of-type {\r\n          margin-right: 20px;\r\n          text-align: right;\r\n          color: #cc6633; }\r\n\r\n/*# sourceMappingURL=grade.css.map */", ""]);
 
 	// exports
 
 
 /***/ },
-/* 229 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36838,6 +37631,8 @@
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -36853,126 +37648,99 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(230);
+	__webpack_require__(236);
 
-	var _headerJsx = __webpack_require__(217);
+	var _headerJsx = __webpack_require__(220);
 
 	var _headerJsx2 = _interopRequireDefault(_headerJsx);
 
-	var ZmitiCourseDetailApp = (function (_React$Component) {
-	  _inherits(ZmitiCourseDetailApp, _React$Component);
+	var _iscroll = __webpack_require__(186);
 
-	  function ZmitiCourseDetailApp(props) {
-	    _classCallCheck(this, ZmitiCourseDetailApp);
+	var _iscroll2 = _interopRequireDefault(_iscroll);
 
-	    _get(Object.getPrototypeOf(ZmitiCourseDetailApp.prototype), 'constructor', this).call(this, props);
+	var ZmitiRankingListApp = (function (_React$Component) {
+	  _inherits(ZmitiRankingListApp, _React$Component);
+
+	  function ZmitiRankingListApp(props) {
+	    _classCallCheck(this, ZmitiRankingListApp);
+
+	    _get(Object.getPrototypeOf(ZmitiRankingListApp.prototype), 'constructor', this).call(this, props);
 	    this.state = {
-	      title: '静夜思',
-	      userlist: [{
-	        date: '04/24',
-	        headimgurl: './assets/images/user/zmiti.jpg',
-	        nickname: "zmiti",
-	        audioSrc: '',
-	        score: 99
-	      }, {
-	        date: '04/24',
-	        headimgurl: './assets/images/user/zmiti.jpg',
-	        nickname: "zmiti",
-	        audioSrc: '',
-	        score: 99
-	      }, {
-	        date: '04/24',
-	        headimgurl: './assets/images/user/zmiti.jpg',
-	        nickname: "zmiti",
-	        audioSrc: '',
-	        score: 99
-	      }, {
-	        date: '04/24',
-	        headimgurl: './assets/images/user/zmiti.jpg',
-	        nickname: "zmiti",
-	        audioSrc: '',
-	        score: 99
-	      }, {
-	        date: '04/24',
-	        headimgurl: './assets/images/user/zmiti.jpg',
-	        nickname: "zmiti",
-	        audioSrc: '',
-	        score: 99
-	      }, {
-	        date: '04/24',
-	        headimgurl: './assets/images/user/zmiti.jpg',
-	        nickname: "zmiti",
-	        audioSrc: '',
-	        score: 99
-	      }, {
-	        date: '04/24',
-	        headimgurl: './assets/images/user/zmiti.jpg',
-	        nickname: "zmiti",
-	        audioSrc: '',
-	        score: 99
-	      }, {
-	        date: '04/24',
-	        headimgurl: './assets/images/user/zmiti.jpg',
-	        nickname: "zmiti",
-	        audioSrc: '',
-	        score: 99
-	      }]
-
+	      rankinglist: [{ title: '静夜思静夜思静夜思静夜思', read: 140, score: 96 }, { title: '静夜思', read: 130, score: 90 }, { title: '静夜思', read: 121, score: 55 }, { title: '静夜思', read: 144, score: 76 }, { title: '静夜思', read: 250, score: 68 }, { title: '静夜思', read: 52, score: 58 }, { title: '静夜思', read: 50, score: 88 }, { title: '静夜思', read: 85, score: 48 }, { title: '静夜思', read: 36, score: 36 }, { title: '静夜思', read: 120, score: 33 }, { title: '静夜思', read: 59, score: 84 }, { title: '静夜思', read: 99, score: 73 }, { title: '静夜思', read: 83, score: 69 }, { title: '静夜思', read: 32, score: 44 }],
+	      sortByRead: false,
+	      sortByScore: false,
+	      readDesc: false,
+	      scoreDesc: false
 	    };
 	    this.viewH = document.documentElement.clientHeight;
 	  }
 
-	  _createClass(ZmitiCourseDetailApp, [{
+	  _createClass(ZmitiRankingListApp, [{
 	    key: 'render',
 	    value: function render() {
+
+	      var className = '';
+	      if (this.state.mainState === 0) {
+	        className = 'active';
+	      }
+	      var headerProps = _extends({
+	        type: 'ranking'
+	      }, this.props);
 	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'zmiti-coursedetail-main-ui' },
-	        _react2['default'].createElement(_headerJsx2['default'], null),
+	        { className: 'zmiti-rankinglist-main-ui ' + className },
+	        _react2['default'].createElement(_headerJsx2['default'], headerProps),
+	        _react2['default'].createElement(
+	          'ul',
+	          { className: 'zmiti-rankinglist-title' },
+	          _react2['default'].createElement(
+	            'li',
+	            null,
+	            '标题'
+	          ),
+	          _react2['default'].createElement(
+	            'li',
+	            { onTouchTap: this.sortByRead.bind(this), className: (this.state.sortByRead && this.state.readDesc ? ' zmiti-read-desc' : '') + (this.state.sortByRead && !this.state.readDesc ? ' zmiti-read-asc' : '') },
+	            '已读人数',
+	            _react2['default'].createElement('span', null),
+	            _react2['default'].createElement('span', null)
+	          ),
+	          _react2['default'].createElement(
+	            'li',
+	            { onTouchTap: this.sortByScore.bind(this), className: (this.state.sortByScore && this.state.scoreDesc ? ' zmiti-score-desc' : '') + (this.state.sortByScore && !this.state.scoreDesc ? ' zmiti-score-asc' : '') },
+	            '最高得分',
+	            _react2['default'].createElement('span', null),
+	            _react2['default'].createElement('span', null)
+	          )
+	        ),
 	        _react2['default'].createElement(
 	          'section',
-	          { className: 'zmiti-courcedetail-scroll', style: { height: this.viewH - 120 }, ref: 'zmiti-courcedetail-scroll' },
+	          { className: 'zmiti-rankinglist-scroll', ref: 'zmiti-rankinglist-scroll', style: { height: this.viewH - 150 } },
 	          _react2['default'].createElement(
 	            'ul',
-	            null,
-	            this.state.userlist.map(function (item, i) {
+	            { style: { paddingBottom: 30 } },
+	            this.state.rankinglist.map(function (item, i) {
 	              return _react2['default'].createElement(
 	                'li',
 	                { key: i },
-	                _react2['default'].createElement('div', null),
 	                _react2['default'].createElement(
-	                  'div',
+	                  'aside',
+	                  { className: 'zmiti-text-overflow' },
+	                  '《',
+	                  item.title,
+	                  '》'
+	                ),
+	                _react2['default'].createElement(
+	                  'aside',
 	                  null,
-	                  _react2['default'].createElement(
-	                    'aside',
-	                    null,
-	                    _react2['default'].createElement(
-	                      'span',
-	                      null,
-	                      item.date
-	                    ),
-	                    _react2['default'].createElement('img', { src: item.headimgurl || './assets/images/user/zmiti.jpg' }),
-	                    _react2['default'].createElement(
-	                      'span',
-	                      null,
-	                      item.nickname
-	                    ),
-	                    i === 0 && _react2['default'].createElement(
-	                      'span',
-	                      { className: 'zmiti-first-author' },
-	                      '创始者'
-	                    )
-	                  ),
-	                  _react2['default'].createElement(
-	                    'aside',
-	                    null,
-	                    _react2['default'].createElement(
-	                      'i',
-	                      null,
-	                      item.score,
-	                      '分'
-	                    )
-	                  )
+	                  item.read,
+	                  '人'
+	                ),
+	                _react2['default'].createElement(
+	                  'aside',
+	                  null,
+	                  item.score,
+	                  '分'
 	                )
 	              );
 	            })
@@ -36980,22 +37748,83 @@
 	        )
 	      );
 	    }
+	  }, {
+	    key: 'sortByScore',
+	    value: function sortByScore() {
+	      var _this = this;
+
+	      this.setState({
+	        sortByRead: false,
+	        sortByScore: true,
+	        scoreDesc: !this.state.scoreDesc
+	      }, function () {
+	        if (!_this.state.scoreDesc) {
+	          _this.state.rankinglist.sort(function (a, b) {
+	            return a.score - b.score;
+	          });
+	        } else {
+	          _this.state.rankinglist.sort(function (a, b) {
+	            return b.score - a.score;
+	          });
+	        }
+	        _this.forceUpdate();
+	      });
+	    }
+	  }, {
+	    key: 'sortByRead',
+	    value: function sortByRead() {
+	      var _this2 = this;
+
+	      this.setState({
+	        sortByRead: true,
+	        sortByScore: false,
+	        readDesc: !this.state.readDesc
+	      }, function () {
+	        if (!_this2.state.readDesc) {
+	          _this2.state.rankinglist.sort(function (a, b) {
+	            return a.read - b.read;
+	          });
+	        } else {
+	          _this2.state.rankinglist.sort(function (a, b) {
+	            return b.read - a.read;
+	          });
+	        }
+	        _this2.forceUpdate();
+	      });
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this3 = this;
+
+	      this.scroll = new _iscroll2['default'](this.refs['zmiti-rankinglist-scroll'], {
+	        scrollbars: true
+	      });
+
+	      var obserable = this.props.obserable;
+
+	      obserable.on('toggleRanking', function (data) {
+	        _this3.setState({
+	          mainState: data
+	        });
+	      });
+	    }
 	  }]);
 
-	  return ZmitiCourseDetailApp;
+	  return ZmitiRankingListApp;
 	})(_react2['default'].Component);
 
-	exports['default'] = ZmitiCourseDetailApp;
+	exports['default'] = ZmitiRankingListApp;
 	module.exports = exports['default'];
 
 /***/ },
-/* 230 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(231);
+	var content = __webpack_require__(237);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -37004,8 +37833,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/css-loader/index.js!./coursedetail.css", function() {
-				var newContent = require("!!../../../node_modules/css-loader/index.js!./coursedetail.css");
+			module.hot.accept("!!../../../node_modules/css-loader/index.js!./rankinglist.css", function() {
+				var newContent = require("!!../../../node_modules/css-loader/index.js!./rankinglist.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -37015,7 +37844,7 @@
 	}
 
 /***/ },
-/* 231 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -37023,7 +37852,7 @@
 
 
 	// module
-	exports.push([module.id, ".lt-full{width:100%;height:100%;position:absolute;left:0;top:0}.zmiti-text-overflow{overflow:hidden;white-space:nowrap;word-break:break-all;text-overflow:ellipsis;-webkit-text-overflow:ellipsis}.zmiti-break-all{word-wrap:break-word;word-break:break-all}.zmiti-coursedetail-main-ui{position:absolute;width:100%;height:100%;background:#fff;left:0;top:0;z-index:4}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll{margin-top:120px;overflow:hidden;box-sizing:border-box}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:first-of-type{width:2px;height:50px;background:#ccc;margin-left:114px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type{display:-webkit-box;-webkit-box-align:center;-webkit-box-pack:center;-webkit-box-orient:horizontal}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside{-webkit-box-flex:1}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside .zmiti-first-author{margin-left:20px;border:1px solid #ccc;padding:10px;border-radius:10px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside:first-of-type{margin-left:20px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside:last-of-type{text-align:right;margin-right:20px;color:#f90}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li img{width:50px;margin:0 10px;border-radius:50%}\r\n/*# sourceMappingURL=coursedetail.css.map */\r\n", ""]);
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-rankinglist-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  position: absolute;\r\n  background: #fff;\r\n  z-index: 0;\r\n  left: 0;\r\n  top: 0;\r\n  -webkit-transform: translate3d(640px, 0, 0);\r\n  transform: translate3d(640px, 0, 0);\r\n  -webkit-transition: 0.4s;\r\n  transition: 0.4s; }\r\n  .zmiti-rankinglist-main-ui.active {\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0);\r\n    z-index: 20; }\r\n  .zmiti-rankinglist-main-ui .zmiti-rankinglist-title {\r\n    position: absolute;\r\n    width: 100%;\r\n    top: 100px;\r\n    width: 640px;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li {\r\n      -webkit-box-flex: 1;\r\n      text-align: center;\r\n      font-weight: bold; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:last-of-type {\r\n        text-align: right;\r\n        margin-right: 40px; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) {\r\n        text-align: center; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-desc span:nth-of-type(2) {\r\n          border-top-color: #000; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-desc span:nth-of-type(1) {\r\n          border-bottom-color: #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-asc span:nth-of-type(2) {\r\n          border-top-color: #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-asc span:nth-of-type(1) {\r\n          border-bottom-color: #000; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) {\r\n        position: relative; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2) span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) span:nth-of-type(1) {\r\n          position: absolute;\r\n          width: 0;\r\n          height: 0;\r\n          margin-top: 5px;\r\n          margin-left: 10px;\r\n          border-left: 12px solid transparent;\r\n          border-right: 12px solid transparent;\r\n          border-bottom: 12px solid #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2) span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) span:nth-of-type(2) {\r\n          position: absolute;\r\n          width: 0;\r\n          height: 0;\r\n          margin-left: 10px;\r\n          margin-top: 20px;\r\n          border-left: 12px solid transparent;\r\n          border-right: 12px solid transparent;\r\n          border-top: 12px solid #ccc; }\r\n  .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll {\r\n    position: relative;\r\n    bottom: 0;\r\n    width: 100%;\r\n    margin: 150px auto 0;\r\n    overflow: hidden;\r\n    box-sizing: border-box; }\r\n    .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li {\r\n      width: 96%;\r\n      margin: 0 auto;\r\n      display: -webkit-box;\r\n      -webkit-box-align: center;\r\n      -webkit-box-pack: center;\r\n      -webkit-box-orient: horizontal;\r\n      height: 90px;\r\n      line-height: 90px;\r\n      border-bottom: 1px solid #ccc; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside {\r\n        -webkit-box-flex: 1; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:first-of-type {\r\n          margin-left: 20px;\r\n          max-width: 200px; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:nth-of-type(2) {\r\n          text-align: center;\r\n          margin-left: -32px; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:last-of-type {\r\n          margin-right: 40px;\r\n          text-align: right; }\r\n\r\n/*# sourceMappingURL=rankinglist.css.map */", ""]);
 
 	// exports
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import './css/coursedetail.css';
+import IScroll from 'iscroll';
 import ZmitiUserHeaderApp  from './header.jsx';
 export default class ZmitiCourseDetailApp extends React.Component {
   
@@ -11,7 +12,25 @@ export default class ZmitiCourseDetailApp extends React.Component {
     		{
     			date:'04/24',
     			headimgurl:'./assets/images/user/zmiti.jpg',
+    			nickname:"静夜思静夜思静夜思静夜思静夜思",
+    			audioSrc:'',
+    			score:99
+    		},{
+    			date:'04/24',
+    			headimgurl:'./assets/images/user/zmiti.jpg',
     			nickname:"zmiti",
+    			audioSrc:'',
+    			score:99
+    		},{
+    			date:'04/24',
+    			headimgurl:'./assets/images/user/zmiti.jpg',
+    			nickname:"zmiti",
+    			audioSrc:'',
+    			score:99
+    		},{
+    			date:'04/24',
+    			headimgurl:'./assets/images/user/zmiti.jpg',
+    			nickname:"中华人民共和国中华人民共和国",
     			audioSrc:'',
     			score:99
     		},{
@@ -33,30 +52,72 @@ export default class ZmitiCourseDetailApp extends React.Component {
     			audioSrc:'',
     			score:99
     		},{
-    			date:'04/24',
-    			headimgurl:'./assets/images/user/zmiti.jpg',
-    			nickname:"zmiti",
-    			audioSrc:'',
-    			score:99
-    		},{
-    			date:'04/24',
-    			headimgurl:'./assets/images/user/zmiti.jpg',
-    			nickname:"zmiti",
-    			audioSrc:'',
-    			score:99
-    		},{
-    			date:'04/24',
-    			headimgurl:'./assets/images/user/zmiti.jpg',
-    			nickname:"zmiti",
-    			audioSrc:'',
-    			score:99
-    		},{
-    			date:'04/24',
-    			headimgurl:'./assets/images/user/zmiti.jpg',
-    			nickname:"zmiti",
-    			audioSrc:'',
-    			score:99
-    		}
+                date:'04/24',
+                headimgurl:'./assets/images/user/zmiti.jpg',
+                nickname:"zmiti",
+                audioSrc:'',
+                score:99
+            },{
+                date:'04/24',
+                headimgurl:'./assets/images/user/zmiti.jpg',
+                nickname:"zmiti",
+                audioSrc:'',
+                score:99
+            },{
+                date:'04/24',
+                headimgurl:'./assets/images/user/zmiti.jpg',
+                nickname:"zmiti",
+                audioSrc:'',
+                score:99
+            },{
+                date:'04/24',
+                headimgurl:'./assets/images/user/zmiti.jpg',
+                nickname:"zmiti",
+                audioSrc:'',
+                score:99
+            },{
+                date:'04/24',
+                headimgurl:'./assets/images/user/zmiti.jpg',
+                nickname:"zmiti",
+                audioSrc:'',
+                score:99
+            },{
+                date:'04/24',
+                headimgurl:'./assets/images/user/zmiti.jpg',
+                nickname:"zmiti",
+                audioSrc:'',
+                score:99
+            },{
+                date:'04/24',
+                headimgurl:'./assets/images/user/zmiti.jpg',
+                nickname:"zmiti",
+                audioSrc:'',
+                score:99
+            },{
+                date:'04/24',
+                headimgurl:'./assets/images/user/zmiti.jpg',
+                nickname:"zmiti",
+                audioSrc:'',
+                score:99
+            },{
+                date:'04/24',
+                headimgurl:'./assets/images/user/zmiti.jpg',
+                nickname:"zmiti",
+                audioSrc:'',
+                score:99
+            },{
+                date:'04/24',
+                headimgurl:'./assets/images/user/zmiti.jpg',
+                nickname:"zmiti",
+                audioSrc:'',
+                score:99
+            },{
+                date:'04/24',
+                headimgurl:'./assets/images/user/zmiti.jpg',
+                nickname:"zmiti",
+                audioSrc:'',
+                score:99
+            }
     	]
 
     }
@@ -64,20 +125,29 @@ export default class ZmitiCourseDetailApp extends React.Component {
   }
 
   render() {
+    var className = '';
+    if(this.state.mainState === 0){
+        className = 'active';
+    }
+    var headerProps = {
+        type:'courseDetail',
+        ...this.props
+    }
     return (
-		<div className='zmiti-coursedetail-main-ui'>
-			<ZmitiUserHeaderApp></ZmitiUserHeaderApp>
+		<div className={'zmiti-coursedetail-main-ui '+ className}>
+			<ZmitiUserHeaderApp {...headerProps}></ZmitiUserHeaderApp>
 			<section className='zmiti-courcedetail-scroll' style={{height:this.viewH - 120}} ref='zmiti-courcedetail-scroll'>
-				<ul>
+				<ul style={{paddingBottom:30}}>
 					{this.state.userlist.map((item,i)=>{
 						return <li key= {i}>
 							<div></div>
 							<div>
 								<aside>
-									<span>{item.date}</span>
-									<img src={item.headimgurl||'./assets/images/user/zmiti.jpg'}/>
-									<span>{item.nickname}</span>
+									<span className='zmiti-courcedetail-date'>{item.date}</span>
+									<img className='zmiti-headimgurl' src={item.headimgurl||'./assets/images/user/zmiti.jpg'}/>
+									<span className={'zmiti-text-overflow zmiti-courcedetail-nickname '+(i===0 ?'zmiti-first-user':'')}>{item.nickname}</span>
 									{i===0 && <span className='zmiti-first-author'>创始者</span>}
+                                    <img src='./assets/images/user/voice.png'/>
 								</aside>								
 								<aside>
 									<i>{item.score}分</i>
@@ -89,5 +159,22 @@ export default class ZmitiCourseDetailApp extends React.Component {
 			</section>
 		</div>
     );
+  }
+
+  componentDidMount() {
+      this.scroll = new IScroll(this.refs['zmiti-courcedetail-scroll'],{
+            scrollbars:true
+      });
+
+      setTimeout(()=>{
+        this.scroll.refresh()
+      },500)
+
+      let {obserable} = this.props;
+      obserable.on('toggleCourseDetail',(data)=>{
+            this.setState({
+                mainState:data
+            })
+      });
   }
 }

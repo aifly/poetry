@@ -6,12 +6,26 @@ export default class ZmitiUserCenterApp extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+    	mainState:0,
+    	integral:0,
+    	rank:1
+    }
   }
 
   render() {
+  	var headerProps = {
+  		type:'usercenter',
+  		...this.props
+  	}
+  	var className = '';
+  	if(this.state.mainState === -1){
+  		className= 'hide';
+  	}
     return (
-      <div className='zmiti-user-center-main-ui'>
-      	<ZmitiUserHeaderApp></ZmitiUserHeaderApp>
+
+      <div className={'zmiti-user-center-main-ui '+className}>
+      	<ZmitiUserHeaderApp {...headerProps}></ZmitiUserHeaderApp>
       	<section className='zmiti-user-info'>
 			<div className='zmiti-user-headrimg'><img src={this.props.headimgurl|| './assets/images/user/zmiti.jpg'}/></div>
 			<div>{this.props.nickname||'zmiti'}</div>
@@ -22,7 +36,7 @@ export default class ZmitiUserCenterApp extends React.Component {
 		<section className='zmiti-user-score'>
 			<aside>
 				<div><img src='./assets/images/user/currency.png'/></div>			
-				<div>110积分</div>
+				<div>{this.state.integral}积分</div>
 			</aside>
 			<aside>
 				<div>
@@ -31,16 +45,74 @@ export default class ZmitiUserCenterApp extends React.Component {
 					<span></span>
 				</div>
 				<div className=''>
-					<span>11</span>名
+					<span>{this.state.rank}</span>名
 				</div>
 			</aside>
 		</section>
 		<section className='zmiti-user-list-nav'>
-			<div>诗(词、文)的历程</div>
-			<div>个人评分排行榜</div>
-			<div>诗(词、文)排行榜</div>
+			<div><a href='javascript:void(0)' onTouchTap={this.entryCourse.bind(this)}>诗(词、文)的历程</a></div>
+			<div><a href='javascript:void(0)' onTouchTap={this.entryGrade.bind(this)}>个人评分排行榜</a></div>
+			<div><a href='javascript:void(0)' onTouchTap={this.entryRanking.bind(this)}>诗(词、文)排行榜</a></div>
 		</section>
       </div>
     );
+  }
+  entryCourse(){
+  	let {obserable} = this.props;
+  	
+  	obserable.trigger({
+  		type:'toggleUserIndex',
+  		data:-1
+  	})
+
+  	obserable.trigger({
+  		type:'toggleCourseList',
+  		data:0
+  	});
+  }
+
+  entryGrade(){
+  	let {obserable} = this.props;
+  	
+  	obserable.trigger({
+  		type:'toggleUserIndex',
+  		data:-1
+  	})
+  	obserable.trigger({
+  		type:'toggleGrade',
+  		data:0
+  	})
+  }
+
+  entryRanking(){
+  	let {obserable} = this.props;
+  	
+  	obserable.trigger({
+  		type:'toggleUserIndex',
+  		data:-1
+  	});
+
+  	obserable.trigger({
+  		type:'toggleRanking',
+  		data:0
+  	})
+  }
+
+
+  componentDidMount() {
+  	let {obserable} = this.props;
+  	var s = this;
+  	obserable.on('toggleUserIndex',(data)=>{
+  		this.setState({
+	  		mainState:data
+	  	});
+  	});
+
+  	obserable.on('setIntegralRank',(data)=>{
+  		this.setState({
+  			integral:data.integral,
+  			rank:data.rank
+  		})
+  	});
   }
 }
