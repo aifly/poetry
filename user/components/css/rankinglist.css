@@ -52,7 +52,7 @@
       font-weight: bold; }
       .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:last-of-type {
         text-align: right;
-        margin-right: 40px; }
+        margin-right: 0px; }
       .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) {
         text-align: center; }
         .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-desc span:nth-of-type(2) {
@@ -109,7 +109,7 @@
           text-align: center;
           margin-left: -32px; }
         .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:last-of-type {
-          margin-right: 40px;
+          margin-right: 60px;
           text-align: right; }
 
 /*# sourceMappingURL=rankinglist.css.map */

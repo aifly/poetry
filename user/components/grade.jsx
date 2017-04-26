@@ -9,20 +9,7 @@ export default class ZmitiGradeApp extends React.Component {
     super(props);
     this.state = {
     	gradelist:[
-    		{title:'静夜思静夜思静夜思静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98},
-    		{title:'静夜思',score:98}
+    		
     	]
     };
     this.viewH = document.documentElement.clientHeight;
@@ -49,7 +36,7 @@ export default class ZmitiGradeApp extends React.Component {
       			{this.state.gradelist.map((item,i)=>{
       				return <li key={i}>
 			      				<aside className='zmiti-text-overflow'>
-			      					《{item.title}》
+			      					《{item.workdatatitle}》
 			      				</aside>
 			      				<aside>
 			      					<i>{item.score}分</i>
@@ -72,5 +59,13 @@ export default class ZmitiGradeApp extends React.Component {
          mainState:data
       })
     })
+
+    obserable.on('fillGrade',data=>{
+        this.setState({
+          gradelist:data
+        },()=>{
+          this.scroll.refresh();
+        })
+    });
   }
 }

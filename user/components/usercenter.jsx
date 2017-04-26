@@ -1,6 +1,7 @@
 import React from 'react';
 import './css/usercenter.css'
 import ZmitiUserHeaderApp  from './header.jsx';
+import $ from 'jquery';
 export default class ZmitiUserCenterApp extends React.Component {
   
 
@@ -69,6 +70,24 @@ export default class ZmitiUserCenterApp extends React.Component {
   		type:'toggleCourseList',
   		data:0
   	});
+
+
+  	var s = this;
+  	$.ajax({
+  		url:'http://api.zmiti.com/v2/weixin/get_usershiciroute/',
+  		data:{
+  			wxopenid:s.props.openid,
+  			worksid:s.props.worksid
+  		},
+  		success(data){
+  			if(data.getret === 0 ){
+  				obserable.trigger({
+  					type:'fillCourse',
+  					data:data.shicilist
+  				})
+  			}
+  		}
+  	})
   }
 
   entryGrade(){
@@ -81,6 +100,22 @@ export default class ZmitiUserCenterApp extends React.Component {
   	obserable.trigger({
   		type:'toggleGrade',
   		data:0
+  	});
+  	var s = this;
+  	$.ajax({
+  		url:'http://api.zmiti.com/v2/weixin/get_userscorerank/',
+  		data:{
+  			wxopenid:s.props.openid,
+  			worksid:s.props.worksid
+  		},
+  		success(data){
+  			if(data.getret === 0 ){
+  				obserable.trigger({
+  					type:'fillGrade',
+  					data:data.userranklist
+  				})
+  			}
+  		}
   	})
   }
 
@@ -95,7 +130,27 @@ export default class ZmitiUserCenterApp extends React.Component {
   	obserable.trigger({
   		type:'toggleRanking',
   		data:0
+  	});
+
+  	var s = this;
+
+  	$.ajax({
+  		url:'http://api.zmiti.com/v2/weixin/get_shicirank/',
+  		data:{
+  			worksid:s.props.worksid
+  		},
+  		success(data){
+  			if(data.getret === 0 ){
+  				obserable.trigger({
+  					type:'fillPoetryRank',
+  					data:data.shicilist
+  				});
+  			}
+  		}
+
   	})
+
+
   }
 
 

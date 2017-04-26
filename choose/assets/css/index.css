@@ -30,8 +30,8 @@
   top: 0;
   z-index: 1;
   opacity: 0;
-  -webkit-transform: translate3d(320px, 0, 0);
-  transform: translate3d(320px, 0, 0);
+  -webkit-transform: translate3d(640px, 0, 0);
+  transform: translate3d(640px, 0, 0);
   -webkit-transition: 0.3s;
   transition: 0.3s;
   display: -webkit-box;
@@ -42,6 +42,12 @@
     opacity: 1;
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
+    z-index: 6; }
+  .zmiti-choose-main-ui.hide {
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    -webkit-transform: translate3d(-640px, 0, 0);
+    transform: translate3d(-640px, 0, 0);
     z-index: 6; }
   .zmiti-choose-main-ui > img {
     position: absolute;

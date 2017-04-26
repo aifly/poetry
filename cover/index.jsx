@@ -52,6 +52,7 @@ class ZmitiCoverApp extends Component {
 		obserable.trigger({
 			type:'entryChooseApp'
 		})
+		
 	}
 
 

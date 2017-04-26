@@ -34,17 +34,27 @@ $viewW:640px;
 .zmiti-main-ui{
   width:$viewW;
   height: 100%;
+  @include pos(a);
   overflow: hidden;
   opacity:0;
+  left: 50%;
+  margin-left: -320px;
   &.show{
     @include transition(.3s opacity);
     opacity:1;  
   }
   .zmiti-main-C{
     @include transition(.4s);
+
+    .zmiti-main-content {
+      @include transition(.3s);
+      &.hide{
+        @include transform(translate3d($viewW,0,0));
+      }
+    }
   }
   &>section.hide{
-    @include transform(translate3d(-$viewW/3,0,0));
+    @include transform(translate3d(-$viewW,0,0));
   }
 }
 html,body{

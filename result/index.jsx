@@ -67,7 +67,6 @@ class ZmitiResultApp extends Component {
 				s.setState({
 					entryShare:true
 				});
-				alert(s.props.worksid+' -- ' + s.props.workdataid + ' openid'+s.props.openid)
 				$.ajax({
 					url:'http://api.zmiti.com/v2/weixin/post_shiciresult/',
 					type:'post',
@@ -90,7 +89,32 @@ class ZmitiResultApp extends Component {
 					},
 					success(data){
 						if( data.getret === 0){
-							alert('提交成功');
+							var score = 10;
+							$.ajax({
+								url:'http://api.zmiti.com/v2/weixin/add_wxuser/',
+						   		type:'post',
+						   		data:{
+						   			wxopenid:s.props.openid,
+						   			worksid:s.props.worksid,
+						   			nickname:s.props.nickname,
+						   			headimgurl:s.props.headimgurl,
+						   			longitude:s.props.longitude,
+						   			latitude:s.props.latitude,
+						   			accuracy:s.props.accuracy,
+						   			wxappid:s.props.wxappid,
+						   			integral:score
+						   		},
+						   		error(){
+						   			alert('add_wxuser 服务器返回错误');
+						   		},
+						   		success(){
+						   			obserable.trigger({
+						   				type:'updateIntegral',
+						   				data:score
+						   			})
+						   		}
+							})
+							
 						}
 						
 					}
@@ -117,7 +141,7 @@ class ZmitiResultApp extends Component {
 		var {obserable,IScroll} = this.props;
 		obserable.on('updateScore',(data)=>{
 			this.setState({
-				score:data
+				score: data
 			},()=>{
 				setTimeout(()=>{
 					this.scroll.refresh();

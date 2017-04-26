@@ -7,117 +7,9 @@ export default class ZmitiCourseDetailApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-    	title:'静夜思',
+    	workdatatitle:'静夜思',
     	userlist:[
-    		{
-    			date:'04/24',
-    			headimgurl:'./assets/images/user/zmiti.jpg',
-    			nickname:"静夜思静夜思静夜思静夜思静夜思",
-    			audioSrc:'',
-    			score:99
-    		},{
-    			date:'04/24',
-    			headimgurl:'./assets/images/user/zmiti.jpg',
-    			nickname:"zmiti",
-    			audioSrc:'',
-    			score:99
-    		},{
-    			date:'04/24',
-    			headimgurl:'./assets/images/user/zmiti.jpg',
-    			nickname:"zmiti",
-    			audioSrc:'',
-    			score:99
-    		},{
-    			date:'04/24',
-    			headimgurl:'./assets/images/user/zmiti.jpg',
-    			nickname:"中华人民共和国中华人民共和国",
-    			audioSrc:'',
-    			score:99
-    		},{
-    			date:'04/24',
-    			headimgurl:'./assets/images/user/zmiti.jpg',
-    			nickname:"zmiti",
-    			audioSrc:'',
-    			score:99
-    		},{
-    			date:'04/24',
-    			headimgurl:'./assets/images/user/zmiti.jpg',
-    			nickname:"zmiti",
-    			audioSrc:'',
-    			score:99
-    		},{
-    			date:'04/24',
-    			headimgurl:'./assets/images/user/zmiti.jpg',
-    			nickname:"zmiti",
-    			audioSrc:'',
-    			score:99
-    		},{
-                date:'04/24',
-                headimgurl:'./assets/images/user/zmiti.jpg',
-                nickname:"zmiti",
-                audioSrc:'',
-                score:99
-            },{
-                date:'04/24',
-                headimgurl:'./assets/images/user/zmiti.jpg',
-                nickname:"zmiti",
-                audioSrc:'',
-                score:99
-            },{
-                date:'04/24',
-                headimgurl:'./assets/images/user/zmiti.jpg',
-                nickname:"zmiti",
-                audioSrc:'',
-                score:99
-            },{
-                date:'04/24',
-                headimgurl:'./assets/images/user/zmiti.jpg',
-                nickname:"zmiti",
-                audioSrc:'',
-                score:99
-            },{
-                date:'04/24',
-                headimgurl:'./assets/images/user/zmiti.jpg',
-                nickname:"zmiti",
-                audioSrc:'',
-                score:99
-            },{
-                date:'04/24',
-                headimgurl:'./assets/images/user/zmiti.jpg',
-                nickname:"zmiti",
-                audioSrc:'',
-                score:99
-            },{
-                date:'04/24',
-                headimgurl:'./assets/images/user/zmiti.jpg',
-                nickname:"zmiti",
-                audioSrc:'',
-                score:99
-            },{
-                date:'04/24',
-                headimgurl:'./assets/images/user/zmiti.jpg',
-                nickname:"zmiti",
-                audioSrc:'',
-                score:99
-            },{
-                date:'04/24',
-                headimgurl:'./assets/images/user/zmiti.jpg',
-                nickname:"zmiti",
-                audioSrc:'',
-                score:99
-            },{
-                date:'04/24',
-                headimgurl:'./assets/images/user/zmiti.jpg',
-                nickname:"zmiti",
-                audioSrc:'',
-                score:99
-            },{
-                date:'04/24',
-                headimgurl:'./assets/images/user/zmiti.jpg',
-                nickname:"zmiti",
-                audioSrc:'',
-                score:99
-            }
+    		
     	]
 
     }
@@ -136,7 +28,7 @@ export default class ZmitiCourseDetailApp extends React.Component {
     return (
 		<div className={'zmiti-coursedetail-main-ui '+ className}>
 			<ZmitiUserHeaderApp {...headerProps}></ZmitiUserHeaderApp>
-			<div className='zmiti-coursedetail-title zmiti-text-overflow'>{this.state.title}</div>
+			<div className='zmiti-coursedetail-title zmiti-text-overflow'>{this.state.workdatatitle}</div>
 			<section className='zmiti-courcedetail-scroll' style={{height:this.viewH - 120}} ref='zmiti-courcedetail-scroll'>
 				<ul style={{paddingBottom:30}}>
 					{this.state.userlist.map((item,i)=>{
@@ -144,7 +36,7 @@ export default class ZmitiCourseDetailApp extends React.Component {
 							<div></div>
 							<div>
 								<aside>
-									<span className='zmiti-courcedetail-date'>{item.date}</span>
+									<span className='zmiti-courcedetail-date'>{item.posttime}</span>
 									<img className='zmiti-headimgurl' src={item.headimgurl||'./assets/images/user/zmiti.jpg'}/>
 									<span className={'zmiti-text-overflow zmiti-courcedetail-nickname '+(i===0 ?'zmiti-first-user':'')}>{item.nickname}</span>
 									{i===0 && <span className='zmiti-first-author'>创始者</span>}
@@ -177,5 +69,15 @@ export default class ZmitiCourseDetailApp extends React.Component {
                 mainState:data
             })
       });
+
+      obserable.on('fillCourseDetail',(data)=>{
+        data.detailist.forEach((item,i)=>{
+            item.posttime = item.posttime.substring(5,10) 
+        });
+        this.setState({
+            userlist:data.detailist,
+            workdatatitle:data.workdatatitle
+        })
+      })
   }
 }

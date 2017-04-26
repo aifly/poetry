@@ -52,8 +52,11 @@ input, textarea {
 .zmiti-main-ui {
   width: 640px;
   height: 100%;
+  position: absolute;
   overflow: hidden;
-  opacity: 0; }
+  opacity: 0;
+  left: 50%;
+  margin-left: -320px; }
   .zmiti-main-ui.show {
     -webkit-transition: 0.3s opacity;
     transition: 0.3s opacity;
@@ -61,9 +64,15 @@ input, textarea {
   .zmiti-main-ui .zmiti-main-C {
     -webkit-transition: 0.4s;
     transition: 0.4s; }
+    .zmiti-main-ui .zmiti-main-C .zmiti-main-content {
+      -webkit-transition: 0.3s;
+      transition: 0.3s; }
+      .zmiti-main-ui .zmiti-main-C .zmiti-main-content.hide {
+        -webkit-transform: translate3d(640px, 0, 0);
+        transform: translate3d(640px, 0, 0); }
   .zmiti-main-ui > section.hide {
-    -webkit-transform: translate3d(-213.33333px, 0, 0);
-    transform: translate3d(-213.33333px, 0, 0); }
+    -webkit-transform: translate3d(-640px, 0, 0);
+    transform: translate3d(-640px, 0, 0); }
 
 html, body {
   -webkit-user-select: none; }

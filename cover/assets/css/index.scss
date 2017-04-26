@@ -8,12 +8,9 @@ $viewW:640px;
   left: 0;
   top:0;
   z-index: 4;
-
   &.hide{
-    @include transition(.3s);
-    @include transform(translate3d(-$viewW /3 ,0,0));
-    opacity:0;
-    z-index: 0;
+    @include transition(.4s);
+    @include transform(translate3d(-$viewW  ,0,0));
   }
 
   .zmiti-cover-top{

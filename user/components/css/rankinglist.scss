@@ -28,7 +28,7 @@ $viewW:640px;
  			font-weight: bold;
  			&:last-of-type{
  				text-align: right;
- 				margin-right: 40px;
+ 				margin-right: 0px;
  			}
  			&:nth-of-type(2),&:nth-of-type(3){
  				text-align: center;
@@ -106,7 +106,7 @@ $viewW:640px;
  					margin-left: -32px;
  				}
  				&:last-of-type{
- 					margin-right: 40px;
+ 					margin-right: 60px;
  					text-align: right;
  				}
  			}

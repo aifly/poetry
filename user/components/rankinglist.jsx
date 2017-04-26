@@ -7,20 +7,7 @@ export default class ZmitiRankingListApp extends React.Component {
     super(props);
     this.state = {
     	rankinglist:[
-    		{title:'静夜思静夜思静夜思静夜思',read:140,score:96},
-    		{title:'静夜思',read:130,score:90},
-    		{title:'静夜思',read:121,score:55},
-    		{title:'静夜思',read:144,score:76},
-    		{title:'静夜思',read:250,score:68},
-    		{title:'静夜思',read:52,score:58},
-    		{title:'静夜思',read:50,score:88},
-    		{title:'静夜思',read:85,score:48},
-    		{title:'静夜思',read:36,score:36},
-    		{title:'静夜思',read:120,score:33},
-    		{title:'静夜思',read:59,score:84},
-    		{title:'静夜思',read:99,score:73},
-    		{title:'静夜思',read:83,score:69},
-    		{title:'静夜思',read:32,score:44}
+    	
     	],
       sortByRead:false,
       sortByScore:false,
@@ -61,10 +48,10 @@ export default class ZmitiRankingListApp extends React.Component {
       			{this.state.rankinglist.map((item,i)=>{
       				return <li key={i}>
 			      				<aside className='zmiti-text-overflow'>
-			      					《{item.title}》
+			      					《{item.workdatatitle}》
 			      				</aside>
 			      				<aside>
-			      					{item.read}人
+			      					{item.num}人
 			      				</aside>
                     <aside>{item.score}分</aside>
 			      			</li>
@@ -100,11 +87,11 @@ export default class ZmitiRankingListApp extends React.Component {
     },()=>{
       if(!this.state.readDesc){
         this.state.rankinglist.sort((a,b)=>{
-          return a.read - b.read;
+          return a.num - b.num;
         })  
       }else{
         this.state.rankinglist.sort((a,b)=>{
-          return b.read - a.read;
+          return b.num - a.num;
         })
       }
       this.forceUpdate();
@@ -121,6 +108,14 @@ export default class ZmitiRankingListApp extends React.Component {
         this.setState({
           mainState:data
         })
+    });
+
+    obserable.on('fillPoetryRank',(data)=>{
+      this.setState({
+        rankinglist:data
+      },()=>{
+        this.scroll.refresh();
+      });
     });
   }
 }

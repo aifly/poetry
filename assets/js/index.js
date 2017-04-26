@@ -128,11 +128,13 @@
 
 			_get(Object.getPrototypeOf(App.prototype), 'constructor', this).call(this, props);
 			this.state = {
-				isFirst: false, //是否是从新开始的
+				hideMainContent: true,
+				isFirst: true, //是否是从新开始的
 				audioSrc: '', //当前录音的id
 				showUI: true,
-				score: 120, //积分
+				score: 0, //积分
 				openid: '',
+				wxappid: '',
 				worksid: '5296019810',
 				nickname: '',
 				headimgurl: '',
@@ -167,9 +169,13 @@
 						{ className: 'zmiti-main-C ' + (this.state.showUser ? 'hide' : '') },
 						this.state.isFirst && _react2['default'].createElement(_coverIndexJsx2['default'], _extends({}, this.state, data)),
 						this.state.isFirst && _react2['default'].createElement(_chooseIndexJsx2['default'], _extends({}, this.state, data)),
-						_react2['default'].createElement(_indexIndexJsx2['default'], _extends({}, this.state, data)),
-						_react2['default'].createElement(_resultIndexJsx2['default'], _extends({}, this.state, data)),
-						_react2['default'].createElement(_shareIndexJsx2['default'], _extends({}, this.state, data))
+						_react2['default'].createElement(
+							'section',
+							{ className: 'zmiti-main-content ' + (this.state.isFirst && this.state.hideMainContent ? 'hide' : '') },
+							_react2['default'].createElement(_indexIndexJsx2['default'], _extends({}, this.state, data)),
+							_react2['default'].createElement(_resultIndexJsx2['default'], _extends({}, this.state, data)),
+							_react2['default'].createElement(_shareIndexJsx2['default'], _extends({}, this.state, data))
+						)
 					),
 					_react2['default'].createElement(_userIndexJsx2['default'], _extends({}, this.state, data))
 				);
@@ -287,7 +293,7 @@
 									longitude: wx.posData.longitude,
 									latitude: wx.posData.latitude,
 									accuracy: wx.posData.accuracy,
-									wxappid: appData.wxappid,
+									wxappid: s.state.wxappid,
 									integral: localStorage.getItem('nickname') ? 0 : 10
 								},
 								error: function error() {
@@ -310,13 +316,13 @@
 														score: s.score
 													});
 												} else {
-													alert('getret  : ' + data.getret + ' msg : ' + data.getmsg);
+													//alert('getret  : '+ data.getret + ' msg : ' + data.getmsg);	
 												}
 											}
 										});
 									} else {
-										alert('getret  : ' + data.getret + ' msg : ' + data.getmsg + ' .....');
-									}
+											alert('getret  : ' + data.getret + ' msg : ' + data.getmsg + ' .....');
+										}
 								}
 							});
 
@@ -443,8 +449,10 @@
 
 				_jquery2['default'].getJSON('./assets/js/data.json', function (d) {
 					_this.wxConfig('微信API测试', '微信API测试', 'http://h5.zmiti.com/public/wxapi/assets/images/300.jpg');
+					s.wxappid = d.wxappid;
 					_this.setState({
-						worksid: d.worksid
+						worksid: d.worksid,
+						wxappid: d.wxappid
 					}, function () {
 
 						_jquery2['default'].ajax({
@@ -533,6 +541,12 @@
 					});
 				});
 
+				obserable.on('hideMainContent', function () {
+					_this.setState({
+						hideMainContent: false
+					});
+				});
+
 				obserable.on('toggleUser', function (data) {
 					_this.setState({
 						showUser: data
@@ -560,6 +574,14 @@
 
 				obserable.on('refreshPoetry', function () {
 					_this.refreshPoetry();
+				});
+
+				obserable.on('updateIntegral', function (data) {
+					_this.setState({
+						score: _this.state.score + data
+					}, function () {
+						alert(_this.state.score);
+					});
 				});
 
 				//this.connect();
@@ -34491,7 +34513,7 @@
 
 
 	// module
-	exports.push([module.id, "@charset \"UTF-8\";\r\n/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\nhtml, body, div, p, ul, li, ol, dl, dt, dd, header, footer, video, h1, h2, h3, h4, canvas, section, figure {\r\n  padding: 0;\r\n  margin: 0; }\r\n\r\na {\r\n  text-decoration: none; }\r\n\r\nli {\r\n  list-style: none; }\r\n\r\nhtml, body {\r\n  height: 100%; }\r\n\r\nbody {\r\n  font-family: \"Helvetica Neue\", 'Helvetica', \"Microsoft YaHei\", '\\5FAE\\8F6F\\96C5\\9ED1', arial, sans-serif;\r\n  overflow: hidden;\r\n  font-size: 24px; }\r\n\r\nimg {\r\n  border: none;\r\n  vertical-align: middle;\r\n  width: 100%;\r\n  height: auto; }\r\n\r\ninput, textarea {\r\n  outline: none; }\r\n\r\n.zmiti-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  overflow: hidden;\r\n  opacity: 0; }\r\n  .zmiti-main-ui.show {\r\n    -webkit-transition: 0.3s opacity;\r\n    transition: 0.3s opacity;\r\n    opacity: 1; }\r\n  .zmiti-main-ui .zmiti-main-C {\r\n    -webkit-transition: 0.4s;\r\n    transition: 0.4s; }\r\n  .zmiti-main-ui > section.hide {\r\n    -webkit-transform: translate3d(-213.33333px, 0, 0);\r\n    transform: translate3d(-213.33333px, 0, 0); }\r\n\r\nhtml, body {\r\n  -webkit-user-select: none; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
+	exports.push([module.id, "@charset \"UTF-8\";\r\n/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\nhtml, body, div, p, ul, li, ol, dl, dt, dd, header, footer, video, h1, h2, h3, h4, canvas, section, figure {\r\n  padding: 0;\r\n  margin: 0; }\r\n\r\na {\r\n  text-decoration: none; }\r\n\r\nli {\r\n  list-style: none; }\r\n\r\nhtml, body {\r\n  height: 100%; }\r\n\r\nbody {\r\n  font-family: \"Helvetica Neue\", 'Helvetica', \"Microsoft YaHei\", '\\5FAE\\8F6F\\96C5\\9ED1', arial, sans-serif;\r\n  overflow: hidden;\r\n  font-size: 24px; }\r\n\r\nimg {\r\n  border: none;\r\n  vertical-align: middle;\r\n  width: 100%;\r\n  height: auto; }\r\n\r\ninput, textarea {\r\n  outline: none; }\r\n\r\n.zmiti-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  position: absolute;\r\n  overflow: hidden;\r\n  opacity: 0;\r\n  left: 50%;\r\n  margin-left: -320px; }\r\n  .zmiti-main-ui.show {\r\n    -webkit-transition: 0.3s opacity;\r\n    transition: 0.3s opacity;\r\n    opacity: 1; }\r\n  .zmiti-main-ui .zmiti-main-C {\r\n    -webkit-transition: 0.4s;\r\n    transition: 0.4s; }\r\n    .zmiti-main-ui .zmiti-main-C .zmiti-main-content {\r\n      -webkit-transition: 0.3s;\r\n      transition: 0.3s; }\r\n      .zmiti-main-ui .zmiti-main-C .zmiti-main-content.hide {\r\n        -webkit-transform: translate3d(640px, 0, 0);\r\n        transform: translate3d(640px, 0, 0); }\r\n  .zmiti-main-ui > section.hide {\r\n    -webkit-transform: translate3d(-640px, 0, 0);\r\n    transform: translate3d(-640px, 0, 0); }\r\n\r\nhtml, body {\r\n  -webkit-user-select: none; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
 
 	// exports
 
@@ -35528,7 +35550,6 @@
 						s.setState({
 							entryShare: true
 						});
-						alert(s.props.worksid + ' -- ' + s.props.workdataid + ' openid' + s.props.openid);
 						_jquery2['default'].ajax({
 							url: 'http://api.zmiti.com/v2/weixin/post_shiciresult/',
 							type: 'post',
@@ -35551,7 +35572,31 @@
 							},
 							success: function success(data) {
 								if (data.getret === 0) {
-									alert('提交成功');
+									var score = 10;
+									_jquery2['default'].ajax({
+										url: 'http://api.zmiti.com/v2/weixin/add_wxuser/',
+										type: 'post',
+										data: {
+											wxopenid: s.props.openid,
+											worksid: s.props.worksid,
+											nickname: s.props.nickname,
+											headimgurl: s.props.headimgurl,
+											longitude: s.props.longitude,
+											latitude: s.props.latitude,
+											accuracy: s.props.accuracy,
+											wxappid: s.props.wxappid,
+											integral: score
+										},
+										error: function error() {
+											alert('add_wxuser 服务器返回错误');
+										},
+										success: function success() {
+											obserable.trigger({
+												type: 'updateIntegral',
+												data: score
+											});
+										}
+									});
 								}
 							}
 						});
@@ -36145,7 +36190,7 @@
 
 
 	// module
-	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-cover-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  background: #fff;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0;\r\n  z-index: 4; }\r\n  .zmiti-cover-main-ui.hide {\r\n    -webkit-transition: 0.3s;\r\n    transition: 0.3s;\r\n    -webkit-transform: translate3d(-213.33333px, 0, 0);\r\n    transform: translate3d(-213.33333px, 0, 0);\r\n    opacity: 0;\r\n    z-index: 0; }\r\n  .zmiti-cover-main-ui .zmiti-cover-top {\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0; }\r\n  .zmiti-cover-main-ui .zmiti-cover-bottom {\r\n    position: absolute;\r\n    bottom: 0;\r\n    left: 0; }\r\n  .zmiti-cover-main-ui .zmiti-cover-shici {\r\n    position: absolute;\r\n    text-align: center;\r\n    width: 100%;\r\n    top: 68%;\r\n    -webkit-transform: translate3d(0, 100px, 0);\r\n    transform: translate3d(0, 100px, 0);\r\n    opacity: 0; }\r\n    .zmiti-cover-main-ui .zmiti-cover-shici.active {\r\n      -webkit-transition: 1s 2s;\r\n      transition: 1s 2s;\r\n      -webkit-transform: translate3d(0, 0, 0);\r\n      transform: translate3d(0, 0, 0);\r\n      opacity: 1; }\r\n    .zmiti-cover-main-ui .zmiti-cover-shici img {\r\n      width: 260px; }\r\n  .zmiti-cover-main-ui .zmiti-cover-begin {\r\n    position: absolute;\r\n    width: 200px;\r\n    left: 50%;\r\n    margin-left: -100px;\r\n    bottom: 50px;\r\n    z-index: 10;\r\n    -webkit-transform: translate3d(0, 100px, 0);\r\n    transform: translate3d(0, 100px, 0);\r\n    opacity: 0; }\r\n    .zmiti-cover-main-ui .zmiti-cover-begin.active {\r\n      -webkit-transition: 0.4s 3s;\r\n      transition: 0.4s 3s;\r\n      -webkit-transform: translate3d(0, 0, 0);\r\n      transform: translate3d(0, 0, 0);\r\n      opacity: 1; }\r\n    .zmiti-cover-main-ui .zmiti-cover-begin img:first-of-type {\r\n      -webkit-animation: rotate 5s infinite 1s;\r\n      animation: rotate 5s infinite 1s; }\r\n    .zmiti-cover-main-ui .zmiti-cover-begin img:last-of-type {\r\n      position: absolute;\r\n      top: 0;\r\n      width: 100px;\r\n      left: 50%;\r\n      top: 65%;\r\n      margin: -50px 0 0 -50px; }\r\n  .zmiti-cover-main-ui .zmiti-cover-canvas {\r\n    position: absolute;\r\n    left: 50%;\r\n    text-align: center;\r\n    -webkit-transform-style: preserve-3d;\r\n    transform-style: preserve-3d;\r\n    perspective: 400px;\r\n    -webkit-perspective: 400px;\r\n    top: 40%;\r\n    -webkit-transform: translate3d(-50%, -50%, 0) scale(0);\r\n    transform: translate3d(-50%, -50%, 0) scale(0); }\r\n    .zmiti-cover-main-ui .zmiti-cover-canvas img {\r\n      width: 70%;\r\n      margin-top: 100px;\r\n      -webkit-transform: translate3d(0, 0, 400px);\r\n      transform: translate3d(0, 0, 400px); }\r\n    .zmiti-cover-main-ui .zmiti-cover-canvas.active {\r\n      -webkit-transition: 0.5s 0.5s;\r\n      transition: 0.5s 0.5s;\r\n      -webkit-transform: translate3d(-50%, -50%, 0) scale(1);\r\n      transform: translate3d(-50%, -50%, 0) scale(1); }\r\n      .zmiti-cover-main-ui .zmiti-cover-canvas.active img {\r\n        -webkit-transition: 0.5s 1.2s;\r\n        transition: 0.5s 1.2s;\r\n        -webkit-transition-timing-function: cubic-bezier(0.11, 1.07, 0.82, 1.07);\r\n        transition-timing-function: cubic-bezier(0.11, 1.07, 0.82, 1.07);\r\n        -webkit-transform: translate3d(0, 0, 10px);\r\n        transform: translate3d(0, 0, 10px); }\r\n\r\n@-webkit-keyframes rotate {\r\n  to {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); } }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-cover-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  background: #fff;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0;\r\n  z-index: 4; }\r\n  .zmiti-cover-main-ui.hide {\r\n    -webkit-transition: 0.4s;\r\n    transition: 0.4s;\r\n    -webkit-transform: translate3d(-640px, 0, 0);\r\n    transform: translate3d(-640px, 0, 0); }\r\n  .zmiti-cover-main-ui .zmiti-cover-top {\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0; }\r\n  .zmiti-cover-main-ui .zmiti-cover-bottom {\r\n    position: absolute;\r\n    bottom: 0;\r\n    left: 0; }\r\n  .zmiti-cover-main-ui .zmiti-cover-shici {\r\n    position: absolute;\r\n    text-align: center;\r\n    width: 100%;\r\n    top: 68%;\r\n    -webkit-transform: translate3d(0, 100px, 0);\r\n    transform: translate3d(0, 100px, 0);\r\n    opacity: 0; }\r\n    .zmiti-cover-main-ui .zmiti-cover-shici.active {\r\n      -webkit-transition: 1s 2s;\r\n      transition: 1s 2s;\r\n      -webkit-transform: translate3d(0, 0, 0);\r\n      transform: translate3d(0, 0, 0);\r\n      opacity: 1; }\r\n    .zmiti-cover-main-ui .zmiti-cover-shici img {\r\n      width: 260px; }\r\n  .zmiti-cover-main-ui .zmiti-cover-begin {\r\n    position: absolute;\r\n    width: 200px;\r\n    left: 50%;\r\n    margin-left: -100px;\r\n    bottom: 50px;\r\n    z-index: 10;\r\n    -webkit-transform: translate3d(0, 100px, 0);\r\n    transform: translate3d(0, 100px, 0);\r\n    opacity: 0; }\r\n    .zmiti-cover-main-ui .zmiti-cover-begin.active {\r\n      -webkit-transition: 0.4s 3s;\r\n      transition: 0.4s 3s;\r\n      -webkit-transform: translate3d(0, 0, 0);\r\n      transform: translate3d(0, 0, 0);\r\n      opacity: 1; }\r\n    .zmiti-cover-main-ui .zmiti-cover-begin img:first-of-type {\r\n      -webkit-animation: rotate 5s infinite 1s;\r\n      animation: rotate 5s infinite 1s; }\r\n    .zmiti-cover-main-ui .zmiti-cover-begin img:last-of-type {\r\n      position: absolute;\r\n      top: 0;\r\n      width: 100px;\r\n      left: 50%;\r\n      top: 65%;\r\n      margin: -50px 0 0 -50px; }\r\n  .zmiti-cover-main-ui .zmiti-cover-canvas {\r\n    position: absolute;\r\n    left: 50%;\r\n    text-align: center;\r\n    -webkit-transform-style: preserve-3d;\r\n    transform-style: preserve-3d;\r\n    perspective: 400px;\r\n    -webkit-perspective: 400px;\r\n    top: 40%;\r\n    -webkit-transform: translate3d(-50%, -50%, 0) scale(0);\r\n    transform: translate3d(-50%, -50%, 0) scale(0); }\r\n    .zmiti-cover-main-ui .zmiti-cover-canvas img {\r\n      width: 70%;\r\n      margin-top: 100px;\r\n      -webkit-transform: translate3d(0, 0, 400px);\r\n      transform: translate3d(0, 0, 400px); }\r\n    .zmiti-cover-main-ui .zmiti-cover-canvas.active {\r\n      -webkit-transition: 0.5s 0.5s;\r\n      transition: 0.5s 0.5s;\r\n      -webkit-transform: translate3d(-50%, -50%, 0) scale(1);\r\n      transform: translate3d(-50%, -50%, 0) scale(1); }\r\n      .zmiti-cover-main-ui .zmiti-cover-canvas.active img {\r\n        -webkit-transition: 0.5s 1.2s;\r\n        transition: 0.5s 1.2s;\r\n        -webkit-transition-timing-function: cubic-bezier(0.11, 1.07, 0.82, 1.07);\r\n        transition-timing-function: cubic-bezier(0.11, 1.07, 0.82, 1.07);\r\n        -webkit-transform: translate3d(0, 0, 10px);\r\n        transform: translate3d(0, 0, 10px); }\r\n\r\n@-webkit-keyframes rotate {\r\n  to {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); } }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
 
 	// exports
 
@@ -36195,12 +36240,19 @@
 			value: function render() {
 				var _this = this;
 
+				var className = '';
+				if (this.state.showMainUI === 0) {
+					className = 'active';
+				} else if (this.state.showMainUI === -1) {
+					className = 'hide';
+				}
+
 				return _react2['default'].createElement(
 					'div',
-					{ className: 'zmiti-choose-main-ui ' + (this.state.showMainUI ? 'active' : '') },
+					{ className: 'zmiti-choose-main-ui ' + className },
 					_react2['default'].createElement(
 						'div',
-						{ onTouchStart: function () {
+						{ onTouchTap: this.entryMain.bind(this), onTouchStart: function () {
 								_this.setState({ readActive: true });
 							}, onTouchEnd: function () {
 								_this.setState({ readActive: false });
@@ -36229,6 +36281,19 @@
 				);
 			}
 		}, {
+			key: 'entryMain',
+			value: function entryMain() {
+				//
+				this.setState({
+					showMainUI: -1
+				});
+				var obserable = this.props.obserable;
+
+				obserable.trigger({
+					type: 'hideMainContent'
+				});
+			}
+		}, {
 			key: 'componentDidMount',
 			value: function componentDidMount() {
 				var _this2 = this;
@@ -36237,7 +36302,7 @@
 
 				obserable.on('entryChooseApp', function () {
 					_this2.setState({
-						showMainUI: true
+						showMainUI: 0
 					});
 				});
 			}
@@ -36284,7 +36349,7 @@
 
 
 	// module
-	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-choose-main-ui {\r\n  background: #fff;\r\n  position: absolute;\r\n  width: 640px;\r\n  height: 100%;\r\n  left: 0;\r\n  top: 0;\r\n  z-index: 1;\r\n  opacity: 0;\r\n  -webkit-transform: translate3d(320px, 0, 0);\r\n  transform: translate3d(320px, 0, 0);\r\n  -webkit-transition: 0.3s;\r\n  transition: 0.3s;\r\n  display: -webkit-box;\r\n  -webkit-box-align: center;\r\n  -webkit-box-pack: center;\r\n  -webkit-box-orient: vertical; }\r\n  .zmiti-choose-main-ui.active {\r\n    opacity: 1;\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0);\r\n    z-index: 6; }\r\n  .zmiti-choose-main-ui > img {\r\n    position: absolute;\r\n    bottom: 0;\r\n    z-index: -1; }\r\n  .zmiti-choose-main-ui > div {\r\n    margin: 10px 0;\r\n    -webkit-transition: 0.1s;\r\n    transition: 0.1s; }\r\n    .zmiti-choose-main-ui > div.active {\r\n      -webkit-transform: scale(0.9);\r\n      transform: scale(0.9); }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-choose-main-ui {\r\n  background: #fff;\r\n  position: absolute;\r\n  width: 640px;\r\n  height: 100%;\r\n  left: 0;\r\n  top: 0;\r\n  z-index: 1;\r\n  opacity: 0;\r\n  -webkit-transform: translate3d(640px, 0, 0);\r\n  transform: translate3d(640px, 0, 0);\r\n  -webkit-transition: 0.3s;\r\n  transition: 0.3s;\r\n  display: -webkit-box;\r\n  -webkit-box-align: center;\r\n  -webkit-box-pack: center;\r\n  -webkit-box-orient: vertical; }\r\n  .zmiti-choose-main-ui.active {\r\n    opacity: 1;\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0);\r\n    z-index: 6; }\r\n  .zmiti-choose-main-ui.hide {\r\n    -webkit-transition: 0.4s;\r\n    transition: 0.4s;\r\n    -webkit-transform: translate3d(-640px, 0, 0);\r\n    transform: translate3d(-640px, 0, 0);\r\n    z-index: 6; }\r\n  .zmiti-choose-main-ui > img {\r\n    position: absolute;\r\n    bottom: 0;\r\n    z-index: -1; }\r\n  .zmiti-choose-main-ui > div {\r\n    margin: 10px 0;\r\n    -webkit-transition: 0.1s;\r\n    transition: 0.1s; }\r\n    .zmiti-choose-main-ui > div.active {\r\n      -webkit-transform: scale(0.9);\r\n      transform: scale(0.9); }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
 
 	// exports
 
@@ -36456,6 +36521,10 @@
 
 	var _headerJsx2 = _interopRequireDefault(_headerJsx);
 
+	var _jquery = __webpack_require__(185);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
 	var ZmitiUserCenterApp = (function (_React$Component) {
 	  _inherits(ZmitiUserCenterApp, _React$Component);
 
@@ -36590,6 +36659,23 @@
 	        type: 'toggleCourseList',
 	        data: 0
 	      });
+
+	      var s = this;
+	      _jquery2['default'].ajax({
+	        url: 'http://api.zmiti.com/v2/weixin/get_usershiciroute/',
+	        data: {
+	          wxopenid: s.props.openid,
+	          worksid: s.props.worksid
+	        },
+	        success: function success(data) {
+	          if (data.getret === 0) {
+	            obserable.trigger({
+	              type: 'fillCourse',
+	              data: data.shicilist
+	            });
+	          }
+	        }
+	      });
 	    }
 	  }, {
 	    key: 'entryGrade',
@@ -36603,6 +36689,22 @@
 	      obserable.trigger({
 	        type: 'toggleGrade',
 	        data: 0
+	      });
+	      var s = this;
+	      _jquery2['default'].ajax({
+	        url: 'http://api.zmiti.com/v2/weixin/get_userscorerank/',
+	        data: {
+	          wxopenid: s.props.openid,
+	          worksid: s.props.worksid
+	        },
+	        success: function success(data) {
+	          if (data.getret === 0) {
+	            obserable.trigger({
+	              type: 'fillGrade',
+	              data: data.userranklist
+	            });
+	          }
+	        }
 	      });
 	    }
 	  }, {
@@ -36618,6 +36720,24 @@
 	      obserable.trigger({
 	        type: 'toggleRanking',
 	        data: 0
+	      });
+
+	      var s = this;
+
+	      _jquery2['default'].ajax({
+	        url: 'http://api.zmiti.com/v2/weixin/get_shicirank/',
+	        data: {
+	          worksid: s.props.worksid
+	        },
+	        success: function success(data) {
+	          if (data.getret === 0) {
+	            obserable.trigger({
+	              type: 'fillPoetryRank',
+	              data: data.shicilist
+	            });
+	          }
+	        }
+
 	      });
 	    }
 	  }, {
@@ -36896,6 +37016,10 @@
 
 	var _iscroll2 = _interopRequireDefault(_iscroll);
 
+	var _jquery = __webpack_require__(185);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
 	var ZmitiCourseListApp = (function (_React$Component) {
 	  _inherits(ZmitiCourseListApp, _React$Component);
 
@@ -36938,12 +37062,13 @@
 	            this.state.courselist.map(function (item, i) {
 	              return _react2['default'].createElement(
 	                'li',
-	                { key: i, onTouchTap: _this.entryDetail.bind(_this, i) },
+	                { key: i, onTouchTap: _this.entryDetail.bind(_this, item.workdataid, item.workdatatitle) },
+	                _react2['default'].createElement('a', { href: 'javascript:void(0)' }),
 	                _react2['default'].createElement(
 	                  'aside',
 	                  { className: 'zmiti-text-overflow' },
 	                  '《',
-	                  item.title,
+	                  item.workdatatitle,
 	                  '》'
 	                ),
 	                _react2['default'].createElement(
@@ -36952,7 +37077,7 @@
 	                  _react2['default'].createElement(
 	                    'i',
 	                    null,
-	                    item.read,
+	                    item.num,
 	                    '人已读'
 	                  )
 	                )
@@ -36964,7 +37089,7 @@
 	    }
 	  }, {
 	    key: 'entryDetail',
-	    value: function entryDetail(index) {
+	    value: function entryDetail(workdataid, workdatatitle) {
 	      var obserable = this.props.obserable;
 
 	      obserable.trigger({
@@ -36974,6 +37099,22 @@
 	      obserable.trigger({
 	        type: 'toggleCourseDetail',
 	        data: 0
+	      });
+	      var s = this;
+	      _jquery2['default'].ajax({
+	        url: 'http://api.zmiti.com/v2/weixin/get_shicidetail/',
+	        data: {
+	          workdataid: workdataid,
+	          worksid: s.props.worksid
+	        },
+	        success: function success(data) {
+	          if (data.getret === 0) {
+	            obserable.trigger({
+	              type: 'fillCourseDetail',
+	              data: { detailist: data.detaillist, workdatatitle: workdatatitle }
+	            });
+	          }
+	        }
 	      });
 	    }
 	  }, {
@@ -36990,6 +37131,14 @@
 	      obserable.on('toggleCourseList', function (data) {
 	        _this2.setState({
 	          mainState: data
+	        });
+	      });
+
+	      obserable.on('fillCourse', function (data) {
+	        _this2.setState({
+	          courselist: data
+	        }, function () {
+	          _this2.scroll.refresh();
 	        });
 	      });
 	    }
@@ -37048,7 +37197,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-	    value: true
+	  value: true
 	});
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -37078,223 +37227,125 @@
 	var _headerJsx2 = _interopRequireDefault(_headerJsx);
 
 	var ZmitiCourseDetailApp = (function (_React$Component) {
-	    _inherits(ZmitiCourseDetailApp, _React$Component);
+	  _inherits(ZmitiCourseDetailApp, _React$Component);
 
-	    function ZmitiCourseDetailApp(props) {
-	        _classCallCheck(this, ZmitiCourseDetailApp);
+	  function ZmitiCourseDetailApp(props) {
+	    _classCallCheck(this, ZmitiCourseDetailApp);
 
-	        _get(Object.getPrototypeOf(ZmitiCourseDetailApp.prototype), 'constructor', this).call(this, props);
-	        this.state = {
-	            title: '静夜思',
-	            userlist: [{
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "静夜思静夜思静夜思静夜思静夜思",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "中华人民共和国中华人民共和国",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }, {
-	                date: '04/24',
-	                headimgurl: './assets/images/user/zmiti.jpg',
-	                nickname: "zmiti",
-	                audioSrc: '',
-	                score: 99
-	            }]
+	    _get(Object.getPrototypeOf(ZmitiCourseDetailApp.prototype), 'constructor', this).call(this, props);
+	    this.state = {
+	      workdatatitle: '静夜思',
+	      userlist: []
 
-	        };
-	        this.viewH = document.documentElement.clientHeight;
-	    }
+	    };
+	    this.viewH = document.documentElement.clientHeight;
+	  }
 
-	    _createClass(ZmitiCourseDetailApp, [{
-	        key: 'render',
-	        value: function render() {
-	            var className = '';
-	            if (this.state.mainState === 0) {
-	                className = 'active';
-	            }
-	            var headerProps = _extends({
-	                type: 'courseDetail'
-	            }, this.props);
-	            return _react2['default'].createElement(
-	                'div',
-	                { className: 'zmiti-coursedetail-main-ui ' + className },
-	                _react2['default'].createElement(_headerJsx2['default'], headerProps),
+	  _createClass(ZmitiCourseDetailApp, [{
+	    key: 'render',
+	    value: function render() {
+	      var className = '';
+	      if (this.state.mainState === 0) {
+	        className = 'active';
+	      }
+	      var headerProps = _extends({
+	        type: 'courseDetail'
+	      }, this.props);
+	      return _react2['default'].createElement(
+	        'div',
+	        { className: 'zmiti-coursedetail-main-ui ' + className },
+	        _react2['default'].createElement(_headerJsx2['default'], headerProps),
+	        _react2['default'].createElement(
+	          'div',
+	          { className: 'zmiti-coursedetail-title zmiti-text-overflow' },
+	          this.state.workdatatitle
+	        ),
+	        _react2['default'].createElement(
+	          'section',
+	          { className: 'zmiti-courcedetail-scroll', style: { height: this.viewH - 120 }, ref: 'zmiti-courcedetail-scroll' },
+	          _react2['default'].createElement(
+	            'ul',
+	            { style: { paddingBottom: 30 } },
+	            this.state.userlist.map(function (item, i) {
+	              return _react2['default'].createElement(
+	                'li',
+	                { key: i },
+	                _react2['default'].createElement('div', null),
 	                _react2['default'].createElement(
-	                    'div',
-	                    { className: 'zmiti-coursedetail-title zmiti-text-overflow' },
-	                    this.state.title
-	                ),
-	                _react2['default'].createElement(
-	                    'section',
-	                    { className: 'zmiti-courcedetail-scroll', style: { height: this.viewH - 120 }, ref: 'zmiti-courcedetail-scroll' },
+	                  'div',
+	                  null,
+	                  _react2['default'].createElement(
+	                    'aside',
+	                    null,
 	                    _react2['default'].createElement(
-	                        'ul',
-	                        { style: { paddingBottom: 30 } },
-	                        this.state.userlist.map(function (item, i) {
-	                            return _react2['default'].createElement(
-	                                'li',
-	                                { key: i },
-	                                _react2['default'].createElement('div', null),
-	                                _react2['default'].createElement(
-	                                    'div',
-	                                    null,
-	                                    _react2['default'].createElement(
-	                                        'aside',
-	                                        null,
-	                                        _react2['default'].createElement(
-	                                            'span',
-	                                            { className: 'zmiti-courcedetail-date' },
-	                                            item.date
-	                                        ),
-	                                        _react2['default'].createElement('img', { className: 'zmiti-headimgurl', src: item.headimgurl || './assets/images/user/zmiti.jpg' }),
-	                                        _react2['default'].createElement(
-	                                            'span',
-	                                            { className: 'zmiti-text-overflow zmiti-courcedetail-nickname ' + (i === 0 ? 'zmiti-first-user' : '') },
-	                                            item.nickname
-	                                        ),
-	                                        i === 0 && _react2['default'].createElement(
-	                                            'span',
-	                                            { className: 'zmiti-first-author' },
-	                                            '创始者'
-	                                        ),
-	                                        _react2['default'].createElement('img', { src: './assets/images/user/voice.png' })
-	                                    ),
-	                                    _react2['default'].createElement(
-	                                        'aside',
-	                                        null,
-	                                        _react2['default'].createElement(
-	                                            'i',
-	                                            null,
-	                                            item.score,
-	                                            '分'
-	                                        )
-	                                    )
-	                                )
-	                            );
-	                        })
+	                      'span',
+	                      { className: 'zmiti-courcedetail-date' },
+	                      item.posttime
+	                    ),
+	                    _react2['default'].createElement('img', { className: 'zmiti-headimgurl', src: item.headimgurl || './assets/images/user/zmiti.jpg' }),
+	                    _react2['default'].createElement(
+	                      'span',
+	                      { className: 'zmiti-text-overflow zmiti-courcedetail-nickname ' + (i === 0 ? 'zmiti-first-user' : '') },
+	                      item.nickname
+	                    ),
+	                    i === 0 && _react2['default'].createElement(
+	                      'span',
+	                      { className: 'zmiti-first-author' },
+	                      '创始者'
+	                    ),
+	                    _react2['default'].createElement('img', { src: './assets/images/user/voice.png' })
+	                  ),
+	                  _react2['default'].createElement(
+	                    'aside',
+	                    null,
+	                    _react2['default'].createElement(
+	                      'i',
+	                      null,
+	                      item.score,
+	                      '分'
 	                    )
+	                  )
 	                )
-	            );
-	        }
-	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _this = this;
+	              );
+	            })
+	          )
+	        )
+	      );
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this = this;
 
-	            this.scroll = new _iscroll2['default'](this.refs['zmiti-courcedetail-scroll'], {
-	                scrollbars: true
-	            });
+	      this.scroll = new _iscroll2['default'](this.refs['zmiti-courcedetail-scroll'], {
+	        scrollbars: true
+	      });
 
-	            setTimeout(function () {
-	                _this.scroll.refresh();
-	            }, 500);
+	      setTimeout(function () {
+	        _this.scroll.refresh();
+	      }, 500);
 
-	            var obserable = this.props.obserable;
+	      var obserable = this.props.obserable;
 
-	            obserable.on('toggleCourseDetail', function (data) {
-	                _this.setState({
-	                    mainState: data
-	                });
-	            });
-	        }
-	    }]);
+	      obserable.on('toggleCourseDetail', function (data) {
+	        _this.setState({
+	          mainState: data
+	        });
+	      });
 
-	    return ZmitiCourseDetailApp;
+	      obserable.on('fillCourseDetail', function (data) {
+	        data.detailist.forEach(function (item, i) {
+	          item.posttime = item.posttime.substring(5, 10);
+	        });
+	        _this.setState({
+	          userlist: data.detailist,
+	          workdatatitle: data.workdatatitle
+	        });
+	      });
+	    }
+	  }]);
+
+	  return ZmitiCourseDetailApp;
 	})(_react2['default'].Component);
 
 	exports['default'] = ZmitiCourseDetailApp;
@@ -37335,7 +37386,7 @@
 
 
 	// module
-	exports.push([module.id, ".lt-full{width:100%;height:100%;position:absolute;left:0;top:0}.zmiti-text-overflow{overflow:hidden;white-space:nowrap;word-break:break-all;text-overflow:ellipsis;-webkit-text-overflow:ellipsis}.zmiti-break-all{word-wrap:break-word;word-break:break-all}.zmiti-coursedetail-main-ui{position:absolute;width:640px;height:100%;background:#fff;left:0;top:0;z-index:0;-webkit-transform:translate3d(640px, 0, 0);transform:translate3d(640px, 0, 0);-webkit-transition:.4s;transition:.4s}.zmiti-coursedetail-main-ui.active{-webkit-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0);z-index:20}.zmiti-coursedetail-main-ui .zmiti-coursedetail-title{position:absolute;max-width:300px;top:30px;left:30px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll{margin-top:120px;overflow:hidden;position:relative;box-sizing:border-box}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:first-of-type{width:4px;height:50px;background:#91aa9d;border-radius:2px;margin-left:124px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type{display:-webkit-box;-webkit-box-align:center;-webkit-box-pack:center;-webkit-box-orient:horizontal}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside{-webkit-box-flex:1}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside .zmiti-courcedetail-date{color:#ccc}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside .zmiti-courcedetail-nickname{display:inline-block;position:relative;top:6px;max-width:220px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside .zmiti-courcedetail-nickname.zmiti-first-user{max-width:160px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside .zmiti-headimgurl{box-shadow:0 3px 10px rgba(0,0,0,0.3)}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside .zmiti-first-author{margin-left:20px;border:1px solid #ccc;padding:10px;color:#663300;border-radius:10px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside:first-of-type{margin-left:20px}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li>div:last-of-type>aside:last-of-type{text-align:right;margin-right:20px;color:#cc6633}.zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li img{width:50px;margin:0 20px;border-radius:50%}\r\n/*# sourceMappingURL=coursedetail.css.map */\r\n", ""]);
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-coursedetail-main-ui {\r\n  position: absolute;\r\n  width: 640px;\r\n  height: 100%;\r\n  background: #fff;\r\n  left: 0;\r\n  top: 0;\r\n  z-index: 0;\r\n  -webkit-transform: translate3d(640px, 0, 0);\r\n  transform: translate3d(640px, 0, 0);\r\n  -webkit-transition: 0.4s;\r\n  transition: 0.4s; }\r\n  .zmiti-coursedetail-main-ui.active {\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0);\r\n    z-index: 20; }\r\n  .zmiti-coursedetail-main-ui .zmiti-coursedetail-title {\r\n    position: absolute;\r\n    max-width: 300px;\r\n    top: 30px;\r\n    left: 30px;\r\n    font-size: 32px; }\r\n  .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll {\r\n    margin-top: 120px;\r\n    overflow: hidden;\r\n    position: relative;\r\n    box-sizing: border-box; }\r\n    .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:first-of-type {\r\n      width: 4px;\r\n      height: 50px;\r\n      background: #91aa9d;\r\n      border-radius: 2px;\r\n      margin-left: 124px; }\r\n    .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type {\r\n      display: -webkit-box;\r\n      -webkit-box-align: center;\r\n      -webkit-box-pack: center;\r\n      -webkit-box-orient: horizontal; }\r\n      .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside {\r\n        -webkit-box-flex: 1; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-courcedetail-date {\r\n          color: #ccc; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-courcedetail-nickname {\r\n          display: inline-block;\r\n          position: relative;\r\n          top: 6px;\r\n          max-width: 220px; }\r\n          .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-courcedetail-nickname.zmiti-first-user {\r\n            max-width: 160px; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-headimgurl {\r\n          box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside .zmiti-first-author {\r\n          margin-left: 20px;\r\n          border: 1px solid #ccc;\r\n          padding: 10px;\r\n          color: #663300;\r\n          border-radius: 10px; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside:first-of-type {\r\n          margin-left: 20px; }\r\n        .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li > div:last-of-type > aside:last-of-type {\r\n          text-align: right;\r\n          margin-right: 20px;\r\n          color: #cc6633; }\r\n    .zmiti-coursedetail-main-ui .zmiti-courcedetail-scroll li img {\r\n      width: 50px;\r\n      margin: 0 20px;\r\n      border-radius: 50%; }\r\n\r\n/*# sourceMappingURL=coursedetail.css.map */", ""]);
 
 	// exports
 
@@ -37386,7 +37437,7 @@
 
 	    _get(Object.getPrototypeOf(ZmitiGradeApp.prototype), 'constructor', this).call(this, props);
 	    this.state = {
-	      gradelist: [{ title: '静夜思静夜思静夜思静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }, { title: '静夜思', score: 98 }]
+	      gradelist: []
 	    };
 	    this.viewH = document.documentElement.clientHeight;
 	  }
@@ -37423,7 +37474,7 @@
 	                  'aside',
 	                  { className: 'zmiti-text-overflow' },
 	                  '《',
-	                  item.title,
+	                  item.workdatatitle,
 	                  '》'
 	                ),
 	                _react2['default'].createElement(
@@ -37455,6 +37506,14 @@
 	      obserable.on('toggleGrade', function (data) {
 	        _this.setState({
 	          mainState: data
+	        });
+	      });
+
+	      obserable.on('fillGrade', function (data) {
+	        _this.setState({
+	          gradelist: data
+	        }, function () {
+	          _this.scroll.refresh();
 	        });
 	      });
 	    }
@@ -37550,7 +37609,7 @@
 
 	    _get(Object.getPrototypeOf(ZmitiRankingListApp.prototype), 'constructor', this).call(this, props);
 	    this.state = {
-	      rankinglist: [{ title: '静夜思静夜思静夜思静夜思', read: 140, score: 96 }, { title: '静夜思', read: 130, score: 90 }, { title: '静夜思', read: 121, score: 55 }, { title: '静夜思', read: 144, score: 76 }, { title: '静夜思', read: 250, score: 68 }, { title: '静夜思', read: 52, score: 58 }, { title: '静夜思', read: 50, score: 88 }, { title: '静夜思', read: 85, score: 48 }, { title: '静夜思', read: 36, score: 36 }, { title: '静夜思', read: 120, score: 33 }, { title: '静夜思', read: 59, score: 84 }, { title: '静夜思', read: 99, score: 73 }, { title: '静夜思', read: 83, score: 69 }, { title: '静夜思', read: 32, score: 44 }],
+	      rankinglist: [],
 	      sortByRead: false,
 	      sortByScore: false,
 	      readDesc: false,
@@ -37611,13 +37670,13 @@
 	                  'aside',
 	                  { className: 'zmiti-text-overflow' },
 	                  '《',
-	                  item.title,
+	                  item.workdatatitle,
 	                  '》'
 	                ),
 	                _react2['default'].createElement(
 	                  'aside',
 	                  null,
-	                  item.read,
+	                  item.num,
 	                  '人'
 	                ),
 	                _react2['default'].createElement(
@@ -37666,11 +37725,11 @@
 	      }, function () {
 	        if (!_this2.state.readDesc) {
 	          _this2.state.rankinglist.sort(function (a, b) {
-	            return a.read - b.read;
+	            return a.num - b.num;
 	          });
 	        } else {
 	          _this2.state.rankinglist.sort(function (a, b) {
-	            return b.read - a.read;
+	            return b.num - a.num;
 	          });
 	        }
 	        _this2.forceUpdate();
@@ -37690,6 +37749,14 @@
 	      obserable.on('toggleRanking', function (data) {
 	        _this3.setState({
 	          mainState: data
+	        });
+	      });
+
+	      obserable.on('fillPoetryRank', function (data) {
+	        _this3.setState({
+	          rankinglist: data
+	        }, function () {
+	          _this3.scroll.refresh();
 	        });
 	      });
 	    }
@@ -37736,7 +37803,7 @@
 
 
 	// module
-	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-rankinglist-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  position: absolute;\r\n  background: #fff;\r\n  z-index: 0;\r\n  left: 0;\r\n  top: 0;\r\n  -webkit-transform: translate3d(640px, 0, 0);\r\n  transform: translate3d(640px, 0, 0);\r\n  -webkit-transition: 0.4s;\r\n  transition: 0.4s; }\r\n  .zmiti-rankinglist-main-ui.active {\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0);\r\n    z-index: 20; }\r\n  .zmiti-rankinglist-main-ui .zmiti-rankinglist-title {\r\n    position: absolute;\r\n    width: 100%;\r\n    top: 100px;\r\n    width: 640px;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li {\r\n      -webkit-box-flex: 1;\r\n      text-align: center;\r\n      font-weight: bold; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:last-of-type {\r\n        text-align: right;\r\n        margin-right: 40px; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) {\r\n        text-align: center; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-desc span:nth-of-type(2) {\r\n          border-top-color: #000; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-desc span:nth-of-type(1) {\r\n          border-bottom-color: #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-asc span:nth-of-type(2) {\r\n          border-top-color: #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-asc span:nth-of-type(1) {\r\n          border-bottom-color: #000; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) {\r\n        position: relative; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2) span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) span:nth-of-type(1) {\r\n          position: absolute;\r\n          width: 0;\r\n          height: 0;\r\n          margin-top: 5px;\r\n          margin-left: 10px;\r\n          border-left: 12px solid transparent;\r\n          border-right: 12px solid transparent;\r\n          border-bottom: 12px solid #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2) span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) span:nth-of-type(2) {\r\n          position: absolute;\r\n          width: 0;\r\n          height: 0;\r\n          margin-left: 10px;\r\n          margin-top: 20px;\r\n          border-left: 12px solid transparent;\r\n          border-right: 12px solid transparent;\r\n          border-top: 12px solid #ccc; }\r\n  .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll {\r\n    position: relative;\r\n    bottom: 0;\r\n    width: 100%;\r\n    margin: 150px auto 0;\r\n    overflow: hidden;\r\n    box-sizing: border-box; }\r\n    .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li {\r\n      width: 96%;\r\n      margin: 0 auto;\r\n      display: -webkit-box;\r\n      -webkit-box-align: center;\r\n      -webkit-box-pack: center;\r\n      -webkit-box-orient: horizontal;\r\n      height: 90px;\r\n      line-height: 90px;\r\n      border-bottom: 1px solid #ccc; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside {\r\n        -webkit-box-flex: 1; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:first-of-type {\r\n          margin-left: 20px;\r\n          max-width: 200px; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:nth-of-type(2) {\r\n          text-align: center;\r\n          margin-left: -32px; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:last-of-type {\r\n          margin-right: 40px;\r\n          text-align: right; }\r\n\r\n/*# sourceMappingURL=rankinglist.css.map */", ""]);
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-rankinglist-main-ui {\r\n  width: 640px;\r\n  height: 100%;\r\n  position: absolute;\r\n  background: #fff;\r\n  z-index: 0;\r\n  left: 0;\r\n  top: 0;\r\n  -webkit-transform: translate3d(640px, 0, 0);\r\n  transform: translate3d(640px, 0, 0);\r\n  -webkit-transition: 0.4s;\r\n  transition: 0.4s; }\r\n  .zmiti-rankinglist-main-ui.active {\r\n    -webkit-transform: translate3d(0, 0, 0);\r\n    transform: translate3d(0, 0, 0);\r\n    z-index: 20; }\r\n  .zmiti-rankinglist-main-ui .zmiti-rankinglist-title {\r\n    position: absolute;\r\n    width: 100%;\r\n    top: 100px;\r\n    width: 640px;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li {\r\n      -webkit-box-flex: 1;\r\n      text-align: center;\r\n      font-weight: bold; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:last-of-type {\r\n        text-align: right;\r\n        margin-right: 0px; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) {\r\n        text-align: center; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-desc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-desc span:nth-of-type(2) {\r\n          border-top-color: #000; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-desc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-desc span:nth-of-type(1) {\r\n          border-bottom-color: #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-asc span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-asc span:nth-of-type(2) {\r\n          border-top-color: #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-read-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2).zmiti-score-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-read-asc span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3).zmiti-score-asc span:nth-of-type(1) {\r\n          border-bottom-color: #000; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) {\r\n        position: relative; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2) span:nth-of-type(1), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) span:nth-of-type(1) {\r\n          position: absolute;\r\n          width: 0;\r\n          height: 0;\r\n          margin-top: 5px;\r\n          margin-left: 10px;\r\n          border-left: 12px solid transparent;\r\n          border-right: 12px solid transparent;\r\n          border-bottom: 12px solid #ccc; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(2) span:nth-of-type(2), .zmiti-rankinglist-main-ui .zmiti-rankinglist-title li:nth-of-type(3) span:nth-of-type(2) {\r\n          position: absolute;\r\n          width: 0;\r\n          height: 0;\r\n          margin-left: 10px;\r\n          margin-top: 20px;\r\n          border-left: 12px solid transparent;\r\n          border-right: 12px solid transparent;\r\n          border-top: 12px solid #ccc; }\r\n  .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll {\r\n    position: relative;\r\n    bottom: 0;\r\n    width: 100%;\r\n    margin: 150px auto 0;\r\n    overflow: hidden;\r\n    box-sizing: border-box; }\r\n    .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li {\r\n      width: 96%;\r\n      margin: 0 auto;\r\n      display: -webkit-box;\r\n      -webkit-box-align: center;\r\n      -webkit-box-pack: center;\r\n      -webkit-box-orient: horizontal;\r\n      height: 90px;\r\n      line-height: 90px;\r\n      border-bottom: 1px solid #ccc; }\r\n      .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside {\r\n        -webkit-box-flex: 1; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:first-of-type {\r\n          margin-left: 20px;\r\n          max-width: 200px; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:nth-of-type(2) {\r\n          text-align: center;\r\n          margin-left: -32px; }\r\n        .zmiti-rankinglist-main-ui .zmiti-rankinglist-scroll li aside:last-of-type {\r\n          margin-right: 60px;\r\n          text-align: right; }\r\n\r\n/*# sourceMappingURL=rankinglist.css.map */", ""]);
 
 	// exports
 

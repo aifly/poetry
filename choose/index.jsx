@@ -14,10 +14,16 @@ class ZmitiChooseApp extends Component {
 
 	render() {
 
+		var className = '';
+		if(this.state.showMainUI === 0){
+			className = 'active'
+		}else if(this.state.showMainUI === -1){
+			className = 'hide';
+		}
 
 		return (
-			<div className={'zmiti-choose-main-ui '+(this.state.showMainUI?'active':'')}>
-				<div onTouchStart={()=>{this.setState({readActive:true})}} onTouchEnd={()=>{this.setState({readActive:false})}} className={this.state.readActive?'active':''}><img src='./assets/images/c-read.png'/></div>
+			<div className={'zmiti-choose-main-ui '+className}>
+				<div onTouchTap={this.entryMain.bind(this)} onTouchStart={()=>{this.setState({readActive:true})}} onTouchEnd={()=>{this.setState({readActive:false})}} className={this.state.readActive?'active':''}><img src='./assets/images/c-read.png'/></div>
 				<div onTouchStart={()=>{this.setState({guessActive:true})}} onTouchEnd={()=>{this.setState({guessActive:false})}} className={this.state.guessActive?'active':''} ><img src='./assets/images/c-guess.png'/></div>
 				<div onTouchStart={()=>{this.setState({recordActive:true})}} onTouchEnd={()=>{this.setState({recordActive:false})}} className={this.state.recordActive?'active':''}><img src='./assets/images/c-record.png'/></div>
 				<img src='./assets/images/choose.png'/>
@@ -25,12 +31,22 @@ class ZmitiChooseApp extends Component {
 		);
 	}
 
+	entryMain(){//
+		this.setState({
+			showMainUI:-1
+		});
+		let {obserable} = this.props;
+		obserable.trigger({
+			type:'hideMainContent'
+		})
+	}
+
 	componentDidMount() {
 		let {obserable} = this.props;
 		obserable.on('entryChooseApp',()=>{
 			this.setState({
-				showMainUI:true
-			})
+				showMainUI:0
+			});
 		})
 	}
 }

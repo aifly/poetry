@@ -22,11 +22,13 @@ export class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isFirst:false,//是否是从新开始的
+			hideMainContent:true,
+			isFirst:true,//是否是从新开始的
 			audioSrc:'',//当前录音的id
 			showUI:true,
-			score:120,//积分
+			score:0,//积分
 			openid:'',
+			wxappid:'',
 			worksid:'5296019810',	
 			nickname:'',
 			headimgurl:'',
@@ -55,9 +57,11 @@ export class App extends Component {
 				<section className={'zmiti-main-C '+(this.state.showUser?'hide':'')}>
 					{this.state.isFirst &&<ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
 					{this.state.isFirst && <ZmitiChooseApp {...this.state} {...data}></ZmitiChooseApp>}
-					<ZmitiIndexApp {...this.state} {...data}></ZmitiIndexApp>
-					<ZmitiResultApp {...this.state} {...data}></ZmitiResultApp>
-					<ZmitiShareApp {...this.state} {...data}></ZmitiShareApp>
+					<section className={'zmiti-main-content '+(this.state.isFirst && this.state.hideMainContent?'hide':'')}>
+						<ZmitiIndexApp {...this.state} {...data}></ZmitiIndexApp>
+						<ZmitiResultApp {...this.state} {...data}></ZmitiResultApp>
+						<ZmitiShareApp {...this.state} {...data}></ZmitiShareApp>
+					</section>
 				</section>
 				<ZmitiUserApp {...this.state} {...data}></ZmitiUserApp>
 			</div>
@@ -167,7 +171,7 @@ export class App extends Component {
 				   			longitude:wx.posData.longitude,
 				   			latitude:wx.posData.latitude,
 				   			accuracy:wx.posData.accuracy,
-				   			wxappid:appData.wxappid,
+				   			wxappid:s.state.wxappid,
 				   			integral:localStorage.getItem('nickname')?0:10
 				   		},
 				   		error(){
@@ -190,7 +194,7 @@ export class App extends Component {
 												score:s.score
 											});
 										}else{
-											alert('getret  : '+ data.getret + ' msg : ' + data.getmsg);	
+											//alert('getret  : '+ data.getret + ' msg : ' + data.getmsg);	
 										}
 									}
 								})
@@ -357,8 +361,10 @@ export class App extends Component {
 
 		$.getJSON('./assets/js/data.json',(d)=>{
 			this.wxConfig('微信API测试','微信API测试','http://h5.zmiti.com/public/wxapi/assets/images/300.jpg');
+			s.wxappid = d.wxappid;
 			this.setState({
-				worksid:d.worksid
+				worksid:d.worksid,
+				wxappid:d.wxappid
 			},()=>{
 
 				$.ajax({
@@ -454,6 +460,12 @@ export class App extends Component {
 			})
 		});
 
+		obserable.on('hideMainContent',()=>{
+			this.setState({
+				hideMainContent:false
+			})
+		})
+
 		obserable.on('toggleUser',(data)=>{
 			this.setState({
 				showUser:data
@@ -481,6 +493,14 @@ export class App extends Component {
 		obserable.on('refreshPoetry',()=>{
 			this.refreshPoetry();
 		});
+
+		obserable.on('updateIntegral',(data)=>{
+			this.setState({
+				score:this.state.score + data
+			},()=>{
+				alert(this.state.score);
+			})
+		})
 
 
 		
