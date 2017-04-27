@@ -1,8 +1,8 @@
 ﻿@import "../../../assets/css/base.scss";
 $viewW:640px;
-.zmiti-index-main-ui{
+.zmiti-shareopen-main-ui{
     width: $viewW;
-    height: 100%;
+    box-sizing:border-box;
     @include pos(a);
     @include transition(.2s);
     z-index: 2;
@@ -17,53 +17,78 @@ $viewW:640px;
       top: 100px;
     }
 
+    .zmiti-open-poetry{
+        @include pos(a);
+        width: 40px;
+        top: 180px;
+        right: 35px;
+      }
+
+
     .zmiti-poetry-C{
-      $poetryW:758px;
+      $poetryW:500px;
+      @include pos(r);
       width:$poetryW;
-      height: $poetryW;
-      @include br(50%);
-      @include pos(a);
+      height: $poetryW * 1.1;
+      @include br(50px);
       margin-left: ($viewW - $poetryW) /2;
-      top: 128px;
+      overflow: hidden;
       @include displayBox(horizontal);
       text-align: center;
       .zmiti-poetry-author{
-        margin: 10px auto;
-        @include transform(scale(1.2));
+        margin-top: 10px;
+        width: $poetryW;
+      }
+      .zmiti-tip{
+        @include pos(a);
+        bottom: 8px;
+        left: 50%;
+        width: 100%;
+        font-size: 24px;
+        color:#999;
+        @include transform(translate3d(-50%,0,0));
       }
       .zmiti-poetry-title{
+        width: $poetryW;
         font-size:30px;
-        max-width: 300px;
-        margin: 0 auto;
         @include transform(scale(1.5));
       }
+
+      
 
       .zmiti-poetry-content{
         -webkit-box-flex:1;
         text-align: center;
         @include transform(scale(1.2)); 
-        width:580px;
-        margin: 80px auto;
+        width:350px;
+        margin: 50px auto;
+        text-align: left;
         &.zmiti-custom-text{
           width:400px;
           text-align: left;
+
         }
       }
     }
 
     .zmiti-seal{
       @include pos(a);
-      bottom: 140px;
-      right: 60px;
+      top:580px;
+      right: 30px;
+    }
+
+    .zmiti-voice-content{
+      width: 100%;
+      height: 60px;
+      top: 660px;
     }
 
     .zmiti-bottom-ui{
       width: $viewW;
       height: 96px;
-      background: #ccc;
-      @include pos(a);
-      bottom: 0;
+      margin-top: 40px;     
       left: 0;
+      @include pos(r);
       .zmiti-tips{
           width: 284px;
           height: 58px;
@@ -100,6 +125,27 @@ $viewW:640px;
     .zmiti-begin-read{
       width:464px;
       margin: 13px auto;
+      @include pos(r);
+      font-size: 30px;
+    }
+
+    .zmiti-shareopen-bottom-btngroup{
+      @include displayBox(horizontal);
+      img{width: 30px;margin-right: 20px;}
+      aside{
+        -webkit-box-flex:1;
+        margin: 0 10px;
+        .zmiti-reload-poetry{
+          border:1px solid #ccc;
+          display: inline-block;
+          padding: 12px 32px;
+          @include br(40px);
+          font-size: 30px;
+        }
+        &:first-of-type{
+          text-align: right;;
+        }
+      }
     }
 }
 

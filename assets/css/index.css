@@ -57,6 +57,13 @@ input, textarea {
   opacity: 0;
   left: 50%;
   margin-left: -320px; }
+  .zmiti-main-ui .zmiti-auoth-page {
+    position: absolute;
+    width: 640px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 100; }
   .zmiti-main-ui.show {
     -webkit-transition: 0.3s opacity;
     transition: 0.3s opacity;

@@ -9,20 +9,7 @@ export default class ZmitiCourseListApp extends React.Component {
     this.state = {
       mainState:1,
     	courselist:[
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140},
-    		{title:'静夜思',read:140}
+    	
     	]
     };
     this.viewH = document.documentElement.clientHeight;

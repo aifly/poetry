@@ -38,6 +38,15 @@ $viewW:640px;
   overflow: hidden;
   opacity:0;
   left: 50%;
+
+  .zmiti-auoth-page{
+    @include pos(a);
+    width: $viewW;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 100;
+  }
   margin-left: -320px;
   &.show{
     @include transition(.3s opacity);

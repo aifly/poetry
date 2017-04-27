@@ -11,6 +11,7 @@ import Obserable from './components/public/obserable.js';
 var obserable = new Obserable();
 
 import ZmitiIndexApp from './index/index.jsx';
+import ZmitiShareOpenApp from './shareopen/index.jsx';
 import ZmitiResultApp from './result/index.jsx';
 import ZmitiShareApp from './share/index.jsx';
 import ZmitiCoverApp from './cover/index.jsx';
@@ -23,9 +24,9 @@ export class App extends Component {
 		super(props);
 		this.state = {
 			hideMainContent:true,
-			isFirst:true,//是否是从新开始的
+			isFirst:false,//是否是从新开始的
 			audioSrc:'',//当前录音的id
-			showUI:true,
+			showUI:false,
 			score:0,//积分
 			openid:'',
 			wxappid:'',
@@ -37,9 +38,15 @@ export class App extends Component {
 			latitude:'',
 			longitude:'',
 			usercity:'',
-			poetryTitle:'望岳',
-			poetryAuthor:'杜甫',
-			poetryContent:'岱宗夫如何，齐鲁青未了。\r\n造化钟神秀，阴阳割昏晓。\r\n荡胸生层云，决眦入归鸟。\r\n会当凌绝顶，一览众山小。\r\n',
+			poetryTitle:'',
+			poetryAuthor:'',
+			poetryContentAll:'',//原诗
+			poetryContent:'',
+			data:{
+				shareTitle:'智媒体测试',
+				shareDesc:'智媒体诗词解密测试',
+				shareImg:'http://h5.zmiti.com/public/silk/assets/images/300.jpg',
+			},
 			isEntryResult:false,
 			theme:{
 				backgroundColor:'#4a5265'
@@ -52,18 +59,29 @@ export class App extends Component {
 			obserable,
 			IScroll
 		}
+		var auothStyle = {
+			background:'url(./assets/images/auoth.jpg) no-repeat center bottom / cover'
+		}
+		var zmiti = this.getQueryString('zmiti');
+		var s = this;
+		var id = s.getQueryString('id'),
+			parentWxopenId  = s.getQueryString('wxopenid');
 		return (
-			<div className={'zmiti-main-ui '+(this.state.showUI?' show':'')} style={{height:this.viewH}}>
-				<section className={'zmiti-main-C '+(this.state.showUser?'hide':'')}>
-					{this.state.isFirst &&<ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
-					{this.state.isFirst && <ZmitiChooseApp {...this.state} {...data}></ZmitiChooseApp>}
-					<section className={'zmiti-main-content '+(this.state.isFirst && this.state.hideMainContent?'hide':'')}>
-						<ZmitiIndexApp {...this.state} {...data}></ZmitiIndexApp>
-						<ZmitiResultApp {...this.state} {...data}></ZmitiResultApp>
-						<ZmitiShareApp {...this.state} {...data}></ZmitiShareApp>
-					</section>
-				</section>
-				<ZmitiUserApp {...this.state} {...data}></ZmitiUserApp>
+			<div className={'zmiti-main-ui show'} style={{height:this.viewH}}>
+				{zmiti && <div>
+									<section className={'zmiti-main-C '+(this.state.showUser?'hide':'')}>
+									{this.state.isFirst &&<ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
+									{this.state.isFirst && <ZmitiChooseApp {...this.state} {...data}></ZmitiChooseApp>}
+									<section className={'zmiti-main-content '+(this.state.isFirst && this.state.hideMainContent?'hide':'')}>
+											{!(this.state.id && this.state.parentWxopenId) && <ZmitiIndexApp {...this.state} {...data}></ZmitiIndexApp>}
+											{(this.state.id && this.state.parentWxopenId ) && <ZmitiShareOpenApp {...this.state} {...data}></ZmitiShareOpenApp>}
+											<ZmitiResultApp {...this.state} {...data}></ZmitiResultApp>
+											<ZmitiShareApp {...this.state} {...data}></ZmitiShareApp>
+										</section>
+									</section>
+									<ZmitiUserApp {...this.state} {...data}></ZmitiUserApp>
+								</div>}
+				{!zmiti && <div className='zmiti-auoth-page' style={auothStyle}></div>}
 			</div>
 		);
 	}
@@ -130,6 +148,25 @@ export class App extends Component {
 			msg:'停止播放录音'
 		});
 	}
+
+	changeURLPar(destiny, par, par_value) { 
+		var pattern = par+'=([^&]*)'; 
+		var replaceText = par+'='+par_value; 
+		if (destiny.match(pattern)) { 
+			var tmp = '/\\'+par+'=[^&]*/'; 
+			tmp = destiny.replace(eval(tmp), replaceText); 
+			return (tmp); 
+		} 
+		else { 
+			if (destiny.match('[\?]')) { 
+				return destiny+'&'+ replaceText; 
+			} 
+			else { 
+				return destiny+'?'+replaceText; 
+			} 
+		} 
+		return destiny+'\n'+par+'\n'+par_value; 
+	} 
 
 
     getPos(nickname,headimgurl){
@@ -233,6 +270,11 @@ export class App extends Component {
 	wxConfig(title,desc,img,appId='wxfacf4a639d9e3bcc',worksid=this.state.worksid){
 			var s = this;
 		   var durl = location.href.split('#')[0]; //window.location;
+		   var symbol = durl.indexOf('?')>-1?'&':'?';
+		   	//durl = durl.replace(/id/ig,'zmiti-id').replace(/wxopenid/ig,'zmiti-openid');
+		   //	durl = this.changeURLPar(durl,'id','');
+		   //	durl = this.changeURLPar(durl,'wxopenid','');
+		   
 		        var code_durl = encodeURIComponent(durl);
 			$.ajax({
 				type:'get',
@@ -358,9 +400,21 @@ export class App extends Component {
 	componentDidMount() {
 
 		var s = this;
+		var id = s.getQueryString('id'),
+			parentWxopenId  = s.getQueryString('wxopenid'),
+			code = s.getQueryString('code');
+
+			
+		this.setState({
+			isFirst:!(id && parentWxopenId),
+			id,
+			parentWxopenId,
+			code
+		});
+		
 
 		$.getJSON('./assets/js/data.json',(d)=>{
-			this.wxConfig('微信API测试','微信API测试','http://h5.zmiti.com/public/wxapi/assets/images/300.jpg');
+			this.wxConfig(this.state.data.shareTitle,this.state.data.shareDesc,this.state.shareImg,d.wxappid);
 			s.wxappid = d.wxappid;
 			this.setState({
 				worksid:d.worksid,
@@ -387,7 +441,6 @@ export class App extends Component {
 							},
 							success(data){
 								if(data.getret === 0){
-									console.log(data);
 								}
 							}
 						});
@@ -412,11 +465,21 @@ export class App extends Component {
 					else{
 						
 						if(s.isWeiXin() ){
+
+							var redirect_uri = window.location.href.replace(/code/ig,'zmiti');
+							var symbol = redirect_uri.indexOf('?')>-1?'&':'?';
+							if(s.state.id && s.state.parentWxopenId){
+								
+								redirect_uri = redirect_uri+symbol+'id='+s.state.id+'&wxopenid='+s.state.parentWxopenId;
+							}
+							if(!s.getQueryString('zmiti')){
+								redirect_uri+= 	symbol+'zmiti=start';
+							}
 							$.ajax({
 								url:'http://api.zmiti.com/v2/weixin/getoauthurl/',
 								type:"post",
 								data:{
-									redirect_uri:window.location.href.split('?')[0],
+									redirect_uri:redirect_uri,
 									scope:'snsapi_userinfo',
 									worksid:s.state.worksid,
 									state:new Date().getTime()+''
@@ -426,7 +489,12 @@ export class App extends Component {
 								},
 								success(dt){
 									if(dt.getret === 0){
-										window.location.href =  dt.url;
+										var url = dt.url;
+										if(url.indexOf('&zmiti')<=-1||url.indexOf('?zmiti')<=-1){
+											url = url.split('#')[0]+'&zmiti=start#'+(url.split('#')[1]||'')
+										}
+
+										window.location.href = url;
 									}
 								}
 							})
@@ -491,14 +559,14 @@ export class App extends Component {
 		});
 
 		obserable.on('refreshPoetry',()=>{
-			this.refreshPoetry();
+			this.refreshPoetry(true);
 		});
 
 		obserable.on('updateIntegral',(data)=>{
 			this.setState({
 				score:this.state.score + data
 			},()=>{
-				alert(this.state.score);
+				
 			})
 		})
 
@@ -509,31 +577,71 @@ export class App extends Component {
 
 	}
 
-	refreshPoetry(){
+	refreshPoetry(isRefresh){
 		var s = this;
-		$.ajax({
-			url:'http://api.zmiti.com/v2/weixin/get_shici/',
-			data:{
-				type:0,//0诗1词2，自定义
-				worksid:s.state.worksid,
-				shicinumber:1
-			},
-			success(data){
-				if(data.getret === 0){
-					if(data.shicilist.length>0){
-						s.state.poetryTitle = data.shicilist[0].title;
-						s.state.poetryAuthor = data.shicilist[0].author;
-						s.state.poetryContent = data.shicilist[0].originaltext;
-						s.state.workdataid = data.shicilist[0].workdataid;
 
-						s.forceUpdate();
-					}
-					else{
-						alert('没有获取到诗词，请刷新重试');
+		if(this.state.id && this.state.parentWxopenId && !isRefresh){
+			$.ajax({
+				url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
+				data:{
+					id:s.state.id,
+					wxopenid:s.state.parentWxopenId
+				},
+				success(data){
+					if(data.getret === 0){
+						if(data.list.length>0){
+							s.state.poetryTitle = <img src={data.list[0].headimgurl} style={{width:100,borderRadius:'50%',marginBottom:20}}/>;
+							s.state.poetryAuthor = data.list[0].nickname;
+							s.state.poetryContent = data.list[0].changetext;
+							s.state.poetryContentAll = data.list[0].originaltext;
+							s.state.workdataid = data.list[0].workdataid;
+							s.forceUpdate();
+						}
+						else{
+							alert('没有获取到诗词，请刷新重试');
+						}
 					}
 				}
-			}
-		})
+			})	
+		}else{
+ 
+
+			$.ajax({
+				url:'http://api.zmiti.com/v2/weixin/get_shici/',
+				data:{
+					type:0,//0诗1词2，自定义
+					worksid:s.state.worksid,
+					shicinumber:1
+				},
+				error(){
+					alert('get_shici ： 服务器返回错误')
+				},
+				success(data){
+
+					if(data.getret === 0){
+						if(data.shicilist.length>0){
+							s.state.poetryTitle = data.shicilist[0].title;
+							s.state.poetryAuthor = data.shicilist[0].author;
+							s.state.poetryContent = data.shicilist[0].originaltext;
+							s.state.poetryContentAll = data.shicilist[0].originaltext;
+							s.state.workdataid = data.shicilist[0].workdataid;
+							
+							s.state.id = '';
+							s.state.parentWxopenId = '';
+							s.wxConfig(s.state.data.shareTitle,s.state.data.shareDesc,s.state.shareImg,s.state.wxappid);
+							s.forceUpdate();
+						}
+						else{
+							alert('没有获取到诗词，请刷新重试');
+						}
+					}
+					else{
+						alert('data.getret = ' + data.getret + 'daat.getmsg  =' + data.getmsg);
+					}
+				}
+			})	
+		}
+		
 	}
 
 

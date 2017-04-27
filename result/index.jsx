@@ -10,7 +10,8 @@ class ZmitiResultApp extends Component {
 		this.state={
 			transformText:'新品如传闻一般加入了后置双摄、四曲面陶瓷机身等特性。值得注意的是，小米6最低起售价2499元，这是从2011年开始“小米X”系列首次上调起售价格。',
 			score:'',
-			entryShare:false
+			entryShare:false,
+			id:'',
 		};
 		this.viewW = document.documentElement.clientWidth;
 		this.viewH = document.documentElement.clientHeight;
@@ -89,6 +90,14 @@ class ZmitiResultApp extends Component {
 					},
 					success(data){
 						if( data.getret === 0){
+
+							var id = data.id;
+				   			s.setState({
+				   				id
+				   			},()=>{
+				   				s.wxConfig('智媒体诗词解密','智媒体诗词解密','http://h5.zmiti.com/public/silk/assets/images/300.jpg',s.props.wxappid);
+				   			})
+
 							var score = 10;
 							$.ajax({
 								url:'http://api.zmiti.com/v2/weixin/add_wxuser/',
@@ -107,11 +116,18 @@ class ZmitiResultApp extends Component {
 						   		error(){
 						   			alert('add_wxuser 服务器返回错误');
 						   		},
-						   		success(){
-						   			obserable.trigger({
-						   				type:'updateIntegral',
-						   				data:score
-						   			})
+						   		success(data){
+						   			
+						   			if(data.getret === 0){
+						   				
+						   				obserable.trigger({
+							   				type:'updateIntegral',
+							   				data:score
+							   			});
+
+							   			
+						   			} 
+						   			
 						   		}
 							})
 							
@@ -124,6 +140,97 @@ class ZmitiResultApp extends Component {
 
 
 		/**/
+	}
+
+	wxConfig(title,desc,img,appId='wxfacf4a639d9e3bcc',worksid=this.props.worksid){
+			var s = this;
+			var symbol = location.href.indexOf('?')>-1? '&' : '?';
+		   var durl = location.href.split('#')[0]+symbol+'id='+this.state.id+'&wxopenid='+ this.props.openid; //window.location;
+		   alert(durl);
+		        var code_durl = encodeURIComponent(durl);
+			$.ajax({
+				type:'get',
+				url: "http://api.zmiti.com/weixin/jssdk.php?type=signature&durl="+code_durl+"&worksid="+worksid,
+				dataType:'jsonp',
+				jsonp: "callback",
+			    jsonpCallback: "jsonFlickrFeed",
+			    success(data){
+			    	wx.config({
+							    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+							    appId:appId, // 必填，公众号的唯一标识
+							    timestamp:'1488558145' , // 必填，生成签名的时间戳
+							    nonceStr: 'Wm3WZYTPz0wzccnW', // 必填，生成签名的随机串
+							    signature: data.signature,// 必填，签名，见附录1
+							    jsApiList: [ 'checkJsApi',
+											'onMenuShareTimeline',
+											'onMenuShareAppMessage',
+											'onMenuShareQQ',
+											'onMenuShareWeibo',
+											'hideMenuItems',
+											'showMenuItems',
+											'hideAllNonBaseMenuItem',
+											'showAllNonBaseMenuItem',
+											'translateVoice',
+											'startRecord',
+											'stopRecord',
+											'onRecordEnd',
+											'playVoice',
+											'pauseVoice',
+											'stopVoice',
+											'uploadVoice',
+											'downloadVoice',
+											'chooseImage',
+											'previewImage',
+											'uploadImage',
+											'downloadImage',
+											'getNetworkType',
+											'openLocation',
+											'getLocation',
+											'hideOptionMenu',
+											'showOptionMenu',
+											'closeWindow',
+											'scanQRCode',
+											'chooseWXPay',
+											'openProductSpecificView',
+									] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+							});
+
+			    	wx.ready(()=>{
+			    				//朋友圈
+	                    wx.onMenuShareTimeline({
+	                        title: title, // 分享标题
+	                        link: durl, // 分享链接
+	                        imgUrl: img, // 分享图标
+	                        desc: desc,
+	                        success: function () { },
+	                        cancel: function () { }
+	                    });
+	                    //朋友
+	                    wx.onMenuShareAppMessage({
+	                        title: title, // 分享标题
+	                        link: durl, // 分享链接
+	                        imgUrl: img, // 分享图标
+	                        type: "link",
+	                        dataUrl: "",
+	                        desc: desc,
+	                        success: function () {
+	                        },
+	                        cancel: function () { 
+	                        }
+	                    });
+	                    //qq
+	                    wx.onMenuShareQQ({
+	                        title: title, // 分享标题
+	                        link: durl, // 分享链接
+	                        imgUrl: img, // 分享图标
+	                        desc: desc,
+	                        success: function () { },
+	                        cancel: function () { }
+	                    });
+			    	});
+			    }
+			});
+		 
 	}
 
 	createMarkup(){
