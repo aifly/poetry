@@ -39,13 +39,19 @@ export class App extends Component {
 			longitude:'',
 			usercity:'',
 			poetryTitle:'',
+			id:'',//6NPqiCFidf
+			parentWxopenId:'',//oSDVUs5MkTw7MxaXPu0KsflRfSqM
 			poetryAuthor:'',
-			poetryContentAll:'',//原诗
 			poetryContent:'',
+			userPoetryTitle:'',
+			userPoetryAuthor:'',
+			userPoetryContent:'',//原诗
+			
 			data:{
 				shareTitle:'智媒体测试',
 				shareDesc:'智媒体诗词解密测试',
 				shareImg:'http://h5.zmiti.com/public/silk/assets/images/300.jpg',
+				shareUrl:'',
 			},
 			isEntryResult:false,
 			theme:{
@@ -53,6 +59,8 @@ export class App extends Component {
 			}
 		}
 		this.viewH = document.documentElement.clientHeight;
+		this.defaultShareUrl = '';
+		this.code = this.getQueryString('code');
 	}
 	render() {
 		var data = {
@@ -62,13 +70,16 @@ export class App extends Component {
 		var auothStyle = {
 			background:'url(./assets/images/auoth.jpg) no-repeat center bottom / cover'
 		}
-		var zmiti = this.getQueryString('zmiti');
+		var zmiti = this.getQueryString('zmiti') === 'start';
 		var s = this;
 		var id = s.getQueryString('id'),
 			parentWxopenId  = s.getQueryString('wxopenid');
+
+
+
 		return (
 			<div className={'zmiti-main-ui show'} style={{height:this.viewH}}>
-				{zmiti && <div>
+				{this.state.code && <div>
 									<section className={'zmiti-main-C '+(this.state.showUser?'hide':'')}>
 									{this.state.isFirst &&<ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
 									{this.state.isFirst && <ZmitiChooseApp {...this.state} {...data}></ZmitiChooseApp>}
@@ -81,7 +92,7 @@ export class App extends Component {
 									</section>
 									<ZmitiUserApp {...this.state} {...data}></ZmitiUserApp>
 								</div>}
-				{!zmiti && <div className='zmiti-auoth-page' style={auothStyle}></div>}
+				{!this.state.code && <div className='zmiti-auoth-page' style={auothStyle}></div>}
 			</div>
 		);
 	}
@@ -174,9 +185,11 @@ export class App extends Component {
     	var s = this;
     	 $.ajax({
         	url:`http://restapi.amap.com/v3/geocode/regeo?key=10df4af5d9266f83b404c007534f0001&location=${wx.posData.longitude},${wx.posData.latitude}&poitype=&radius=100&extensions=base&batch=false&roadlevel=1`+'',
-			type:'',
-			success(data){
+			type:'get',
+			error(){
 
+			},
+			success(data){
 				if(data.status === '1' && data.infocode === '10000'){
 					
 					var addressComponent = data.regeocode.addressComponent;
@@ -226,12 +239,11 @@ export class App extends Component {
 										if(data.getret === 0){
 											
 											s.score = data.wxuserinfo.totalintegral;
-
 											s.setState({
 												score:s.score
 											});
 										}else{
-											//alert('getret  : '+ data.getret + ' msg : ' + data.getmsg);	
+											alert('get_wxuserdetaile : getret  : '+ data.getret + ' msg : ' + data.getmsg);	
 										}
 									}
 								})
@@ -269,12 +281,16 @@ export class App extends Component {
 
 	wxConfig(title,desc,img,appId='wxfacf4a639d9e3bcc',worksid=this.state.worksid){
 			var s = this;
-		   var durl = location.href.split('#')[0]; //window.location;
+
+		   var durl = window.location.href.split('#')[0]; //window.location;
+		   
 		   var symbol = durl.indexOf('?')>-1?'&':'?';
 		   	//durl = durl.replace(/id/ig,'zmiti-id').replace(/wxopenid/ig,'zmiti-openid');
-		   //	durl = this.changeURLPar(durl,'id','');
+		   		if(durl.indexOf('&code')>-1||durl.indexOf('?code')>-1){
+		   			//durl = this.changeURLPar(durl,'code','""');	
+		   		}
+		     	//durl = this.changeURLPar(durl,'zmiti','end');
 		   //	durl = this.changeURLPar(durl,'wxopenid','');
-		   
 		        var code_durl = encodeURIComponent(durl);
 			$.ajax({
 				type:'get',
@@ -363,6 +379,7 @@ export class App extends Component {
 	                        dataUrl: "",
 	                        desc: desc,
 	                        success: function () {
+
 	                        },
 	                        cancel: function () { 
 	                        }
@@ -381,9 +398,7 @@ export class App extends Component {
 			});
 		 
 	}
- 
-
- 
+  
 	isWeiXin(){
 	    var ua = window.navigator.userAgent.toLowerCase();
 	    return ua.match(/MicroMessenger/i) == 'micromessenger';
@@ -401,199 +416,225 @@ export class App extends Component {
 
 		var s = this;
 		var id = s.getQueryString('id'),
-			parentWxopenId  = s.getQueryString('wxopenid'),
-			code = s.getQueryString('code');
+			parentWxopenId = s.getQueryString('wxopenid'),
+			code = s.getQueryString('code'),
+			zmiti = s.getQueryString('zmiti');
 
-			
+
 		this.setState({
-			isFirst:!(id && parentWxopenId),
+			isFirst: !(id && parentWxopenId) ,//!(id && parentWxopenId),
 			id,
 			parentWxopenId,
-			code
+			code,
+			zmiti
 		});
-		
 
-		$.getJSON('./assets/js/data.json',(d)=>{
-			this.wxConfig(this.state.data.shareTitle,this.state.data.shareDesc,this.state.shareImg,d.wxappid);
+
+		$.getJSON('./assets/js/data.json', (d)=> {
+
+
 			s.wxappid = d.wxappid;
-			this.setState({
-				worksid:d.worksid,
-				wxappid:d.wxappid
-			},()=>{
 
-				$.ajax({
-				url:'http://api.zmiti.com/v2/weixin/getwxuserinfo/',
-				data:{
-					code:s.getQueryString('code'),
-					wxappid:d.wxappid,
-					wxappsecret:d.wxappsecret
+			this.state.worksid = d.worksid;
+			this.state.wxappid = d.wxappid;
+
+			this.state.data.shareUrl = d.viewpath;
+			this.defaultShareUrl = d.viewpath;
+
+
+			var redirect_uri = s.defaultShareUrl;
+			var symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
+			if (s.state.id && s.state.parentWxopenId) {
+				redirect_uri = redirect_uri + symbol + 'id=' + s.state.id + '&wxopenid=' + s.state.parentWxopenId;
+			}
+			
+			symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
+			if (!s.getQueryString('zmiti')) {
+				redirect_uri += symbol + 'zmiti=start';
+			}
+			$.ajax({
+				url: 'http://api.zmiti.com/v2/weixin/getoauthurl/',
+				type: "post",
+				data: {
+					redirect_uri: redirect_uri,
+					scope: 'snsapi_userinfo',
+					worksid: s.state.worksid,
+					state: new Date().getTime() + ''
 				},
 				error(){
-					alert('error')
+					alert('error');
 				},
 				success(dt){
-
-					if(dt.getret === 0){
-						$.ajax({
-							url:'http://api.zmiti.com/v2/works/update_pvnum/',
-							data:{
-								worksid:s.state.worksid
-							},
-							success(data){
-								if(data.getret === 0){
-								}
-							}
-						});
-						localStorage.setItem('nickname',dt.userinfo.nickname );
-						localStorage.setItem('headimgurl',dt.userinfo.headimgurl);
-						s.nickname = dt.userinfo.nickname;
-						s.headimgurl = dt.userinfo.headimgurl;
-
-						s.openid = dt.userinfo.openid;
-						s.setState({
-							openid:s.openid,
-							nickname:s.nickname,
-					   		headimgurl:s.headimgurl,
-						})
-					
-						s.refreshPoetry();
-
-						if(wx.posData && wx.posData.longitude){
-							s.getPos(dt.userinfo.nickname,dt.userinfo.headimgurl);
+					if (dt.getret === 0) {
+						var url = dt.url;
+						if (url.indexOf('&zmiti') <= -1 || url.indexOf('?zmiti') <= -1) {
+							url = url.split('#')[0] + '&zmiti=start#' + (url.split('#')[1] || '')
 						}
-					}
-					else{
 						
-						if(s.isWeiXin() ){
-
-							var redirect_uri = window.location.href.replace(/code/ig,'zmiti');
-							var symbol = redirect_uri.indexOf('?')>-1?'&':'?';
-							if(s.state.id && s.state.parentWxopenId){
-								
-								redirect_uri = redirect_uri+symbol+'id='+s.state.id+'&wxopenid='+s.state.parentWxopenId;
-							}
-							if(!s.getQueryString('zmiti')){
-								redirect_uri+= 	symbol+'zmiti=start';
-							}
-							$.ajax({
-								url:'http://api.zmiti.com/v2/weixin/getoauthurl/',
-								type:"post",
-								data:{
-									redirect_uri:redirect_uri,
-									scope:'snsapi_userinfo',
-									worksid:s.state.worksid,
-									state:new Date().getTime()+''
-								},
-								error(){
-									alert('error');
-								},
-								success(dt){
-									if(dt.getret === 0){
-										var url = dt.url;
-										if(url.indexOf('&zmiti')<=-1||url.indexOf('?zmiti')<=-1){
-											url = url.split('#')[0]+'&zmiti=start#'+(url.split('#')[1]||'')
-										}
-
-										window.location.href = url;
-									}
-								}
-							})
-						}
-						else{
-							//alert('请在微信中打开');
-						}
+						s.oauthurl = dt.url;
+						localStorage.setItem('oauthurl',s.oauthurl);
+						
 					}
 				}
-			});
-			});
+			})
+
+			this.wxConfig(this.state.data.shareTitle, this.state.data.shareDesc, this.state.shareImg, this.state.wxappid);
+			this.forceUpdate(()=> {
+				$.ajax({
+					url: 'http://api.zmiti.com/v2/weixin/getwxuserinfo/',
+					data: {
+						code: s.getQueryString('code'),
+						wxappid: d.wxappid,
+						wxappsecret: d.wxappsecret
+					},
+					error(){
+						alert('error')
+					},
+					success(dt){
+
+						if (dt.getret === 0) {
+							$.ajax({
+								url: 'http://api.zmiti.com/v2/works/update_pvnum/',
+								data: {
+									worksid: s.state.worksid
+								},
+								success(data){
+									if (data.getret === 0) {
+									}
+								}
+							});
+							localStorage.setItem('nickname', dt.userinfo.nickname);
+							localStorage.setItem('headimgurl', dt.userinfo.headimgurl);
+							s.nickname = dt.userinfo.nickname;
+							s.headimgurl = dt.userinfo.headimgurl;
+
+							s.openid = dt.userinfo.openid;
+							s.setState({
+								openid: s.openid,
+								nickname: s.nickname,
+								headimgurl: s.headimgurl,
+								code
+							});
 
 
-			
+							s.refreshPoetry();
+							if (wx.posData && wx.posData.longitude) {
+								s.getPos(dt.userinfo.nickname, dt.userinfo.headimgurl);
+							}
+						}
+						else {
+
+							if (s.isWeiXin()) {
+									
+								var url = s.oauthurl || window.localStorage.getItem('oauthurl');
+								//alert(url);
+								window.location.href = url;
+
+
+								//var redirect_uri = window.location.href.replace(/^code$/ig, 'zmiti');
+
+								
+							}
+							else {
+								s.refreshPoetry();
+								//alert('请在微信中打开');
+							}
+						}
+					}
+				});
+			});
 		});
-		
+
 
 		wx.onVoicePlayEnd({
-		    success: function (res) {
-		    	s.setState({
-		    		msg:'录音停止。'
-		    	})
-		        //var localId = res.localId; // 返回音频的本地ID
-		    }
+			success: function (res) {
+				s.setState({
+					msg: '录音停止。'
+				})
+				//var localId = res.localId; // 返回音频的本地ID
+			}
 		});
 
 
-		obserable.on('entryResult',(data)=>{
+		obserable.on('entryResult', (data)=> {
 			this.setState({
-				isEntryResult:data
+				isEntryResult: data
 			})
 		});
 
-		obserable.on('hideMainContent',()=>{
+		obserable.on('hideMainContent', ()=> {
 			this.setState({
-				hideMainContent:false
-			})
-		})
-
-		obserable.on('toggleUser',(data)=>{
-			this.setState({
-				showUser:data
-			})
-		});
-
-		obserable.on('countdownDuration',()=>{//录音倒计时
-			this.setState({
-				duration:this.state.duration + 1
-			});
-		});
-
-		obserable.on('getLocalId',(data)=>{
-			this.setState({
-				audioSrc:data
-			})
-		});
-
-		obserable.on('getTransformResult',(data)=>{
-			this.setState({
-				transformResult:data
-			});
-		});
-
-		obserable.on('refreshPoetry',()=>{
-			this.refreshPoetry(true);
-		});
-
-		obserable.on('updateIntegral',(data)=>{
-			this.setState({
-				score:this.state.score + data
-			},()=>{
-				
+				hideMainContent: false
 			})
 		})
 
+		obserable.on('toggleUser', (data)=> {
+			this.setState({
+				showUser: data
+			})
+		});
 
-		
+		obserable.on('countdownDuration', ()=> {//录音倒计时
+			this.setState({
+				duration: this.state.duration + 1
+			});
+		});
+
+		obserable.on('getLocalId', (data)=> {
+			this.setState({
+				audioSrc: data
+			})
+		});
+
+		obserable.on('getTransformResult', (data)=> {
+			this.setState({
+				transformResult: data
+			});
+		});
+
+		obserable.on('refreshPoetry', (data)=> {
+			var data = data || {};
+			this.refreshPoetry(data.flag === 'false'?false:true,data.isOther);
+		});
+
+		obserable.on('updateIntegral', (data)=> {
+			this.setState({
+				score: this.state.score + data
+			}, ()=> {
+
+			})
+		})
+
+
 		//this.connect();
 
 
 	}
 
-	refreshPoetry(isRefresh){
+	refreshPoetry(isRefresh,isOther){
 		var s = this;
 
+
 		if(this.state.id && this.state.parentWxopenId && !isRefresh){
-			$.ajax({
-				url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
-				data:{
+			var params = {};
+			if(!isOther){
+				params = {
 					id:s.state.id,
 					wxopenid:s.state.parentWxopenId
-				},
+				}
+			}
+			$.ajax({
+				url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
+				data:params,
 				success(data){
 					if(data.getret === 0){
 						if(data.list.length>0){
-							s.state.poetryTitle = <img src={data.list[0].headimgurl} style={{width:100,borderRadius:'50%',marginBottom:20}}/>;
-							s.state.poetryAuthor = data.list[0].nickname;
-							s.state.poetryContent = data.list[0].changetext;
-							s.state.poetryContentAll = data.list[0].originaltext;
+							s.state.userPoetryTitle = <img src={data.list[0].headimgurl} style={{width:60,borderRadius:'50%',marginBottom:20}}/>;
+							s.state.userPoetryAuthor = data.list[0].nickname;
+							s.state.userPoetryContent = data.list[0].changetext;
+							s.state.poetryContent = data.list[0].originaltext;
+							s.state.poetryTitle = data.list[0].workdatatitle;
+							s.state.poetryAuthor = data.list[0].author;
 							s.state.workdataid = data.list[0].workdataid;
 							s.forceUpdate();
 						}
@@ -623,8 +664,10 @@ export class App extends Component {
 							s.state.poetryTitle = data.shicilist[0].title;
 							s.state.poetryAuthor = data.shicilist[0].author;
 							s.state.poetryContent = data.shicilist[0].originaltext;
-							s.state.poetryContentAll = data.shicilist[0].originaltext;
+							
 							s.state.workdataid = data.shicilist[0].workdataid;
+
+							s.state.userPoetryContent = data.shicilist[0].originaltext;
 							
 							s.state.id = '';
 							s.state.parentWxopenId = '';

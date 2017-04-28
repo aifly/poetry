@@ -77,7 +77,11 @@ class ZmitiHeaderApp extends Component {
 	refreshPoetry(){
 		let {obserable} = this.props;
 		obserable.trigger({
-			type:'refreshPoetry'
+			type:'refreshPoetry',
+			data:{
+				flag:true,
+				isOther:false
+			}
 		})
 	}
 

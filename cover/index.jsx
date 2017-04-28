@@ -54,15 +54,11 @@ class ZmitiCoverApp extends Component {
 		})
 		
 	}
-
-
 	componentDidMount() {
 		this.setState({
 			showCanvas:true
 		});
-		
 	}
-
  
 }
 export default PubCom(ZmitiCoverApp);

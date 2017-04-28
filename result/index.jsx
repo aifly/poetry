@@ -146,7 +146,6 @@ class ZmitiResultApp extends Component {
 			var s = this;
 			var symbol = location.href.indexOf('?')>-1? '&' : '?';
 		   var durl = location.href.split('#')[0]+symbol+'id='+this.state.id+'&wxopenid='+ this.props.openid; //window.location;
-		   alert(durl);
 		        var code_durl = encodeURIComponent(durl);
 			$.ajax({
 				type:'get',

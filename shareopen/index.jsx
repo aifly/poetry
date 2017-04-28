@@ -34,16 +34,23 @@ class ZmitiShareOpenApp extends Component {
 				 	<ZmitiHeaderApp showRefreshBtn={false} {...this.props}></ZmitiHeaderApp>
 					 <div className='zmiti-poetry-C' style={poetryStyle}>
 					 	 <section>
-					 	 	<div className='zmiti-poetry-title'>{this.props.poetryTitle}</div>
-					 	 	<div className='zmiti-poetry-author'>{this.props.poetryAuthor}</div>
-						 	<article className={'zmiti-poetry-content '+(this.props.id&& this.props.parentWxopenId ? 'zmiti-custom-text':'')} dangerouslySetInnerHTML={this.createMarkup()}>
+					 	 	<div className='zmiti-poetry-title'>{this.props.userPoetryTitle}</div>
+					 	 	<div className='zmiti-poetry-author'>{this.props.userPoetryAuthor}</div>
+						 	<article className={'zmiti-poetry-content '+(this.props.id&& this.props.parentWxopenId ? 'zmiti-custom-text':'')}>
+						 		{this.props.userPoetryContent}
 						 	</article>
-
+						 	{this.state.showPoetry&&<div>
+						 		<div className='zmiti-shareopen-line'><img src='./assets/images/line.png'/></div>
+							 	<div className='zmiti-poetry-title'>{this.props.poetryTitle}</div>
+						 	 	<div className='zmiti-poetry-author'>{this.props.poetryAuthor}</div>
+							 	<article className={'zmiti-poetry-content '} dangerouslySetInnerHTML={this.createMarkup()}>
+							 	</article>
+						 	</div>}
 						 	<div className='zmiti-tip'>以上根据网友语音转化的文字</div>
 					 	 </section>
 
 					 </div>
-					 <div className='zmiti-open-poetry'><img src='./assets/images/openpeotry.png'/></div>
+					 <div className='zmiti-open-poetry' onTouchTap={this.showPoetry.bind(this)}><img src='./assets/images/openpeotry.png'/></div>
 					 <section className='zmiti-voice-content'><ZmitiAudioApp {...this.props}></ZmitiAudioApp></section>
 					 <div className='zmiti-bottom-ui'>
 					 
@@ -62,7 +69,7 @@ class ZmitiShareOpenApp extends Component {
 					 			</div>
 					 		</aside>
 					 		<aside>
-								<div className='zmiti-reload-poetry'>
+								<div className='zmiti-reload-poetry' onTouchTap={this.gruessOther.bind(this)}>
 									<img className={this.state.isRefresh?'zmiti-rotate':''} src='./assets/images/refresh.png'/>
 									猜别的
 								</div>				 			
@@ -77,12 +84,38 @@ class ZmitiShareOpenApp extends Component {
 		);
 	}
 
+	showPoetry(){
+		this.setState({
+			showPoetry:true
+		},()=>{
+			this.scroll.refresh();
+		})
+	}
+
+	gruessOther(){
+		let {obserable} = this.props;
+		obserable.trigger({
+			type:'refreshPoetry',
+			data:{
+				flag:'false',
+				isOther:true
+			}
+		});
+		this.setState({
+			showPoetry:false
+		},()=>{
+			this.scroll.refresh();
+		})
+	}
 
 	beginRefreshPoetry(){
 		let {obserable} = this.props;
 		 
 		obserable.trigger({
-			type:'refreshPoetry'
+			type:'refreshPoetry',
+			data:{
+				flag:true
+			}
 		});
 	}
 

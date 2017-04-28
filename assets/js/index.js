@@ -148,13 +148,19 @@
 				longitude: '',
 				usercity: '',
 				poetryTitle: '',
+				id: '', //6NPqiCFidf
+				parentWxopenId: '', //oSDVUs5MkTw7MxaXPu0KsflRfSqM
 				poetryAuthor: '',
-				poetryContentAll: '', //原诗
 				poetryContent: '',
+				userPoetryTitle: '',
+				userPoetryAuthor: '',
+				userPoetryContent: '', //原诗
+
 				data: {
 					shareTitle: '智媒体测试',
 					shareDesc: '智媒体诗词解密测试',
-					shareImg: 'http://h5.zmiti.com/public/silk/assets/images/300.jpg'
+					shareImg: 'http://h5.zmiti.com/public/silk/assets/images/300.jpg',
+					shareUrl: ''
 				},
 				isEntryResult: false,
 				theme: {
@@ -162,6 +168,8 @@
 				}
 			};
 			this.viewH = document.documentElement.clientHeight;
+			this.defaultShareUrl = '';
+			this.code = this.getQueryString('code');
 		}
 
 		_createClass(App, [{
@@ -174,14 +182,15 @@
 				var auothStyle = {
 					background: 'url(./assets/images/auoth.jpg) no-repeat center bottom / cover'
 				};
-				var zmiti = this.getQueryString('zmiti');
+				var zmiti = this.getQueryString('zmiti') === 'start';
 				var s = this;
 				var id = s.getQueryString('id'),
 				    parentWxopenId = s.getQueryString('wxopenid');
+
 				return _react2['default'].createElement(
 					'div',
 					{ className: 'zmiti-main-ui show', style: { height: this.viewH } },
-					zmiti && _react2['default'].createElement(
+					this.state.code && _react2['default'].createElement(
 						'div',
 						null,
 						_react2['default'].createElement(
@@ -200,7 +209,7 @@
 						),
 						_react2['default'].createElement(_userIndexJsx2['default'], _extends({}, this.state, data))
 					),
-					!zmiti && _react2['default'].createElement('div', { className: 'zmiti-auoth-page', style: auothStyle })
+					!this.state.code && _react2['default'].createElement('div', { className: 'zmiti-auoth-page', style: auothStyle })
 				);
 			}
 		}, {
@@ -300,9 +309,9 @@
 				var s = this;
 				_jquery2['default'].ajax({
 					url: 'http://restapi.amap.com/v3/geocode/regeo?key=10df4af5d9266f83b404c007534f0001&location=' + wx.posData.longitude + ',' + wx.posData.latitude + '&poitype=&radius=100&extensions=base&batch=false&roadlevel=1' + '',
-					type: '',
+					type: 'get',
+					error: function error() {},
 					success: function success(data) {
-
 						if (data.status === '1' && data.infocode === '10000') {
 
 							var addressComponent = data.regeocode.addressComponent;
@@ -352,18 +361,17 @@
 												if (data.getret === 0) {
 
 													s.score = data.wxuserinfo.totalintegral;
-
 													s.setState({
 														score: s.score
 													});
 												} else {
-													//alert('getret  : '+ data.getret + ' msg : ' + data.getmsg);	
+													alert('get_wxuserdetaile : getret  : ' + data.getret + ' msg : ' + data.getmsg);
 												}
 											}
 										});
 									} else {
-											alert('getret  : ' + data.getret + ' msg : ' + data.getmsg + ' .....');
-										}
+										alert('getret  : ' + data.getret + ' msg : ' + data.getmsg + ' .....');
+									}
 								}
 							});
 
@@ -396,12 +404,16 @@
 				var worksid = arguments.length <= 4 || arguments[4] === undefined ? this.state.worksid : arguments[4];
 
 				var s = this;
-				var durl = location.href.split('#')[0]; //window.location;
+
+				var durl = window.location.href.split('#')[0]; //window.location;
+
 				var symbol = durl.indexOf('?') > -1 ? '&' : '?';
 				//durl = durl.replace(/id/ig,'zmiti-id').replace(/wxopenid/ig,'zmiti-openid');
-				//	durl = this.changeURLPar(durl,'id','');
-				//	durl = this.changeURLPar(durl,'wxopenid','');
+				if (durl.indexOf('&code') > -1 || durl.indexOf('?code') > -1) {}
+				//durl = this.changeURLPar(durl,'code','""');	
 
+				//durl = this.changeURLPar(durl,'zmiti','end');
+				//	durl = this.changeURLPar(durl,'wxopenid','');
 				var code_durl = encodeURIComponent(durl);
 				_jquery2['default'].ajax({
 					type: 'get',
@@ -494,23 +506,64 @@
 				var s = this;
 				var id = s.getQueryString('id'),
 				    parentWxopenId = s.getQueryString('wxopenid'),
-				    code = s.getQueryString('code');
+				    code = s.getQueryString('code'),
+				    zmiti = s.getQueryString('zmiti');
 
 				this.setState({
-					isFirst: !(id && parentWxopenId),
+					isFirst: !(id && parentWxopenId), //!(id && parentWxopenId),
 					id: id,
 					parentWxopenId: parentWxopenId,
-					code: code
+					code: code,
+					zmiti: zmiti
 				});
 
 				_jquery2['default'].getJSON('./assets/js/data.json', function (d) {
-					_this.wxConfig(_this.state.data.shareTitle, _this.state.data.shareDesc, _this.state.shareImg, d.wxappid);
-					s.wxappid = d.wxappid;
-					_this.setState({
-						worksid: d.worksid,
-						wxappid: d.wxappid
-					}, function () {
 
+					s.wxappid = d.wxappid;
+
+					_this.state.worksid = d.worksid;
+					_this.state.wxappid = d.wxappid;
+
+					_this.state.data.shareUrl = d.viewpath;
+					_this.defaultShareUrl = d.viewpath;
+
+					var redirect_uri = s.defaultShareUrl;
+					var symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
+					if (s.state.id && s.state.parentWxopenId) {
+						redirect_uri = redirect_uri + symbol + 'id=' + s.state.id + '&wxopenid=' + s.state.parentWxopenId;
+					}
+
+					symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
+					if (!s.getQueryString('zmiti')) {
+						redirect_uri += symbol + 'zmiti=start';
+					}
+					_jquery2['default'].ajax({
+						url: 'http://api.zmiti.com/v2/weixin/getoauthurl/',
+						type: "post",
+						data: {
+							redirect_uri: redirect_uri,
+							scope: 'snsapi_userinfo',
+							worksid: s.state.worksid,
+							state: new Date().getTime() + ''
+						},
+						error: function error() {
+							alert('error');
+						},
+						success: function success(dt) {
+							if (dt.getret === 0) {
+								var url = dt.url;
+								if (url.indexOf('&zmiti') <= -1 || url.indexOf('?zmiti') <= -1) {
+									url = url.split('#')[0] + '&zmiti=start#' + (url.split('#')[1] || '');
+								}
+
+								s.oauthurl = dt.url;
+								localStorage.setItem('oauthurl', s.oauthurl);
+							}
+						}
+					});
+
+					_this.wxConfig(_this.state.data.shareTitle, _this.state.data.shareDesc, _this.state.shareImg, _this.state.wxappid);
+					_this.forceUpdate(function () {
 						_jquery2['default'].ajax({
 							url: 'http://api.zmiti.com/v2/weixin/getwxuserinfo/',
 							data: {
@@ -542,11 +595,11 @@
 									s.setState({
 										openid: s.openid,
 										nickname: s.nickname,
-										headimgurl: s.headimgurl
+										headimgurl: s.headimgurl,
+										code: code
 									});
 
 									s.refreshPoetry();
-
 									if (wx.posData && wx.posData.longitude) {
 										s.getPos(dt.userinfo.nickname, dt.userinfo.headimgurl);
 									}
@@ -554,41 +607,15 @@
 
 									if (s.isWeiXin()) {
 
-										var redirect_uri = window.location.href.replace(/code/ig, 'zmiti');
-										var symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
-										if (s.state.id && s.state.parentWxopenId) {
+										var url = s.oauthurl || window.localStorage.getItem('oauthurl');
+										//alert(url);
+										window.location.href = url;
 
-											redirect_uri = redirect_uri + symbol + 'id=' + s.state.id + '&wxopenid=' + s.state.parentWxopenId;
-										}
-										if (!s.getQueryString('zmiti')) {
-											redirect_uri += symbol + 'zmiti=start';
-										}
-										_jquery2['default'].ajax({
-											url: 'http://api.zmiti.com/v2/weixin/getoauthurl/',
-											type: "post",
-											data: {
-												redirect_uri: redirect_uri,
-												scope: 'snsapi_userinfo',
-												worksid: s.state.worksid,
-												state: new Date().getTime() + ''
-											},
-											error: function error() {
-												alert('error');
-											},
-											success: function success(dt) {
-												if (dt.getret === 0) {
-													var url = dt.url;
-													if (url.indexOf('&zmiti') <= -1 || url.indexOf('?zmiti') <= -1) {
-														url = url.split('#')[0] + '&zmiti=start#' + (url.split('#')[1] || '');
-													}
-
-													window.location.href = url;
-												}
-											}
-										});
+										//var redirect_uri = window.location.href.replace(/^code$/ig, 'zmiti');
 									} else {
-										//alert('请在微信中打开');
-									}
+											s.refreshPoetry();
+											//alert('请在微信中打开');
+										}
 								}
 							}
 						});
@@ -641,8 +668,9 @@
 					});
 				});
 
-				obserable.on('refreshPoetry', function () {
-					_this.refreshPoetry(true);
+				obserable.on('refreshPoetry', function (data) {
+					var data = data || {};
+					_this.refreshPoetry(data.flag === 'false' ? false : true, data.isOther);
 				});
 
 				obserable.on('updateIntegral', function (data) {
@@ -655,23 +683,29 @@
 			}
 		}, {
 			key: 'refreshPoetry',
-			value: function refreshPoetry(isRefresh) {
+			value: function refreshPoetry(isRefresh, isOther) {
 				var s = this;
 
 				if (this.state.id && this.state.parentWxopenId && !isRefresh) {
-					_jquery2['default'].ajax({
-						url: 'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
-						data: {
+					var params = {};
+					if (!isOther) {
+						params = {
 							id: s.state.id,
 							wxopenid: s.state.parentWxopenId
-						},
+						};
+					}
+					_jquery2['default'].ajax({
+						url: 'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
+						data: params,
 						success: function success(data) {
 							if (data.getret === 0) {
 								if (data.list.length > 0) {
-									s.state.poetryTitle = _react2['default'].createElement('img', { src: data.list[0].headimgurl, style: { width: 100, borderRadius: '50%', marginBottom: 20 } });
-									s.state.poetryAuthor = data.list[0].nickname;
-									s.state.poetryContent = data.list[0].changetext;
-									s.state.poetryContentAll = data.list[0].originaltext;
+									s.state.userPoetryTitle = _react2['default'].createElement('img', { src: data.list[0].headimgurl, style: { width: 60, borderRadius: '50%', marginBottom: 20 } });
+									s.state.userPoetryAuthor = data.list[0].nickname;
+									s.state.userPoetryContent = data.list[0].changetext;
+									s.state.poetryContent = data.list[0].originaltext;
+									s.state.poetryTitle = data.list[0].workdatatitle;
+									s.state.poetryAuthor = data.list[0].author;
 									s.state.workdataid = data.list[0].workdataid;
 									s.forceUpdate();
 								} else {
@@ -699,8 +733,10 @@
 									s.state.poetryTitle = data.shicilist[0].title;
 									s.state.poetryAuthor = data.shicilist[0].author;
 									s.state.poetryContent = data.shicilist[0].originaltext;
-									s.state.poetryContentAll = data.shicilist[0].originaltext;
+
 									s.state.workdataid = data.shicilist[0].workdataid;
+
+									s.state.userPoetryContent = data.shicilist[0].originaltext;
 
 									s.state.id = '';
 									s.state.parentWxopenId = '';
@@ -35171,7 +35207,7 @@
 							success: function success(res) {
 								//转成功了。
 
-								var poetryContent = s.props.poetryContentAll.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig, '');
+								var poetryContent = s.props.poetryContent.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig, '');
 
 								var dataArr = res.translateResult.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig, '').split('');
 								//dataArr.length = poetryContent.length;
@@ -35470,7 +35506,11 @@
 				var obserable = this.props.obserable;
 
 				obserable.trigger({
-					type: 'refreshPoetry'
+					type: 'refreshPoetry',
+					data: {
+						flag: true,
+						isOther: false
+					}
 				});
 			}
 		}, {
@@ -35613,14 +35653,38 @@
 								_react2['default'].createElement(
 									'div',
 									{ className: 'zmiti-poetry-title' },
-									this.props.poetryTitle
+									this.props.userPoetryTitle
 								),
 								_react2['default'].createElement(
 									'div',
 									{ className: 'zmiti-poetry-author' },
-									this.props.poetryAuthor
+									this.props.userPoetryAuthor
 								),
-								_react2['default'].createElement('article', { className: 'zmiti-poetry-content ' + (this.props.id && this.props.parentWxopenId ? 'zmiti-custom-text' : ''), dangerouslySetInnerHTML: this.createMarkup() }),
+								_react2['default'].createElement(
+									'article',
+									{ className: 'zmiti-poetry-content ' + (this.props.id && this.props.parentWxopenId ? 'zmiti-custom-text' : '') },
+									this.props.userPoetryContent
+								),
+								this.state.showPoetry && _react2['default'].createElement(
+									'div',
+									null,
+									_react2['default'].createElement(
+										'div',
+										{ className: 'zmiti-shareopen-line' },
+										_react2['default'].createElement('img', { src: './assets/images/line.png' })
+									),
+									_react2['default'].createElement(
+										'div',
+										{ className: 'zmiti-poetry-title' },
+										this.props.poetryTitle
+									),
+									_react2['default'].createElement(
+										'div',
+										{ className: 'zmiti-poetry-author' },
+										this.props.poetryAuthor
+									),
+									_react2['default'].createElement('article', { className: 'zmiti-poetry-content ', dangerouslySetInnerHTML: this.createMarkup() })
+								),
 								_react2['default'].createElement(
 									'div',
 									{ className: 'zmiti-tip' },
@@ -35630,7 +35694,7 @@
 						),
 						_react2['default'].createElement(
 							'div',
-							{ className: 'zmiti-open-poetry' },
+							{ className: 'zmiti-open-poetry', onTouchTap: this.showPoetry.bind(this) },
 							_react2['default'].createElement('img', { src: './assets/images/openpeotry.png' })
 						),
 						_react2['default'].createElement(
@@ -35676,7 +35740,7 @@
 									null,
 									_react2['default'].createElement(
 										'div',
-										{ className: 'zmiti-reload-poetry' },
+										{ className: 'zmiti-reload-poetry', onTouchTap: this.gruessOther.bind(this) },
 										_react2['default'].createElement('img', { className: this.state.isRefresh ? 'zmiti-rotate' : '', src: './assets/images/refresh.png' }),
 										'猜别的'
 									)
@@ -35692,12 +35756,46 @@
 				);
 			}
 		}, {
+			key: 'showPoetry',
+			value: function showPoetry() {
+				var _this = this;
+
+				this.setState({
+					showPoetry: true
+				}, function () {
+					_this.scroll.refresh();
+				});
+			}
+		}, {
+			key: 'gruessOther',
+			value: function gruessOther() {
+				var _this2 = this;
+
+				var obserable = this.props.obserable;
+
+				obserable.trigger({
+					type: 'refreshPoetry',
+					data: {
+						flag: 'false',
+						isOther: true
+					}
+				});
+				this.setState({
+					showPoetry: false
+				}, function () {
+					_this2.scroll.refresh();
+				});
+			}
+		}, {
 			key: 'beginRefreshPoetry',
 			value: function beginRefreshPoetry() {
 				var obserable = this.props.obserable;
 
 				obserable.trigger({
-					type: 'refreshPoetry'
+					type: 'refreshPoetry',
+					data: {
+						flag: true
+					}
 				});
 			}
 		}, {
@@ -35708,7 +35806,7 @@
 		}, {
 			key: 'beginRead',
 			value: function beginRead() {
-				var _this = this;
+				var _this3 = this;
 
 				var obserable = this.props.obserable;
 
@@ -35722,7 +35820,7 @@
 
 					this.timer = setInterval(function () {
 
-						if (60 - _this.props.duration <= 0) {
+						if (60 - _this3.props.duration <= 0) {
 							//录音时间结束.进入结果页面
 							s.stopRecord();
 							return;
@@ -35813,7 +35911,7 @@
 		}, {
 			key: 'componentDidMount',
 			value: function componentDidMount() {
-				var _this2 = this;
+				var _this4 = this;
 
 				var IScroll = this.props.IScroll;
 
@@ -35821,7 +35919,7 @@
 					scrollbars: true
 				});
 				setTimeout(function () {
-					_this2.scroll.refresh();
+					_this4.scroll.refresh();
 				}, 1000);
 			}
 		}]);
@@ -35867,7 +35965,7 @@
 
 
 	// module
-	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-shareopen-main-ui {\r\n  width: 640px;\r\n  box-sizing: border-box;\r\n  position: absolute;\r\n  -webkit-transition: 0.2s;\r\n  transition: 0.2s;\r\n  z-index: 2; }\r\n  .zmiti-shareopen-main-ui.hide {\r\n    opacity: .5;\r\n    -webkit-transform: translate3d(-213.33333px, 0, 0);\r\n    transform: translate3d(-213.33333px, 0, 0); }\r\n  .zmiti-roof {\r\n    width: 60px;\r\n    position: absolute;\r\n    top: 100px; }\r\n  .zmiti-shareopen-main-ui .zmiti-open-poetry {\r\n    position: absolute;\r\n    width: 40px;\r\n    top: 180px;\r\n    right: 35px; }\r\n  .zmiti-shareopen-main-ui .zmiti-poetry-C {\r\n    position: relative;\r\n    width: 500px;\r\n    height: 550px;\r\n    border-radius: 50px;\r\n    margin-left: 70px;\r\n    overflow: hidden;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal;\r\n    text-align: center; }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-author {\r\n      margin-top: 10px;\r\n      width: 500px; }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-tip {\r\n      position: absolute;\r\n      bottom: 8px;\r\n      left: 50%;\r\n      width: 100%;\r\n      font-size: 24px;\r\n      color: #999;\r\n      -webkit-transform: translate3d(-50%, 0, 0);\r\n      transform: translate3d(-50%, 0, 0); }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-title {\r\n      width: 500px;\r\n      font-size: 30px;\r\n      -webkit-transform: scale(1.5);\r\n      transform: scale(1.5); }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-content {\r\n      -webkit-box-flex: 1;\r\n      text-align: center;\r\n      -webkit-transform: scale(1.2);\r\n      transform: scale(1.2);\r\n      width: 350px;\r\n      margin: 50px auto;\r\n      text-align: left; }\r\n      .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-content.zmiti-custom-text {\r\n        width: 400px;\r\n        text-align: left; }\r\n  .zmiti-shareopen-main-ui .zmiti-seal {\r\n    position: absolute;\r\n    top: 580px;\r\n    right: 30px; }\r\n  .zmiti-shareopen-main-ui .zmiti-voice-content {\r\n    width: 100%;\r\n    height: 60px;\r\n    top: 660px; }\r\n  .zmiti-shareopen-main-ui .zmiti-bottom-ui {\r\n    width: 640px;\r\n    height: 96px;\r\n    margin-top: 40px;\r\n    left: 0;\r\n    position: relative; }\r\n    .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-tips {\r\n      width: 284px;\r\n      height: 58px;\r\n      position: absolute;\r\n      top: -58px;\r\n      margin-left: -142px;\r\n      left: 50%;\r\n      text-align: center;\r\n      line-height: 50px;\r\n      color: #7d6548; }\r\n    .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-voice {\r\n      position: absolute;\r\n      width: 184px;\r\n      top: -200px;\r\n      left: 50%;\r\n      margin-left: -97px; }\r\n      .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-voice div {\r\n        margin-top: 6px;\r\n        color: #767676; }\r\n  .zmiti-shareopen-main-ui .zmiti-btn {\r\n    color: #fff;\r\n    text-align: center;\r\n    height: 70px;\r\n    line-height: 70px;\r\n    border-radius: 30px;\r\n    background: #4a5265; }\r\n  .zmiti-shareopen-main-ui .zmiti-begin-read {\r\n    width: 464px;\r\n    margin: 13px auto;\r\n    position: relative;\r\n    font-size: 30px; }\r\n  .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup {\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup img {\r\n      width: 30px;\r\n      margin-right: 20px; }\r\n    .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside {\r\n      -webkit-box-flex: 1;\r\n      margin: 0 10px; }\r\n      .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside .zmiti-reload-poetry {\r\n        border: 1px solid #ccc;\r\n        display: inline-block;\r\n        padding: 12px 32px;\r\n        border-radius: 40px;\r\n        font-size: 30px; }\r\n      .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside:first-of-type {\r\n        text-align: right; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-shareopen-main-ui {\r\n  width: 640px;\r\n  box-sizing: border-box;\r\n  position: absolute;\r\n  -webkit-transition: 0.2s;\r\n  transition: 0.2s;\r\n  z-index: 2; }\r\n  .zmiti-shareopen-main-ui.hide {\r\n    opacity: .5;\r\n    -webkit-transform: translate3d(-213.33333px, 0, 0);\r\n    transform: translate3d(-213.33333px, 0, 0); }\r\n  .zmiti-roof {\r\n    width: 60px;\r\n    position: absolute;\r\n    top: 100px; }\r\n  .zmiti-shareopen-main-ui .zmiti-open-poetry {\r\n    position: absolute;\r\n    width: 40px;\r\n    top: 180px;\r\n    right: 35px; }\r\n  .zmiti-shareopen-main-ui .zmiti-poetry-C {\r\n    min-height: 500px;\r\n    position: relative;\r\n    width: 500px;\r\n    border-radius: 50px;\r\n    overflow: hidden;\r\n    padding: 30px 0 50px;\r\n    margin: 0 auto;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal;\r\n    text-align: center; }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C > section {\r\n      width: 100%; }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-author {\r\n      margin-top: 10px;\r\n      width: 500px; }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-shareopen-line {\r\n      width: 640px;\r\n      margin: 20px 0; }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-tip {\r\n      position: absolute;\r\n      bottom: 8px;\r\n      left: 50%;\r\n      width: 100%;\r\n      font-size: 24px;\r\n      color: #999;\r\n      -webkit-transform: translate3d(-50%, 0, 0);\r\n      transform: translate3d(-50%, 0, 0); }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-title {\r\n      width: 500px;\r\n      font-size: 30px;\r\n      -webkit-transform: scale(1.5);\r\n      transform: scale(1.5); }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-content {\r\n      -webkit-box-flex: 1;\r\n      text-align: center;\r\n      -webkit-transform: scale(1.2);\r\n      transform: scale(1.2);\r\n      width: 300px;\r\n      margin: 50px auto 0;\r\n      line-height: 40px; }\r\n      .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-content.zmiti-custom-text {\r\n        width: 400px;\r\n        text-align: left; }\r\n  .zmiti-shareopen-main-ui .zmiti-seal {\r\n    position: absolute;\r\n    top: 580px;\r\n    right: 30px; }\r\n  .zmiti-shareopen-main-ui .zmiti-voice-content {\r\n    width: 100%;\r\n    height: 60px;\r\n    top: 660px; }\r\n  .zmiti-shareopen-main-ui .zmiti-bottom-ui {\r\n    width: 640px;\r\n    height: 96px;\r\n    margin-top: 40px;\r\n    left: 0;\r\n    position: relative; }\r\n    .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-tips {\r\n      width: 284px;\r\n      height: 58px;\r\n      position: absolute;\r\n      top: -58px;\r\n      margin-left: -142px;\r\n      left: 50%;\r\n      text-align: center;\r\n      line-height: 50px;\r\n      color: #7d6548; }\r\n    .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-voice {\r\n      position: absolute;\r\n      width: 184px;\r\n      top: -200px;\r\n      left: 50%;\r\n      margin-left: -97px; }\r\n      .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-voice div {\r\n        margin-top: 6px;\r\n        color: #767676; }\r\n  .zmiti-shareopen-main-ui .zmiti-btn {\r\n    color: #fff;\r\n    text-align: center;\r\n    height: 70px;\r\n    line-height: 70px;\r\n    border-radius: 30px;\r\n    background: #4a5265; }\r\n  .zmiti-shareopen-main-ui .zmiti-begin-read {\r\n    width: 464px;\r\n    margin: 13px auto;\r\n    position: relative;\r\n    font-size: 30px; }\r\n  .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup {\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup img {\r\n      width: 30px;\r\n      margin-right: 20px; }\r\n    .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside {\r\n      -webkit-box-flex: 1;\r\n      margin: 0 10px; }\r\n      .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside .zmiti-reload-poetry {\r\n        border: 1px solid #ccc;\r\n        display: inline-block;\r\n        padding: 12px 32px;\r\n        border-radius: 40px;\r\n        font-size: 30px; }\r\n      .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside:first-of-type {\r\n        text-align: right; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
 
 	// exports
 
@@ -36224,7 +36322,6 @@
 				var s = this;
 				var symbol = location.href.indexOf('?') > -1 ? '&' : '?';
 				var durl = location.href.split('#')[0] + symbol + 'id=' + this.state.id + '&wxopenid=' + this.props.openid; //window.location;
-				alert(durl);
 				var code_durl = encodeURIComponent(durl);
 				_jquery2['default'].ajax({
 					type: 'get',

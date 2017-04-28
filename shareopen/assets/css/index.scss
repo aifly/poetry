@@ -17,6 +17,7 @@ $viewW:640px;
       top: 100px;
     }
 
+
     .zmiti-open-poetry{
         @include pos(a);
         width: 40px;
@@ -27,17 +28,26 @@ $viewW:640px;
 
     .zmiti-poetry-C{
       $poetryW:500px;
+      &>section{
+        width: 100%;
+      }
+      min-height: $poetryW;
       @include pos(r);
       width:$poetryW;
-      height: $poetryW * 1.1;
       @include br(50px);
-      margin-left: ($viewW - $poetryW) /2;
+      
       overflow: hidden;
+      padding: 30px 0 50px;
+      margin: 0 auto;
       @include displayBox(horizontal);
       text-align: center;
       .zmiti-poetry-author{
         margin-top: 10px;
         width: $poetryW;
+      }
+      .zmiti-shareopen-line{
+        width: $viewW;
+        margin: 20px 0;
       }
       .zmiti-tip{
         @include pos(a);
@@ -60,9 +70,10 @@ $viewW:640px;
         -webkit-box-flex:1;
         text-align: center;
         @include transform(scale(1.2)); 
-        width:350px;
-        margin: 50px auto;
-        text-align: left;
+        width:300px;
+        margin: 50px auto 0;
+        
+        line-height: 40px;
         &.zmiti-custom-text{
           width:400px;
           text-align: left;

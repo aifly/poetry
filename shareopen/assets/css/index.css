@@ -42,20 +42,26 @@
     top: 180px;
     right: 35px; }
   .zmiti-shareopen-main-ui .zmiti-poetry-C {
+    min-height: 500px;
     position: relative;
     width: 500px;
-    height: 550px;
     border-radius: 50px;
-    margin-left: 70px;
     overflow: hidden;
+    padding: 30px 0 50px;
+    margin: 0 auto;
     display: -webkit-box;
     -webkit-box-align: center;
     -webkit-box-pack: center;
     -webkit-box-orient: horizontal;
     text-align: center; }
+    .zmiti-shareopen-main-ui .zmiti-poetry-C > section {
+      width: 100%; }
     .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-author {
       margin-top: 10px;
       width: 500px; }
+    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-shareopen-line {
+      width: 640px;
+      margin: 20px 0; }
     .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-tip {
       position: absolute;
       bottom: 8px;
@@ -75,9 +81,9 @@
       text-align: center;
       -webkit-transform: scale(1.2);
       transform: scale(1.2);
-      width: 350px;
-      margin: 50px auto;
-      text-align: left; }
+      width: 300px;
+      margin: 50px auto 0;
+      line-height: 40px; }
       .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-content.zmiti-custom-text {
         width: 400px;
         text-align: left; }
