@@ -174,7 +174,7 @@ export class App extends Component {
     	var s = this;
     	 $.ajax({
         	url:`http://restapi.amap.com/v3/geocode/regeo?key=10df4af5d9266f83b404c007534f0001&location=${wx.posData.longitude},${wx.posData.latitude}&poitype=&radius=100&extensions=base&batch=false&roadlevel=1`+'',
-			type:'get',
+			type:'',
 			success(data){
 
 				if(data.status === '1' && data.infocode === '10000'){
