@@ -92,31 +92,31 @@
 
 	var _indexIndexJsx2 = _interopRequireDefault(_indexIndexJsx);
 
-	var _shareopenIndexJsx = __webpack_require__(238);
+	var _shareopenIndexJsx = __webpack_require__(199);
 
 	var _shareopenIndexJsx2 = _interopRequireDefault(_shareopenIndexJsx);
 
-	var _resultIndexJsx = __webpack_require__(199);
+	var _resultIndexJsx = __webpack_require__(205);
 
 	var _resultIndexJsx2 = _interopRequireDefault(_resultIndexJsx);
 
-	var _shareIndexJsx = __webpack_require__(205);
+	var _shareIndexJsx = __webpack_require__(208);
 
 	var _shareIndexJsx2 = _interopRequireDefault(_shareIndexJsx);
 
-	var _coverIndexJsx = __webpack_require__(208);
+	var _coverIndexJsx = __webpack_require__(211);
 
 	var _coverIndexJsx2 = _interopRequireDefault(_coverIndexJsx);
 
-	var _chooseIndexJsx = __webpack_require__(211);
+	var _chooseIndexJsx = __webpack_require__(214);
 
 	var _chooseIndexJsx2 = _interopRequireDefault(_chooseIndexJsx);
 
-	var _userIndexJsx = __webpack_require__(214);
+	var _userIndexJsx = __webpack_require__(217);
 
 	var _userIndexJsx2 = _interopRequireDefault(_userIndexJsx);
 
-	var _loadingIndexJsx = __webpack_require__(235);
+	var _loadingIndexJsx = __webpack_require__(238);
 
 	var _loadingIndexJsx2 = _interopRequireDefault(_loadingIndexJsx);
 
@@ -35541,7 +35541,7 @@
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -35556,6 +35556,500 @@
 	var _componentsPublicPubJsx = __webpack_require__(193);
 
 	__webpack_require__(200);
+
+	var _jquery = __webpack_require__(185);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _componentsPublicZmitiAudioJsx = __webpack_require__(202);
+
+	var _componentsPublicZmitiAudioJsx2 = _interopRequireDefault(_componentsPublicZmitiAudioJsx);
+
+	var _componentsPublicZmitiHeaderJsx = __webpack_require__(196);
+
+	var _componentsPublicZmitiHeaderJsx2 = _interopRequireDefault(_componentsPublicZmitiHeaderJsx);
+
+	var ZmitiShareOpenApp = (function (_Component) {
+		_inherits(ZmitiShareOpenApp, _Component);
+
+		function ZmitiShareOpenApp(props) {
+			_classCallCheck(this, ZmitiShareOpenApp);
+
+			_get(Object.getPrototypeOf(ZmitiShareOpenApp.prototype), 'constructor', this).call(this, props);
+			this.state = {
+
+				isBeginRead: false,
+				poetryContent: ''
+
+			};
+			this.viewW = document.documentElement.clientWidth;
+			this.viewH = document.documentElement.clientHeight;
+		}
+
+		_createClass(ZmitiShareOpenApp, [{
+			key: 'render',
+			value: function render() {
+
+				var poetryStyle = {
+					background: 'url(./assets/images/main-bg.jpg) no-repeat center bottom '
+				};
+
+				var s = this;
+				s.state.poetryContent = s.props.poetryContent.replace(/>amp;nbsp;/g, '').replace(/\n/ig, '<br/>');
+
+				return _react2['default'].createElement(
+					'div',
+					{ style: { height: this.viewH, overflow: 'hidden' }, ref: 'zmiti-shareopen-main-ui', className: 'zmiti-shareopen-main-ui ' + (this.props.isEntryResult ? 'hide' : '') },
+					_react2['default'].createElement(
+						'div',
+						{ style: { paddingBottom: 100 } },
+						_react2['default'].createElement(_componentsPublicZmitiHeaderJsx2['default'], _extends({ showRefreshBtn: false }, this.props)),
+						_react2['default'].createElement(
+							'div',
+							{ className: 'zmiti-poetry-C', style: poetryStyle },
+							_react2['default'].createElement(
+								'section',
+								null,
+								_react2['default'].createElement(
+									'div',
+									{ className: 'zmiti-poetry-title' },
+									this.props.poetryTitle
+								),
+								_react2['default'].createElement(
+									'div',
+									{ className: 'zmiti-poetry-author' },
+									this.props.poetryAuthor
+								),
+								_react2['default'].createElement('article', { className: 'zmiti-poetry-content ' + (this.props.id && this.props.parentWxopenId ? 'zmiti-custom-text' : ''), dangerouslySetInnerHTML: this.createMarkup() }),
+								_react2['default'].createElement(
+									'div',
+									{ className: 'zmiti-tip' },
+									'以上根据网友语音转化的文字'
+								)
+							)
+						),
+						_react2['default'].createElement(
+							'div',
+							{ className: 'zmiti-open-poetry' },
+							_react2['default'].createElement('img', { src: './assets/images/openpeotry.png' })
+						),
+						_react2['default'].createElement(
+							'section',
+							{ className: 'zmiti-voice-content' },
+							_react2['default'].createElement(_componentsPublicZmitiAudioJsx2['default'], this.props)
+						),
+						_react2['default'].createElement(
+							'div',
+							{ className: 'zmiti-bottom-ui' },
+							this.state.isBeginRead && _react2['default'].createElement(
+								'div',
+								{ className: 'zmiti-voice' },
+								_react2['default'].createElement('img', { src: './assets/images/voice.gif' }),
+								_react2['default'].createElement(
+									'div',
+									null,
+									'录音时长还剩',
+									60 - this.props.duration,
+									's'
+								)
+							),
+							_react2['default'].createElement(
+								'section',
+								{ style: { backgroundColor: this.props.theme.backgroundColor }, onTouchTap: this.beginRead.bind(this), className: 'zmiti-btn zmiti-begin-read' },
+								this.state.isBeginRead ? '点击结束朗读' : '秒懂，开始阅读原诗'
+							),
+							_react2['default'].createElement(
+								'section',
+								{ className: 'zmiti-shareopen-bottom-btngroup' },
+								_react2['default'].createElement(
+									'aside',
+									null,
+									_react2['default'].createElement(
+										'div',
+										{ className: 'zmiti-reload-poetry', onTouchTap: this.beginRefreshPoetry.bind(this) },
+										_react2['default'].createElement('img', { className: this.state.isRefresh ? 'zmiti-rotate' : '', src: './assets/images/refresh.png' }),
+										'重新出题'
+									)
+								),
+								_react2['default'].createElement(
+									'aside',
+									null,
+									_react2['default'].createElement(
+										'div',
+										{ className: 'zmiti-reload-poetry' },
+										_react2['default'].createElement('img', { className: this.state.isRefresh ? 'zmiti-rotate' : '', src: './assets/images/refresh.png' }),
+										'猜别的'
+									)
+								)
+							)
+						),
+						_react2['default'].createElement(
+							'section',
+							{ className: 'zmiti-seal' },
+							_react2['default'].createElement('img', { src: './assets/images/seal.png' })
+						)
+					)
+				);
+			}
+		}, {
+			key: 'beginRefreshPoetry',
+			value: function beginRefreshPoetry() {
+				var obserable = this.props.obserable;
+
+				obserable.trigger({
+					type: 'refreshPoetry'
+				});
+			}
+		}, {
+			key: 'createMarkup',
+			value: function createMarkup() {
+				return { __html: this.state.poetryContent };
+			}
+		}, {
+			key: 'beginRead',
+			value: function beginRead() {
+				var _this = this;
+
+				var obserable = this.props.obserable;
+
+				var s = this;
+				if (!this.state.isBeginRead) {
+					try {
+						wx.startRecord(); //开始朗读
+					} catch (e) {
+						alert('开始录音了 + error');
+					}
+
+					this.timer = setInterval(function () {
+
+						if (60 - _this.props.duration <= 0) {
+							//录音时间结束.进入结果页面
+							s.stopRecord();
+							return;
+						}
+
+						obserable.trigger({
+							type: 'countdownDuration'
+						});
+					}, 1000);
+					/*obserable.trigger({
+	    	type:'entryResult'
+	    })*/
+				} else {
+						s.stopRecord();
+					}
+				this.setState({
+					isBeginRead: !this.state.isBeginRead
+				});
+			}
+		}, {
+			key: 'stopRecord',
+			value: function stopRecord() {
+				var obserable = this.props.obserable;
+
+				var s = this; //结束朗读
+				clearInterval(s.timer);
+				wx.stopRecord({
+					fail: function fail() {
+						alert('end error');
+					},
+					success: function success(res) {
+
+						s.localId = res.localId;
+						obserable.trigger({
+							type: 'getLocalId',
+							data: s.localId
+						});
+						//开始转文字。
+						wx.translateVoice({
+							localId: s.localId, // 需要识别的音频的本地Id，由录音相关接口获得
+							isShowProgressTips: 1, // 默认为1，显示进度提示
+							fail: function fail() {
+								s.setState({
+									isBeginRead: false
+								});
+								alert('转文字失败，请重新再试');
+							},
+							success: function success(res) {
+								//转成功了。
+
+								var poetryContent = s.props.poetryContent.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig, '');
+
+								var dataArr = res.translateResult.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig, '').split('');
+								//dataArr.length = poetryContent.length;
+								var rightWords = 0;
+
+								var resultHtml = '';
+								var score = 0;
+								dataArr.map(function (da, k) {
+
+									if (poetryContent.indexOf(da) > -1) {
+										rightWords++;
+										resultHtml += '<span style="color:green">' + da + '</span>';
+									} else {
+										resultHtml += da;
+									}
+								});
+
+								var score = rightWords / poetryContent.length * 100 | 0;
+								if (res.translateResult.length > poetryContent.length && score >= 100) {
+									score = 99;
+								}
+								obserable.trigger({ type: 'updateScore', data: score });
+								obserable.trigger({
+									type: 'getTransformResult',
+									data: resultHtml
+								});
+
+								obserable.trigger({
+									type: 'entryResult',
+									data: true
+								});
+							}
+						});
+					}
+				});
+			}
+		}, {
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				var _this2 = this;
+
+				var IScroll = this.props.IScroll;
+
+				this.scroll = new IScroll(this.refs['zmiti-shareopen-main-ui'], {
+					scrollbars: true
+				});
+				setTimeout(function () {
+					_this2.scroll.refresh();
+				}, 1000);
+			}
+		}]);
+
+		return ZmitiShareOpenApp;
+	})(_react.Component);
+
+	exports['default'] = (0, _componentsPublicPubJsx.PubCom)(ZmitiShareOpenApp);
+	module.exports = exports['default'];
+
+/***/ },
+/* 200 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(201);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(190)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../../node_modules/css-loader/index.js!./index.css", function() {
+				var newContent = require("!!../../../node_modules/css-loader/index.js!./index.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 201 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(189)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-shareopen-main-ui {\r\n  width: 640px;\r\n  box-sizing: border-box;\r\n  position: absolute;\r\n  -webkit-transition: 0.2s;\r\n  transition: 0.2s;\r\n  z-index: 2; }\r\n  .zmiti-shareopen-main-ui.hide {\r\n    opacity: .5;\r\n    -webkit-transform: translate3d(-213.33333px, 0, 0);\r\n    transform: translate3d(-213.33333px, 0, 0); }\r\n  .zmiti-roof {\r\n    width: 60px;\r\n    position: absolute;\r\n    top: 100px; }\r\n  .zmiti-shareopen-main-ui .zmiti-open-poetry {\r\n    position: absolute;\r\n    width: 40px;\r\n    top: 180px;\r\n    right: 35px; }\r\n  .zmiti-shareopen-main-ui .zmiti-poetry-C {\r\n    position: relative;\r\n    width: 500px;\r\n    height: 550px;\r\n    border-radius: 50px;\r\n    margin-left: 70px;\r\n    overflow: hidden;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal;\r\n    text-align: center; }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-author {\r\n      margin-top: 10px;\r\n      width: 500px; }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-tip {\r\n      position: absolute;\r\n      bottom: 8px;\r\n      left: 50%;\r\n      width: 100%;\r\n      font-size: 24px;\r\n      color: #999;\r\n      -webkit-transform: translate3d(-50%, 0, 0);\r\n      transform: translate3d(-50%, 0, 0); }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-title {\r\n      width: 500px;\r\n      font-size: 30px;\r\n      -webkit-transform: scale(1.5);\r\n      transform: scale(1.5); }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-content {\r\n      -webkit-box-flex: 1;\r\n      text-align: center;\r\n      -webkit-transform: scale(1.2);\r\n      transform: scale(1.2);\r\n      width: 350px;\r\n      margin: 50px auto;\r\n      text-align: left; }\r\n      .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-content.zmiti-custom-text {\r\n        width: 400px;\r\n        text-align: left; }\r\n  .zmiti-shareopen-main-ui .zmiti-seal {\r\n    position: absolute;\r\n    top: 580px;\r\n    right: 30px; }\r\n  .zmiti-shareopen-main-ui .zmiti-voice-content {\r\n    width: 100%;\r\n    height: 60px;\r\n    top: 660px; }\r\n  .zmiti-shareopen-main-ui .zmiti-bottom-ui {\r\n    width: 640px;\r\n    height: 96px;\r\n    margin-top: 40px;\r\n    left: 0;\r\n    position: relative; }\r\n    .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-tips {\r\n      width: 284px;\r\n      height: 58px;\r\n      position: absolute;\r\n      top: -58px;\r\n      margin-left: -142px;\r\n      left: 50%;\r\n      text-align: center;\r\n      line-height: 50px;\r\n      color: #7d6548; }\r\n    .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-voice {\r\n      position: absolute;\r\n      width: 184px;\r\n      top: -200px;\r\n      left: 50%;\r\n      margin-left: -97px; }\r\n      .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-voice div {\r\n        margin-top: 6px;\r\n        color: #767676; }\r\n  .zmiti-shareopen-main-ui .zmiti-btn {\r\n    color: #fff;\r\n    text-align: center;\r\n    height: 70px;\r\n    line-height: 70px;\r\n    border-radius: 30px;\r\n    background: #4a5265; }\r\n  .zmiti-shareopen-main-ui .zmiti-begin-read {\r\n    width: 464px;\r\n    margin: 13px auto;\r\n    position: relative;\r\n    font-size: 30px; }\r\n  .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup {\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup img {\r\n      width: 30px;\r\n      margin-right: 20px; }\r\n    .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside {\r\n      -webkit-box-flex: 1;\r\n      margin: 0 10px; }\r\n      .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside .zmiti-reload-poetry {\r\n        border: 1px solid #ccc;\r\n        display: inline-block;\r\n        padding: 12px 32px;\r\n        border-radius: 40px;\r\n        font-size: 30px; }\r\n      .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside:first-of-type {\r\n        text-align: right; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
+
+	// exports
+
+
+/***/ },
+/* 202 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pubJsx = __webpack_require__(193);
+
+	__webpack_require__(203);
+
+	var _jquery = __webpack_require__(185);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var ZmitiAudioApp = (function (_Component) {
+		_inherits(ZmitiAudioApp, _Component);
+
+		function ZmitiAudioApp(props) {
+			_classCallCheck(this, ZmitiAudioApp);
+
+			_get(Object.getPrototypeOf(ZmitiAudioApp.prototype), 'constructor', this).call(this, props);
+			this.state = {
+				pause: true
+			};
+		}
+
+		_createClass(ZmitiAudioApp, [{
+			key: 'render',
+			value: function render() {
+				return _react2['default'].createElement(
+					'div',
+					{ className: 'zmiti-audio-main-ui' },
+					_react2['default'].createElement(
+						'section',
+						{ className: 'zmiti-audio-C', onTouchTap: this.playAudio.bind(this) },
+						_react2['default'].createElement(
+							'aside',
+							null,
+							this.state.pause ? _react2['default'].createElement('img', { src: './assets/images/pause.png' }) : _react2['default'].createElement('img', { src: './assets/images/pause.gif' }),
+							'点我播放'
+						),
+						_react2['default'].createElement(
+							'aside',
+							null,
+							this.props.duration,
+							'"'
+						)
+					)
+				);
+			}
+		}, {
+			key: 'playAudio',
+			value: function playAudio() {
+				var s = this;
+				this.pause = !this.pause;
+				if (this.pause) {
+					wx.playVoice({
+						localId: s.props.audioSrc
+					});
+				} else {
+					wx.stopVoice({
+						localId: s.props.audioSrc // 需要停止的音频的本地ID，由stopRecord接口获得
+					});
+				}
+
+				this.setState({
+					pause: !this.pause
+				});
+			}
+		}, {
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				var s = this;
+				wx.onVoicePlayEnd({
+					success: function success(res) {
+						var localId = res.localId; // 返回音频的本地ID
+						s.pause = !s.pause;
+						s.setState({
+							pause: !s.pause
+						});
+					}
+				});
+			}
+		}]);
+
+		return ZmitiAudioApp;
+	})(_react.Component);
+
+	exports['default'] = (0, _pubJsx.PubCom)(ZmitiAudioApp);
+	module.exports = exports['default'];
+
+/***/ },
+/* 203 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(204);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(190)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../../../node_modules/css-loader/index.js!./audio.css", function() {
+				var newContent = require("!!../../../node_modules/css-loader/index.js!./audio.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 204 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(189)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-audio-main-ui {\r\n  width: 500px;\r\n  height: 62px;\r\n  line-height: 62px;\r\n  border: 1px solid #91aa9d;\r\n  border-radius: 30px;\r\n  margin: 38px auto 0; }\r\n  .zmiti-audio-main-ui .zmiti-audio-C {\r\n    width: 440px;\r\n    margin: 0 auto;\r\n    height: 100%;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-audio-main-ui .zmiti-audio-C > aside {\r\n      -webkit-box-flex: 1;\r\n      color: #ccc; }\r\n      .zmiti-audio-main-ui .zmiti-audio-C > aside img {\r\n        width: 70px;\r\n        vertical-align: middle;\r\n        margin-right: 10px; }\r\n      .zmiti-audio-main-ui .zmiti-audio-C > aside:last-of-type {\r\n        text-align: right; }\r\n\r\n/*# sourceMappingURL=audio.css.map */", ""]);
+
+	// exports
+
+
+/***/ },
+/* 205 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _componentsPublicPubJsx = __webpack_require__(193);
+
+	__webpack_require__(206);
 
 	var _jquery = __webpack_require__(185);
 
@@ -35834,13 +36328,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 200 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(201);
+	var content = __webpack_require__(207);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -35860,7 +36354,7 @@
 	}
 
 /***/ },
-/* 201 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -35874,156 +36368,7 @@
 
 
 /***/ },
-/* 202 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _pubJsx = __webpack_require__(193);
-
-	__webpack_require__(203);
-
-	var _jquery = __webpack_require__(185);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var ZmitiAudioApp = (function (_Component) {
-		_inherits(ZmitiAudioApp, _Component);
-
-		function ZmitiAudioApp(props) {
-			_classCallCheck(this, ZmitiAudioApp);
-
-			_get(Object.getPrototypeOf(ZmitiAudioApp.prototype), 'constructor', this).call(this, props);
-			this.state = {
-				pause: true
-			};
-		}
-
-		_createClass(ZmitiAudioApp, [{
-			key: 'render',
-			value: function render() {
-				return _react2['default'].createElement(
-					'div',
-					{ className: 'zmiti-audio-main-ui' },
-					_react2['default'].createElement(
-						'section',
-						{ className: 'zmiti-audio-C', onTouchTap: this.playAudio.bind(this) },
-						_react2['default'].createElement(
-							'aside',
-							null,
-							this.state.pause ? _react2['default'].createElement('img', { src: './assets/images/pause.png' }) : _react2['default'].createElement('img', { src: './assets/images/pause.gif' }),
-							'点我播放'
-						),
-						_react2['default'].createElement(
-							'aside',
-							null,
-							this.props.duration,
-							'"'
-						)
-					)
-				);
-			}
-		}, {
-			key: 'playAudio',
-			value: function playAudio() {
-				var s = this;
-				this.pause = !this.pause;
-				if (this.pause) {
-					wx.playVoice({
-						localId: s.props.audioSrc
-					});
-				} else {
-					wx.stopVoice({
-						localId: s.props.audioSrc // 需要停止的音频的本地ID，由stopRecord接口获得
-					});
-				}
-
-				this.setState({
-					pause: !this.pause
-				});
-			}
-		}, {
-			key: 'componentDidMount',
-			value: function componentDidMount() {
-				var s = this;
-				wx.onVoicePlayEnd({
-					success: function success(res) {
-						var localId = res.localId; // 返回音频的本地ID
-						s.pause = !s.pause;
-						s.setState({
-							pause: !s.pause
-						});
-					}
-				});
-			}
-		}]);
-
-		return ZmitiAudioApp;
-	})(_react.Component);
-
-	exports['default'] = (0, _pubJsx.PubCom)(ZmitiAudioApp);
-	module.exports = exports['default'];
-
-/***/ },
-/* 203 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(204);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(190)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/css-loader/index.js!./audio.css", function() {
-				var newContent = require("!!../../../node_modules/css-loader/index.js!./audio.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 204 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(189)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-audio-main-ui {\r\n  width: 500px;\r\n  height: 62px;\r\n  line-height: 62px;\r\n  border: 1px solid #91aa9d;\r\n  border-radius: 30px;\r\n  margin: 38px auto 0; }\r\n  .zmiti-audio-main-ui .zmiti-audio-C {\r\n    width: 440px;\r\n    margin: 0 auto;\r\n    height: 100%;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-audio-main-ui .zmiti-audio-C > aside {\r\n      -webkit-box-flex: 1;\r\n      color: #ccc; }\r\n      .zmiti-audio-main-ui .zmiti-audio-C > aside img {\r\n        width: 70px;\r\n        vertical-align: middle;\r\n        margin-right: 10px; }\r\n      .zmiti-audio-main-ui .zmiti-audio-C > aside:last-of-type {\r\n        text-align: right; }\r\n\r\n/*# sourceMappingURL=audio.css.map */", ""]);
-
-	// exports
-
-
-/***/ },
-/* 205 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36050,7 +36395,7 @@
 
 	var _componentsPublicPubJsx = __webpack_require__(193);
 
-	__webpack_require__(206);
+	__webpack_require__(209);
 
 	var _componentsPublicZmitiHeaderJsx = __webpack_require__(196);
 
@@ -36185,13 +36530,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 206 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(207);
+	var content = __webpack_require__(210);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -36211,7 +36556,7 @@
 	}
 
 /***/ },
-/* 207 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -36225,7 +36570,7 @@
 
 
 /***/ },
-/* 208 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36250,7 +36595,7 @@
 
 	var _componentsPublicPubJsx = __webpack_require__(193);
 
-	__webpack_require__(209);
+	__webpack_require__(212);
 
 	var ZmitiCoverApp = (function (_Component) {
 		_inherits(ZmitiCoverApp, _Component);
@@ -36333,13 +36678,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 209 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(210);
+	var content = __webpack_require__(213);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -36359,7 +36704,7 @@
 	}
 
 /***/ },
-/* 210 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -36373,7 +36718,7 @@
 
 
 /***/ },
-/* 211 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36398,7 +36743,7 @@
 
 	var _componentsPublicPubJsx = __webpack_require__(193);
 
-	__webpack_require__(212);
+	__webpack_require__(215);
 
 	var ZmitiChooseApp = (function (_Component) {
 		_inherits(ZmitiChooseApp, _Component);
@@ -36492,13 +36837,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 212 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(213);
+	var content = __webpack_require__(216);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -36518,7 +36863,7 @@
 	}
 
 /***/ },
-/* 213 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -36532,7 +36877,7 @@
 
 
 /***/ },
-/* 214 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36555,29 +36900,29 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(215);
+	__webpack_require__(218);
 
 	var _jquery = __webpack_require__(185);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _componentsUsercenterJsx = __webpack_require__(217);
+	var _componentsUsercenterJsx = __webpack_require__(220);
 
 	var _componentsUsercenterJsx2 = _interopRequireDefault(_componentsUsercenterJsx);
 
-	var _componentsCourselistJsx = __webpack_require__(223);
+	var _componentsCourselistJsx = __webpack_require__(226);
 
 	var _componentsCourselistJsx2 = _interopRequireDefault(_componentsCourselistJsx);
 
-	var _componentsCoursedetailJsx = __webpack_require__(226);
+	var _componentsCoursedetailJsx = __webpack_require__(229);
 
 	var _componentsCoursedetailJsx2 = _interopRequireDefault(_componentsCoursedetailJsx);
 
-	var _componentsGradeJsx = __webpack_require__(229);
+	var _componentsGradeJsx = __webpack_require__(232);
 
 	var _componentsGradeJsx2 = _interopRequireDefault(_componentsGradeJsx);
 
-	var _componentsRankinglistJsx = __webpack_require__(232);
+	var _componentsRankinglistJsx = __webpack_require__(235);
 
 	var _componentsRankinglistJsx2 = _interopRequireDefault(_componentsRankinglistJsx);
 
@@ -36627,13 +36972,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 215 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(216);
+	var content = __webpack_require__(219);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -36653,7 +36998,7 @@
 	}
 
 /***/ },
-/* 216 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -36667,7 +37012,7 @@
 
 
 /***/ },
-/* 217 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36692,9 +37037,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(218);
+	__webpack_require__(221);
 
-	var _headerJsx = __webpack_require__(220);
+	var _headerJsx = __webpack_require__(223);
 
 	var _headerJsx2 = _interopRequireDefault(_headerJsx);
 
@@ -36947,13 +37292,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 218 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(219);
+	var content = __webpack_require__(222);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -36973,7 +37318,7 @@
 	}
 
 /***/ },
-/* 219 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -36987,7 +37332,7 @@
 
 
 /***/ },
-/* 220 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37010,7 +37355,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(221);
+	__webpack_require__(224);
 
 	var ZmitiUserHeaderApp = (function (_Component) {
 		_inherits(ZmitiUserHeaderApp, _Component);
@@ -37118,13 +37463,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 221 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(222);
+	var content = __webpack_require__(225);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -37144,7 +37489,7 @@
 	}
 
 /***/ },
-/* 222 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -37158,7 +37503,7 @@
 
 
 /***/ },
-/* 223 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37183,9 +37528,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(224);
+	__webpack_require__(227);
 
-	var _headerJsx = __webpack_require__(220);
+	var _headerJsx = __webpack_require__(223);
 
 	var _headerJsx2 = _interopRequireDefault(_headerJsx);
 
@@ -37328,13 +37673,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 224 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(225);
+	var content = __webpack_require__(228);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -37354,7 +37699,7 @@
 	}
 
 /***/ },
-/* 225 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -37368,7 +37713,7 @@
 
 
 /***/ },
-/* 226 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37393,13 +37738,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(227);
+	__webpack_require__(230);
 
 	var _iscroll = __webpack_require__(186);
 
 	var _iscroll2 = _interopRequireDefault(_iscroll);
 
-	var _headerJsx = __webpack_require__(220);
+	var _headerJsx = __webpack_require__(223);
 
 	var _headerJsx2 = _interopRequireDefault(_headerJsx);
 
@@ -37529,13 +37874,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 227 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(228);
+	var content = __webpack_require__(231);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -37555,7 +37900,7 @@
 	}
 
 /***/ },
-/* 228 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -37569,7 +37914,7 @@
 
 
 /***/ },
-/* 229 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37594,9 +37939,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(230);
+	__webpack_require__(233);
 
-	var _headerJsx = __webpack_require__(220);
+	var _headerJsx = __webpack_require__(223);
 
 	var _headerJsx2 = _interopRequireDefault(_headerJsx);
 
@@ -37703,13 +38048,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 230 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(231);
+	var content = __webpack_require__(234);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -37729,7 +38074,7 @@
 	}
 
 /***/ },
-/* 231 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -37743,7 +38088,7 @@
 
 
 /***/ },
-/* 232 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -37768,9 +38113,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	__webpack_require__(233);
+	__webpack_require__(236);
 
-	var _headerJsx = __webpack_require__(220);
+	var _headerJsx = __webpack_require__(223);
 
 	var _headerJsx2 = _interopRequireDefault(_headerJsx);
 
@@ -37946,13 +38291,13 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 233 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(234);
+	var content = __webpack_require__(237);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(190)(content, {});
@@ -37972,7 +38317,7 @@
 	}
 
 /***/ },
-/* 234 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(189)();
@@ -37986,7 +38331,7 @@
 
 
 /***/ },
-/* 235 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38011,7 +38356,7 @@
 
 	var _componentsPublicPubJsx = __webpack_require__(193);
 
-	__webpack_require__(236);
+	__webpack_require__(239);
 
 	var ZmitiLoadingApp = (function (_Component) {
 		_inherits(ZmitiLoadingApp, _Component);
@@ -38067,351 +38412,6 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 236 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(237);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(190)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!../../../node_modules/css-loader/index.js!./index.css", function() {
-				var newContent = require("!!../../../node_modules/css-loader/index.js!./index.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 237 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(189)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-loading-ui {\r\n  position: fixed;\r\n  left: 50%;\r\n  top: 0;\r\n  margin-left: -320px;\r\n  z-index: 100;\r\n  width: 640px;\r\n  height: 100%; }\r\n  .zmiti-loading-ui a {\r\n    text-align: center;\r\n    line-height: 180px;\r\n    color: #fff;\r\n    display: block;\r\n    width: 180px;\r\n    height: 180px;\r\n    position: fixed;\r\n    left: 50%;\r\n    top: 50%;\r\n    border-radius: 50%;\r\n    margin: -90px 0 0 -90px; }\r\n    .zmiti-loading-ui a .zmiti-head {\r\n      width: 60px;\r\n      height: 60px;\r\n      border-radius: 50%;\r\n      position: absolute;\r\n      top: 50%;\r\n      left: 50%;\r\n      margin-left: -30px;\r\n      margin-top: -30px; }\r\n    .zmiti-loading-ui a .zmiti-progress {\r\n      width: 100%;\r\n      position: relative;\r\n      z-index: 10;\r\n      top: 90px; }\r\n  .zmiti-loading-ui a .line1 {\r\n    width: 80px;\r\n    height: 80px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -42px 0 0 -42px;\r\n    border: 2px solid #fff;\r\n    border-radius: 80px 80px 80px 80px;\r\n    border-right-color: transparent;\r\n    border-top-color: transparent; }\r\n  .zmiti-loading-ui a .line2 {\r\n    width: 100px;\r\n    height: 100px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -52px 0 0 -52px;\r\n    border: 2px solid #fff;\r\n    border-radius: 100px 100px 100px 100px;\r\n    border-right-color: transparent;\r\n    border-left-color: transparent; }\r\n  .zmiti-loading-ui a .line3 {\r\n    width: 120px;\r\n    height: 120px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -62px 0 0 -62px;\r\n    border: 2px solid #fff;\r\n    border-radius: 120px 120px 120px 120px;\r\n    border-right-color: transparent; }\r\n@-webkit-keyframes line1 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n@keyframes line1 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n  .zmiti-loading-ui a .line1 {\r\n    -webkit-animation: line1 14s ease-in-out 1s infinite alternate;\r\n    animation: line1 15s ease-in-out 1s infinite alternate; }\r\n@-webkit-keyframes line2 {\r\n  from {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); }\r\n  to {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); } }\r\n@keyframes line2 {\r\n  from {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); }\r\n  to {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); } }\r\n  .zmiti-loading-ui a .line2 {\r\n    -webkit-animation: line2 3s ease-in-out infinite;\r\n    animation: line2 3s ease-in-out infinite; }\r\n@-webkit-keyframes line3 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n@keyframes line3 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n  .zmiti-loading-ui a .line3 {\r\n    -webkit-animation: line3 20s ease-in-out infinite;\r\n    animation: line3 20s ease-in-out infinite; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
-
-	// exports
-
-
-/***/ },
-/* 238 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _componentsPublicPubJsx = __webpack_require__(193);
-
-	__webpack_require__(239);
-
-	var _jquery = __webpack_require__(185);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _componentsPublicZmitiAudioJsx = __webpack_require__(202);
-
-	var _componentsPublicZmitiAudioJsx2 = _interopRequireDefault(_componentsPublicZmitiAudioJsx);
-
-	var _componentsPublicZmitiHeaderJsx = __webpack_require__(196);
-
-	var _componentsPublicZmitiHeaderJsx2 = _interopRequireDefault(_componentsPublicZmitiHeaderJsx);
-
-	var ZmitiShareOpenApp = (function (_Component) {
-		_inherits(ZmitiShareOpenApp, _Component);
-
-		function ZmitiShareOpenApp(props) {
-			_classCallCheck(this, ZmitiShareOpenApp);
-
-			_get(Object.getPrototypeOf(ZmitiShareOpenApp.prototype), 'constructor', this).call(this, props);
-			this.state = {
-
-				isBeginRead: false,
-				poetryContent: ''
-
-			};
-			this.viewW = document.documentElement.clientWidth;
-			this.viewH = document.documentElement.clientHeight;
-		}
-
-		_createClass(ZmitiShareOpenApp, [{
-			key: 'render',
-			value: function render() {
-
-				var poetryStyle = {
-					background: 'url(./assets/images/main-bg.jpg) no-repeat center bottom '
-				};
-
-				var s = this;
-				s.state.poetryContent = s.props.poetryContent.replace(/>amp;nbsp;/g, '').replace(/\n/ig, '<br/>');
-
-				return _react2['default'].createElement(
-					'div',
-					{ style: { height: this.viewH, overflow: 'hidden' }, ref: 'zmiti-shareopen-main-ui', className: 'zmiti-shareopen-main-ui ' + (this.props.isEntryResult ? 'hide' : '') },
-					_react2['default'].createElement(
-						'div',
-						{ style: { paddingBottom: 100 } },
-						_react2['default'].createElement(_componentsPublicZmitiHeaderJsx2['default'], _extends({ showRefreshBtn: false }, this.props)),
-						_react2['default'].createElement(
-							'div',
-							{ className: 'zmiti-poetry-C', style: poetryStyle },
-							_react2['default'].createElement(
-								'section',
-								null,
-								_react2['default'].createElement(
-									'div',
-									{ className: 'zmiti-poetry-title' },
-									this.props.poetryTitle
-								),
-								_react2['default'].createElement(
-									'div',
-									{ className: 'zmiti-poetry-author' },
-									this.props.poetryAuthor
-								),
-								_react2['default'].createElement('article', { className: 'zmiti-poetry-content ' + (this.props.id && this.props.parentWxopenId ? 'zmiti-custom-text' : ''), dangerouslySetInnerHTML: this.createMarkup() }),
-								_react2['default'].createElement(
-									'div',
-									{ className: 'zmiti-tip' },
-									'以上根据网友语音转化的文字'
-								)
-							)
-						),
-						_react2['default'].createElement(
-							'div',
-							{ className: 'zmiti-open-poetry' },
-							_react2['default'].createElement('img', { src: './assets/images/openpeotry.png' })
-						),
-						_react2['default'].createElement(
-							'section',
-							{ className: 'zmiti-voice-content' },
-							_react2['default'].createElement(_componentsPublicZmitiAudioJsx2['default'], this.props)
-						),
-						_react2['default'].createElement(
-							'div',
-							{ className: 'zmiti-bottom-ui' },
-							this.state.isBeginRead && _react2['default'].createElement(
-								'div',
-								{ className: 'zmiti-voice' },
-								_react2['default'].createElement('img', { src: './assets/images/voice.gif' }),
-								_react2['default'].createElement(
-									'div',
-									null,
-									'录音时长还剩',
-									60 - this.props.duration,
-									's'
-								)
-							),
-							_react2['default'].createElement(
-								'section',
-								{ style: { backgroundColor: this.props.theme.backgroundColor }, onTouchTap: this.beginRead.bind(this), className: 'zmiti-btn zmiti-begin-read' },
-								this.state.isBeginRead ? '点击结束朗读' : '秒懂，开始阅读原诗'
-							),
-							_react2['default'].createElement(
-								'section',
-								{ className: 'zmiti-shareopen-bottom-btngroup' },
-								_react2['default'].createElement(
-									'aside',
-									null,
-									_react2['default'].createElement(
-										'div',
-										{ className: 'zmiti-reload-poetry', onTouchTap: this.beginRefreshPoetry.bind(this) },
-										_react2['default'].createElement('img', { className: this.state.isRefresh ? 'zmiti-rotate' : '', src: './assets/images/refresh.png' }),
-										'重新出题'
-									)
-								),
-								_react2['default'].createElement(
-									'aside',
-									null,
-									_react2['default'].createElement(
-										'div',
-										{ className: 'zmiti-reload-poetry' },
-										_react2['default'].createElement('img', { className: this.state.isRefresh ? 'zmiti-rotate' : '', src: './assets/images/refresh.png' }),
-										'猜别的'
-									)
-								)
-							)
-						),
-						_react2['default'].createElement(
-							'section',
-							{ className: 'zmiti-seal' },
-							_react2['default'].createElement('img', { src: './assets/images/seal.png' })
-						)
-					)
-				);
-			}
-		}, {
-			key: 'beginRefreshPoetry',
-			value: function beginRefreshPoetry() {
-				var obserable = this.props.obserable;
-
-				obserable.trigger({
-					type: 'refreshPoetry'
-				});
-			}
-		}, {
-			key: 'createMarkup',
-			value: function createMarkup() {
-				return { __html: this.state.poetryContent };
-			}
-		}, {
-			key: 'beginRead',
-			value: function beginRead() {
-				var _this = this;
-
-				var obserable = this.props.obserable;
-
-				var s = this;
-				if (!this.state.isBeginRead) {
-					try {
-						wx.startRecord(); //开始朗读
-					} catch (e) {
-						alert('开始录音了 + error');
-					}
-
-					this.timer = setInterval(function () {
-
-						if (60 - _this.props.duration <= 0) {
-							//录音时间结束.进入结果页面
-							s.stopRecord();
-							return;
-						}
-
-						obserable.trigger({
-							type: 'countdownDuration'
-						});
-					}, 1000);
-					/*obserable.trigger({
-	    	type:'entryResult'
-	    })*/
-				} else {
-						s.stopRecord();
-					}
-				this.setState({
-					isBeginRead: !this.state.isBeginRead
-				});
-			}
-		}, {
-			key: 'stopRecord',
-			value: function stopRecord() {
-				var obserable = this.props.obserable;
-
-				var s = this; //结束朗读
-				clearInterval(s.timer);
-				wx.stopRecord({
-					fail: function fail() {
-						alert('end error');
-					},
-					success: function success(res) {
-
-						s.localId = res.localId;
-						obserable.trigger({
-							type: 'getLocalId',
-							data: s.localId
-						});
-						//开始转文字。
-						wx.translateVoice({
-							localId: s.localId, // 需要识别的音频的本地Id，由录音相关接口获得
-							isShowProgressTips: 1, // 默认为1，显示进度提示
-							fail: function fail() {
-								s.setState({
-									isBeginRead: false
-								});
-								alert('转文字失败，请重新再试');
-							},
-							success: function success(res) {
-								//转成功了。
-
-								var poetryContent = s.props.poetryContent.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig, '');
-
-								var dataArr = res.translateResult.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig, '').split('');
-								//dataArr.length = poetryContent.length;
-								var rightWords = 0;
-
-								var resultHtml = '';
-								var score = 0;
-								dataArr.map(function (da, k) {
-
-									if (poetryContent.indexOf(da) > -1) {
-										rightWords++;
-										resultHtml += '<span style="color:green">' + da + '</span>';
-									} else {
-										resultHtml += da;
-									}
-								});
-
-								var score = rightWords / poetryContent.length * 100 | 0;
-								if (res.translateResult.length > poetryContent.length && score >= 100) {
-									score = 99;
-								}
-								obserable.trigger({ type: 'updateScore', data: score });
-								obserable.trigger({
-									type: 'getTransformResult',
-									data: resultHtml
-								});
-
-								obserable.trigger({
-									type: 'entryResult',
-									data: true
-								});
-							}
-						});
-					}
-				});
-			}
-		}, {
-			key: 'componentDidMount',
-			value: function componentDidMount() {
-				var _this2 = this;
-
-				var IScroll = this.props.IScroll;
-
-				this.scroll = new IScroll(this.refs['zmiti-shareopen-main-ui'], {
-					scrollbars: true
-				});
-				setTimeout(function () {
-					_this2.scroll.refresh();
-				}, 1000);
-			}
-		}]);
-
-		return ZmitiShareOpenApp;
-	})(_react.Component);
-
-	exports['default'] = (0, _componentsPublicPubJsx.PubCom)(ZmitiShareOpenApp);
-	module.exports = exports['default'];
-
-/***/ },
 /* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -38446,7 +38446,7 @@
 
 
 	// module
-	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-text-overflow {\r\n  overflow: hidden;\r\n  white-space: nowrap;\r\n  word-break: break-all;\r\n  text-overflow: ellipsis;\r\n  -webkit-text-overflow: ellipsis; }\r\n\r\n.zmiti-break-all {\r\n  word-wrap: break-word;\r\n  word-break: break-all; }\r\n\r\n.zmiti-shareopen-main-ui {\r\n  width: 640px;\r\n  box-sizing: border-box;\r\n  position: absolute;\r\n  -webkit-transition: 0.2s;\r\n  transition: 0.2s;\r\n  z-index: 2; }\r\n  .zmiti-shareopen-main-ui.hide {\r\n    opacity: .5;\r\n    -webkit-transform: translate3d(-213.33333px, 0, 0);\r\n    transform: translate3d(-213.33333px, 0, 0); }\r\n  .zmiti-roof {\r\n    width: 60px;\r\n    position: absolute;\r\n    top: 100px; }\r\n  .zmiti-shareopen-main-ui .zmiti-open-poetry {\r\n    position: absolute;\r\n    width: 40px;\r\n    top: 180px;\r\n    right: 35px; }\r\n  .zmiti-shareopen-main-ui .zmiti-poetry-C {\r\n    position: relative;\r\n    width: 500px;\r\n    height: 550px;\r\n    border-radius: 50px;\r\n    margin-left: 70px;\r\n    overflow: hidden;\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal;\r\n    text-align: center; }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-author {\r\n      margin-top: 10px;\r\n      width: 500px; }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-tip {\r\n      position: absolute;\r\n      bottom: 8px;\r\n      left: 50%;\r\n      width: 100%;\r\n      font-size: 24px;\r\n      color: #999;\r\n      -webkit-transform: translate3d(-50%, 0, 0);\r\n      transform: translate3d(-50%, 0, 0); }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-title {\r\n      width: 500px;\r\n      font-size: 30px;\r\n      -webkit-transform: scale(1.5);\r\n      transform: scale(1.5); }\r\n    .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-content {\r\n      -webkit-box-flex: 1;\r\n      text-align: center;\r\n      -webkit-transform: scale(1.2);\r\n      transform: scale(1.2);\r\n      width: 350px;\r\n      margin: 50px auto;\r\n      text-align: left; }\r\n      .zmiti-shareopen-main-ui .zmiti-poetry-C .zmiti-poetry-content.zmiti-custom-text {\r\n        width: 400px;\r\n        text-align: left; }\r\n  .zmiti-shareopen-main-ui .zmiti-seal {\r\n    position: absolute;\r\n    top: 580px;\r\n    right: 30px; }\r\n  .zmiti-shareopen-main-ui .zmiti-voice-content {\r\n    width: 100%;\r\n    height: 60px;\r\n    top: 660px; }\r\n  .zmiti-shareopen-main-ui .zmiti-bottom-ui {\r\n    width: 640px;\r\n    height: 96px;\r\n    margin-top: 40px;\r\n    left: 0;\r\n    position: relative; }\r\n    .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-tips {\r\n      width: 284px;\r\n      height: 58px;\r\n      position: absolute;\r\n      top: -58px;\r\n      margin-left: -142px;\r\n      left: 50%;\r\n      text-align: center;\r\n      line-height: 50px;\r\n      color: #7d6548; }\r\n    .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-voice {\r\n      position: absolute;\r\n      width: 184px;\r\n      top: -200px;\r\n      left: 50%;\r\n      margin-left: -97px; }\r\n      .zmiti-shareopen-main-ui .zmiti-bottom-ui .zmiti-voice div {\r\n        margin-top: 6px;\r\n        color: #767676; }\r\n  .zmiti-shareopen-main-ui .zmiti-btn {\r\n    color: #fff;\r\n    text-align: center;\r\n    height: 70px;\r\n    line-height: 70px;\r\n    border-radius: 30px;\r\n    background: #4a5265; }\r\n  .zmiti-shareopen-main-ui .zmiti-begin-read {\r\n    width: 464px;\r\n    margin: 13px auto;\r\n    position: relative;\r\n    font-size: 30px; }\r\n  .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup {\r\n    display: -webkit-box;\r\n    -webkit-box-align: center;\r\n    -webkit-box-pack: center;\r\n    -webkit-box-orient: horizontal; }\r\n    .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup img {\r\n      width: 30px;\r\n      margin-right: 20px; }\r\n    .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside {\r\n      -webkit-box-flex: 1;\r\n      margin: 0 10px; }\r\n      .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside .zmiti-reload-poetry {\r\n        border: 1px solid #ccc;\r\n        display: inline-block;\r\n        padding: 12px 32px;\r\n        border-radius: 40px;\r\n        font-size: 30px; }\r\n      .zmiti-shareopen-main-ui .zmiti-shareopen-bottom-btngroup aside:first-of-type {\r\n        text-align: right; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
+	exports.push([module.id, "/*.ant-btn:focus, .ant-btn:hover,.ant-input:focus, .ant-input:hover {\r\n    background-color: #fff;\r\n    border-color: #bf1616;\r\n    box-shadow: 0 0 0 2px rgba(191, 22, 22, 0.1);\r\n}*/\r\n.lt-full {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: absolute;\r\n  left: 0;\r\n  top: 0; }\r\n\r\n.zmiti-loading-ui {\r\n  position: fixed;\r\n  left: 50%;\r\n  top: 0;\r\n  margin-left: -320px;\r\n  z-index: 100;\r\n  width: 640px;\r\n  height: 100%; }\r\n  .zmiti-loading-ui a {\r\n    text-align: center;\r\n    line-height: 180px;\r\n    color: #fff;\r\n    display: block;\r\n    width: 180px;\r\n    height: 180px;\r\n    position: fixed;\r\n    left: 50%;\r\n    top: 50%;\r\n    border-radius: 50%;\r\n    margin: -90px 0 0 -90px; }\r\n    .zmiti-loading-ui a .zmiti-head {\r\n      width: 60px;\r\n      height: 60px;\r\n      border-radius: 50%;\r\n      position: absolute;\r\n      top: 50%;\r\n      left: 50%;\r\n      margin-left: -30px;\r\n      margin-top: -30px; }\r\n    .zmiti-loading-ui a .zmiti-progress {\r\n      width: 100%;\r\n      position: relative;\r\n      z-index: 10;\r\n      top: 90px; }\r\n  .zmiti-loading-ui a .line1 {\r\n    width: 80px;\r\n    height: 80px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -42px 0 0 -42px;\r\n    border: 2px solid #fff;\r\n    border-radius: 80px 80px 80px 80px;\r\n    border-right-color: transparent;\r\n    border-top-color: transparent; }\r\n  .zmiti-loading-ui a .line2 {\r\n    width: 100px;\r\n    height: 100px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -52px 0 0 -52px;\r\n    border: 2px solid #fff;\r\n    border-radius: 100px 100px 100px 100px;\r\n    border-right-color: transparent;\r\n    border-left-color: transparent; }\r\n  .zmiti-loading-ui a .line3 {\r\n    width: 120px;\r\n    height: 120px;\r\n    position: absolute;\r\n    left: 50%;\r\n    top: 50%;\r\n    margin: -62px 0 0 -62px;\r\n    border: 2px solid #fff;\r\n    border-radius: 120px 120px 120px 120px;\r\n    border-right-color: transparent; }\r\n@-webkit-keyframes line1 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n@keyframes line1 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n  .zmiti-loading-ui a .line1 {\r\n    -webkit-animation: line1 14s ease-in-out 1s infinite alternate;\r\n    animation: line1 15s ease-in-out 1s infinite alternate; }\r\n@-webkit-keyframes line2 {\r\n  from {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); }\r\n  to {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); } }\r\n@keyframes line2 {\r\n  from {\r\n    -webkit-transform: rotate(360deg);\r\n    transform: rotate(360deg); }\r\n  to {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); } }\r\n  .zmiti-loading-ui a .line2 {\r\n    -webkit-animation: line2 3s ease-in-out infinite;\r\n    animation: line2 3s ease-in-out infinite; }\r\n@-webkit-keyframes line3 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n@keyframes line3 {\r\n  0% {\r\n    -webkit-transform: rotate(0deg);\r\n    transform: rotate(0deg); }\r\n  20% {\r\n    -webkit-transform: rotate(720deg);\r\n    transform: rotate(720deg); }\r\n  50% {\r\n    -webkit-transform: rotate(1080deg);\r\n    transform: rotate(1080deg); }\r\n  75% {\r\n    -webkit-transform: rotate(1300deg);\r\n    transform: rotate(1300deg); }\r\n  100% {\r\n    -webkit-transform: rotate(2500deg);\r\n    transform: rotate(2500deg); } }\r\n  .zmiti-loading-ui a .line3 {\r\n    -webkit-animation: line3 20s ease-in-out infinite;\r\n    animation: line3 20s ease-in-out infinite; }\r\n\r\n/*# sourceMappingURL=index.css.map */", ""]);
 
 	// exports
 
