@@ -24,11 +24,22 @@ class ZmitiChooseApp extends Component {
 		return (
 			<div className={'zmiti-choose-main-ui '+className}>
 				<div onTouchTap={this.entryMain.bind(this)} onTouchStart={()=>{this.setState({readActive:true})}} onTouchEnd={()=>{this.setState({readActive:false})}} className={this.state.readActive?'active':''}><img src='./assets/images/c-read.png'/></div>
-				<div onTouchStart={()=>{this.setState({guessActive:true})}} onTouchEnd={()=>{this.setState({guessActive:false})}} className={this.state.guessActive?'active':''} ><img src='./assets/images/c-guess.png'/></div>
+				<div onTouchTap={this.entryMainGuess.bind(this)} onTouchStart={()=>{this.setState({guessActive:true})}} onTouchEnd={()=>{this.setState({guessActive:false})}} className={this.state.guessActive?'active':''} ><img src='./assets/images/c-guess.png'/></div>
 				<div onTouchStart={()=>{this.setState({recordActive:true})}} onTouchEnd={()=>{this.setState({recordActive:false})}} className={this.state.recordActive?'active':''}><img src='./assets/images/c-record.png'/></div>
 				<img src='./assets/images/choose.png'/>
 			</div>
 		);
+	}
+
+	entryMainGuess(){
+		this.setState({
+			showMainUI:-1
+		});
+		let {obserable} = this.props;
+		obserable.trigger({
+			type:'hideMainContent',
+			data:'guess'
+		});
 	}
 
 	entryMain(){//

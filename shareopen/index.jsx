@@ -97,7 +97,7 @@ class ZmitiShareOpenApp extends Component {
 		obserable.trigger({
 			type:'refreshPoetry',
 			data:{
-				flag:'false',
+				type:'custom',
 				isOther:true
 			}
 		});
@@ -108,15 +108,17 @@ class ZmitiShareOpenApp extends Component {
 		})
 	}
 
-	beginRefreshPoetry(){
+	beginRefreshPoetry(){ //重新出题
 		let {obserable} = this.props;
 		 
 		obserable.trigger({
 			type:'refreshPoetry',
 			data:{
-				flag:true
+				type:'poetry',
+				isOther:false
 			}
 		});
+
 	}
 
 	createMarkup(){

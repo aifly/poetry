@@ -57,7 +57,7 @@ $viewW:640px;
     }
 
     img:first-of-type{
-      @include animation(rotate 5s  infinite 1s);
+      @include animation(rotate 5s  linear infinite 1s);
     }
     img:last-of-type{
       @include pos(a);

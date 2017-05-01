@@ -27,6 +27,7 @@ export class App extends Component {
 			isFirst:false,//是否是从新开始的
 			audioSrc:'',//当前录音的id
 			showUI:false,
+			showShareOpen:false,
 			score:0,//积分
 			openid:'',
 			wxappid:'',
@@ -79,20 +80,20 @@ export class App extends Component {
 
 		return (
 			<div className={'zmiti-main-ui show'} style={{height:this.viewH}}>
-				{this.state.code && <div>
+				{this.state.code || true && <div>
 									<section className={'zmiti-main-C '+(this.state.showUser?'hide':'')}>
 									{this.state.isFirst &&<ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
 									{this.state.isFirst && <ZmitiChooseApp {...this.state} {...data}></ZmitiChooseApp>}
 									<section className={'zmiti-main-content '+(this.state.isFirst && this.state.hideMainContent?'hide':'')}>
-											{!(this.state.id && this.state.parentWxopenId) && <ZmitiIndexApp {...this.state} {...data}></ZmitiIndexApp>}
-											{(this.state.id && this.state.parentWxopenId ) && <ZmitiShareOpenApp {...this.state} {...data}></ZmitiShareOpenApp>}
+											{!(this.state.id && this.state.parentWxopenId || this.state.showShareOpen) && <ZmitiIndexApp {...this.state} {...data}></ZmitiIndexApp>}
+											{(this.state.id && this.state.parentWxopenId || this.state.showShareOpen) && <ZmitiShareOpenApp {...this.state} {...data}></ZmitiShareOpenApp>}
 											<ZmitiResultApp {...this.state} {...data}></ZmitiResultApp>
 											<ZmitiShareApp {...this.state} {...data}></ZmitiShareApp>
 										</section>
 									</section>
 									<ZmitiUserApp {...this.state} {...data}></ZmitiUserApp>
 								</div>}
-				{!this.state.code && <div className='zmiti-auoth-page' style={auothStyle}></div>}
+				{!this.state.code && false && <div className='zmiti-auoth-page' style={auothStyle}></div>}
 			</div>
 		);
 	}
@@ -426,6 +427,7 @@ export class App extends Component {
 			id,
 			parentWxopenId,
 			code,
+			showShareOpen:id && parentWxopenId,
 			zmiti
 		});
 
@@ -516,8 +518,10 @@ export class App extends Component {
 								code
 							});
 
+							if(id && parentWxopenId){
+								s.refreshPoetry('custom',false);
+							}
 
-							s.refreshPoetry();
 							if (wx.posData && wx.posData.longitude) {
 								s.getPos(dt.userinfo.nickname, dt.userinfo.headimgurl);
 							}
@@ -536,7 +540,7 @@ export class App extends Component {
 								
 							}
 							else {
-								s.refreshPoetry();
+								//s.refreshPoetry();
 								//alert('请在微信中打开');
 							}
 						}
@@ -562,10 +566,41 @@ export class App extends Component {
 			})
 		});
 
-		obserable.on('hideMainContent', ()=> {
+		obserable.on('hideMainContent', (data)=> {
 			this.setState({
 				hideMainContent: false
-			})
+			});
+			this.guess = data || 'poetry';
+			var s = this;
+			if(data === 'guess'){
+				$.ajax({
+					url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
+					data:{},
+					success(data){
+						if(data.getret === 0){
+							if(data.list.length>0){
+								console.log(data.list);
+								s.state.userPoetryTitle = <img src={data.list[0].headimgurl} style={{width:60,borderRadius:'50%',marginBottom:20}}/>;
+								s.state.userPoetryAuthor = data.list[0].nickname;
+								s.state.userPoetryContent = data.list[0].changetext;
+								s.state.poetryContent = data.list[0].originaltext;
+								s.state.poetryTitle = data.list[0].workdatatitle;
+								s.state.poetryAuthor = data.list[0].author;
+								s.state.workdataid = data.list[0].workdataid;
+								s.state.showShareOpen = true;
+								s.forceUpdate();
+							}
+							else{
+								alert('没有获取到诗词，请刷新重试');
+							}
+						}
+					}
+				})	
+			}else{
+
+				s.refreshPoetry('custom',false);
+			}
+			 
 		})
 
 		obserable.on('toggleUser', (data)=> {
@@ -594,7 +629,7 @@ export class App extends Component {
 
 		obserable.on('refreshPoetry', (data)=> {
 			var data = data || {};
-			this.refreshPoetry(data.flag === 'false'?false:true,data.isOther);
+			this.refreshPoetry(data.type,data.isOther);
 		});
 
 		obserable.on('updateIntegral', (data)=> {
@@ -611,13 +646,13 @@ export class App extends Component {
 
 	}
 
-	refreshPoetry(isRefresh,isOther){
+	refreshPoetry(type,isOther){
 		var s = this;
+		var type = type || 'poetry';
 
-
-		if(this.state.id && this.state.parentWxopenId && !isRefresh){
+		if(type === 'custom'){//取用户读的内容.
 			var params = {};
-			if(!isOther){
+			if(!isOther && s.state.id && s.state.parentWxopenId){
 				params = {
 					id:s.state.id,
 					wxopenid:s.state.parentWxopenId
@@ -644,8 +679,7 @@ export class App extends Component {
 					}
 				}
 			})	
-		}else{
- 
+		}else{//取诗
 
 			$.ajax({
 				url:'http://api.zmiti.com/v2/weixin/get_shici/',
@@ -671,6 +705,7 @@ export class App extends Component {
 							
 							s.state.id = '';
 							s.state.parentWxopenId = '';
+							s.state.showShareOpen = false;
 							s.wxConfig(s.state.data.shareTitle,s.state.data.shareDesc,s.state.shareImg,s.state.wxappid);
 							s.forceUpdate();
 						}
