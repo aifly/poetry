@@ -263,6 +263,19 @@ export class App extends Component {
 				   		success(data){
 				   			if(data.getret === 0){
 
+
+				   				/*wx.downloadVoice({
+								    serverId: 'CjdP4ky2Lphzi716uwa07o-JqffwyAz95_uapnqoXmoumY155QGWTsDMSqU9PcKb', // 需要下载的音频的服务器端ID，由uploadVoice接口获得
+								    isShowProgressTips: 1, // 默认为1，显示进度提示
+								    success: function (res) {
+								    	alert('download success  and begin play the audio');
+								        var localId = res.localId; // 返回音频的本地ID
+								        wx.playVoice({
+										    localId // 需要播放的音频的本地ID，由stopRecord接口获得
+										});
+								    }
+								});*/
+
 				   				$.ajax({
 									url:'http://api.zmiti.com/v2/weixin/get_wxuserdetaile',
 									data:{
