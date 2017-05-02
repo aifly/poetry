@@ -12,6 +12,7 @@ class ZmitiResultApp extends Component {
 			score:'',
 			entryShare:false,
 			id:'',
+			level:-1,
 		};
 		this.viewW = document.documentElement.clientWidth;
 		this.viewH = document.documentElement.clientHeight;
@@ -30,7 +31,7 @@ class ZmitiResultApp extends Component {
 						<ZmitiHeaderApp {...this.props} {...headerProps}></ZmitiHeaderApp>
 						<div className='zmiti-score-C'>
 							<span>{this.state.score}</span>
-							<img src='./assets/images/score-bg1.png'/>
+							{this.state.level !== -1 && <img src={'./assets/images/score-bg'+this.state.level+'.png'}/>}
 						</div>
 						<div className='zmiti-transform-C' dangerouslySetInnerHTML={this.createMarkup()}>
 							
@@ -95,7 +96,7 @@ class ZmitiResultApp extends Component {
 				   			s.setState({
 				   				id
 				   			},()=>{
-				   				s.wxConfig('智媒体诗词解密','智媒体诗词解密','http://h5.zmiti.com/public/silk/assets/images/300.jpg',s.props.wxappid);
+				   				s.wxConfig(s.props.data.shareTitle,s.props.data.shareDesc,s.props.data.shareImg,s.props.wxappid);
 				   			})
 
 							var score = 10;
@@ -251,7 +252,20 @@ class ZmitiResultApp extends Component {
 			},()=>{
 				setTimeout(()=>{
 					this.scroll.refresh();
-				},500)
+				},500);
+				var level = 1;
+				if(data > 40){
+					level = 2;
+				}
+				if(data > 60){
+					level = 3;
+				}
+				if (data > 80){
+					level = 4;
+				}
+				this.setState({
+					level
+				})
 			});
 			obserable.trigger({
 				type:'getScale',

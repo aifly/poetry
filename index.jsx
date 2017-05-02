@@ -31,6 +31,7 @@ export class App extends Component {
 			score:0,//积分
 			openid:'',
 			wxappid:'',
+			showLoading:true,
 			worksid:'5296019810',	
 			nickname:'',
 			headimgurl:'',
@@ -49,8 +50,8 @@ export class App extends Component {
 			userPoetryContent:'',//原诗
 			
 			data:{
-				shareTitle:'智媒体测试',
-				shareDesc:'智媒体诗词解密测试',
+				shareTitle:'',
+				shareDesc:'',
 				shareImg:'http://h5.zmiti.com/public/silk/assets/images/300.jpg',
 				shareUrl:'',
 			},
@@ -62,6 +63,62 @@ export class App extends Component {
 		this.viewH = document.documentElement.clientHeight;
 		this.defaultShareUrl = '';
 		this.code = this.getQueryString('code');
+
+		this.loadingImgArr = [
+			 "./assets/images/arron1.png",
+			 "./assets/images/auoth.jpg",
+			 "./assets/images/benjun.png",
+			 "./assets/images/c-guess.png",
+			 "./assets/images/choose.png",
+			 "./assets/images/c-read.png",
+			 "./assets/images/c-record.png",
+			 "./assets/images/currency.png",
+			 "./assets/images/house.png",
+			 "./assets/images/index-begin-bg.png",
+			 "./assets/images/index-begin-text.png",
+			 "./assets/images/index-bg.jpg",
+			 "./assets/images/index-bottom.png",
+			 "./assets/images/index-center.png",
+			 "./assets/images/index-shici.png",
+			 "./assets/images/index-text.png",
+			 "./assets/images/index-top.png",
+			 "./assets/images/line.png",
+			 "./assets/images/loading1.png",
+			 "./assets/images/loading2.png",
+			 "./assets/images/loading3.png",
+			 "./assets/images/loading4.png",
+			 "./assets/images/loading5.png",
+			 "./assets/images/loading6.png",
+			 "./assets/images/loading7.png",
+			 "./assets/images/loading8.png",
+			 "./assets/images/loading9.png",
+			 "./assets/images/loading10.png",
+			 "./assets/images/loading11.png",
+			 "./assets/images/loading12.png",
+			 "./assets/images/loading13.png",
+			 "./assets/images/main-bg.jpg",
+			 "./assets/images/main-bg.png",
+			 "./assets/images/openpeotry.png",
+			 "./assets/images/pause.gif",
+			 "./assets/images/pause.png",
+			 "./assets/images/pre.png",
+			 "./assets/images/refresh.png",
+			 "./assets/images/score-bg1.png",
+			 "./assets/images/score-bg2.png",
+			 "./assets/images/score-bg3.png",
+			 "./assets/images/score-bg4.png",
+			 "./assets/images/seal.png",
+			 "./assets/images/send.png",
+			 "./assets/images/tip-bg.png",
+			 "./assets/images/voice.gif",
+			 "./assets/images/zmiti.jpg",
+			 "./assets/images/user/currency.png",
+			 "./assets/images/user/user-line.png",
+			 "./assets/images/user/user-top-bg.png",
+			 "./assets/images/user/voice.png",
+			 "./assets/images/user/zmiti.jpg"
+
+		];
 	}
 	render() {
 		var data = {
@@ -80,9 +137,10 @@ export class App extends Component {
 
 		return (
 			<div className={'zmiti-main-ui show'} style={{height:this.viewH}}>
-				{this.state.code || true && <div>
+				{this.state.nickname && this.state.headimgurl  && <div>
 									<section className={'zmiti-main-C '+(this.state.showUser?'hide':'')}>
-									{this.state.isFirst &&<ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
+									{this.state.showLoading && <ZmitiLoadingApp {...this.state}></ZmitiLoadingApp>}
+									{this.state.isFirst && !this.state.showLoading  &&  <ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
 									{this.state.isFirst && <ZmitiChooseApp {...this.state} {...data}></ZmitiChooseApp>}
 									<section className={'zmiti-main-content '+(this.state.isFirst && this.state.hideMainContent?'hide':'')}>
 											{!(this.state.id && this.state.parentWxopenId || this.state.showShareOpen) && <ZmitiIndexApp {...this.state} {...data}></ZmitiIndexApp>}
@@ -93,7 +151,7 @@ export class App extends Component {
 									</section>
 									<ZmitiUserApp {...this.state} {...data}></ZmitiUserApp>
 								</div>}
-				{!this.state.code && false && <div className='zmiti-auoth-page' style={auothStyle}></div>}
+				{!(this.state.nickname && this.state.headimgurl) && <div className='zmiti-auoth-page' style={auothStyle}></div>}
 			</div>
 		);
 	}
@@ -133,33 +191,7 @@ export class App extends Component {
 		});
 			
 	}
-	playVoice(){
-		var s = this;
-		wx.playVoice({
-		    localId: s.localId
-		});
-		this.setState({
-			msg:'开始播放录音'
-		})
-	}
-	pauseVoice(){
-		var s = this;
-		wx.pauseVoice({
-		    localId: s.localId
-		});
-		this.setState({
-			msg:'暂停播放录音'
-		})
-	}
-	stopVoice(){
-		var s = this;
-		wx.stopVoice({
-		    localId: s.localId
-		});
-		this.setState({
-			msg:'停止播放录音'
-		});
-	}
+	
 
 	changeURLPar(destiny, par, par_value) { 
 		var pattern = par+'=([^&]*)'; 
@@ -257,12 +289,10 @@ export class App extends Component {
 
 				   	//获取用户积分
 					//
-					
-
 			   		$.ajax({
 						url:'http://api.zmiti.com/v2/msg/send_msg/',
 						data:{
-							type:'publish',
+							type:s.state.worksid,
 							content:JSON.stringify(opt),
 							to:opt.to||''
 						},
@@ -434,7 +464,6 @@ export class App extends Component {
 
 		$.getJSON('./assets/js/data.json', (d)=> {
 
-
 			s.wxappid = d.wxappid;
 
 			this.state.worksid = d.worksid;
@@ -442,9 +471,11 @@ export class App extends Component {
 
 			this.state.data.shareUrl = d.viewpath;
 			this.defaultShareUrl = d.viewpath;
+			this.state.data.shareTitle = d.shareTitle;
+			this.state.data.shareDesc = d.shareDesc;
+			this.state.data.shareImg = d.shareImg;
 
-
-			var redirect_uri = s.defaultShareUrl;
+			var redirect_uri = s.defaultShareUrl || window.location.href.split('?')[0];
 			var symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
 			if (s.state.id && s.state.parentWxopenId) {
 				redirect_uri = redirect_uri + symbol + 'id=' + s.state.id + '&wxopenid=' + s.state.parentWxopenId;
@@ -452,8 +483,9 @@ export class App extends Component {
 			
 			symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
 			if (!s.getQueryString('zmiti')) {
-				redirect_uri += symbol + 'zmiti=start';
+				//redirect_uri += symbol + 'zmiti=start';
 			}
+			 
 			$.ajax({
 				url: 'http://api.zmiti.com/v2/weixin/getoauthurl/',
 				type: "post",
@@ -470,12 +502,15 @@ export class App extends Component {
 					if (dt.getret === 0) {
 						var url = dt.url;
 						if (url.indexOf('&zmiti') <= -1 || url.indexOf('?zmiti') <= -1) {
-							url = url.split('#')[0] + '&zmiti=start#' + (url.split('#')[1] || '')
+							//url = url.split('#')[0] + '&zmiti=start#' + (url.split('#')[1] || '')
 						}
-						
+						//alert(d.wxauthurl + '======'+ dt.url );
 						s.oauthurl = dt.url;
 						localStorage.setItem('oauthurl',s.oauthurl);
 						
+					}
+					else{
+						alert('data.getret = ' + data.getret + 'daat.getmsg  =' + data.getmsg);
 					}
 				}
 			})
@@ -495,6 +530,18 @@ export class App extends Component {
 					success(dt){
 
 						if (dt.getret === 0) {
+
+							s.loading(s.loadingImgArr||[],(scale)=>{
+								s.setState({
+									progress:(scale*100|0)+'%'
+								});
+							},()=>{
+								s.setState({
+									showLoading:false
+								});
+							});
+
+
 							$.ajax({
 								url: 'http://api.zmiti.com/v2/works/update_pvnum/',
 								data: {
@@ -531,7 +578,6 @@ export class App extends Component {
 							if (s.isWeiXin()) {
 									
 								var url = s.oauthurl || window.localStorage.getItem('oauthurl');
-								//alert(url);
 								window.location.href = url;
 
 
@@ -646,6 +692,31 @@ export class App extends Component {
 
 	}
 
+	loading(arr, fn, fnEnd){
+	        var len = arr.length;
+	        var count = 0;
+	        var i = 0;
+	        
+	        function loadimg() {
+	            if (i === len) {
+	                return;
+	            }
+	            var img = new Image();
+	            img.onload = img.onerror = function(){
+	                count++;
+	                if (i < len - 1) {
+	                    i++;
+	                    loadimg();
+	                    fn && fn(i / (len - 1), img.src);
+	                } else {
+	                    fnEnd && fnEnd(img.src);
+	                }
+	            };
+	            img.src = arr[i];
+	        }
+	       loadimg();
+    }
+
 	refreshPoetry(type,isOther){
 		var s = this;
 		var type = type || 'poetry';
@@ -722,11 +793,7 @@ export class App extends Component {
 		
 	}
 
-
-
-	clearRender(){
-		clearInterval(this.talkTimer);
-	}
+	
 }
 
 ReactDOM.render(<App></App>,document.getElementById('fly-main-ui'));

@@ -7,8 +7,7 @@ $viewW:640px;
     @include transition(.2s);
     z-index: 2;
     &.hide{
-      opacity:.5;
-      @include transform(translate3d(-$viewW/3,0,0));
+      @include transform(translate3d(-$viewW,0,0));
     }
 
     @at-root.zmiti-roof{

@@ -14,17 +14,16 @@ class ZmitiLoadingApp extends Component {
 
 	render() {
 		var mainStyle = {
-			background:'url(./assets/images/loading.jpg) no-repeat center / cover'
+			background:'#fff url(./assets/images/choose.png) no-repeat center bottom / cover'
 		}
 		return (
 			<div className='zmiti-loading-ui' style={mainStyle}>
-				  <a href="#">
-				  		<section className='zmiti-head' style={{background:'url('+(this.props.myHeadImg || './assets/images/zmiti.jpg')+') no-repeat center / cover'}}></section>
-				        <div className="line1"></div>
-				        <div className="line2"></div>
-				        <div className="line3"></div>
-				        <div className='zmiti-progress'>{this.props.progress}</div>
-				    </a>
+				{
+					[1,2,3,4,5,6,7,8,9,10,11,12,13].map((item,i)=>{
+						return <div key={i} className='zmiti-loading-item'><img src={'./assets/images/loading'+item+'.png'}/></div>
+					})
+				}
+				<div className='zmiti-loading-pre'>{this.props.progress|| '0%'}</div>
 			</div>
 		);
 	}

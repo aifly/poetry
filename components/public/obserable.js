@@ -7,6 +7,13 @@
 		this.handlers[type] =  this.handlers[type] || [];
 		this.handlers[type].push(handler);	
 	}
+	off(type){
+		this.handlers[type] && this.handlers[type].forEach((item,i)=>{
+			if(item.type  ===  type){
+				this.handlers[type] .splice(i,1);
+			};
+		});
+	}
 	trigger(event){
 
 		if(!event.target){

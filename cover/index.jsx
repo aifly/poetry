@@ -55,9 +55,13 @@ class ZmitiCoverApp extends Component {
 		
 	}
 	componentDidMount() {
-		this.setState({
-			showCanvas:true
-		});
+
+		setTimeout(()=>{
+			this.setState({
+				showCanvas:true
+			});
+		},500)
+		
 	}
  
 }

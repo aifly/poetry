@@ -10,6 +10,17 @@
   left: 0;
   top: 0; }
 
+.zmiti-text-overflow {
+  overflow: hidden;
+  white-space: nowrap;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  -webkit-text-overflow: ellipsis; }
+
+.zmiti-break-all {
+  word-wrap: break-word;
+  word-break: break-all; }
+
 .zmiti-loading-ui {
   position: fixed;
   left: 50%;
@@ -18,150 +29,85 @@
   z-index: 100;
   width: 640px;
   height: 100%; }
-  .zmiti-loading-ui a {
-    text-align: center;
-    line-height: 180px;
-    color: #fff;
-    display: block;
-    width: 180px;
-    height: 180px;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    border-radius: 50%;
-    margin: -90px 0 0 -90px; }
-    .zmiti-loading-ui a .zmiti-head {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      margin-left: -30px;
-      margin-top: -30px; }
-    .zmiti-loading-ui a .zmiti-progress {
-      width: 100%;
-      position: relative;
-      z-index: 10;
-      top: 90px; }
-  .zmiti-loading-ui a .line1 {
-    width: 80px;
-    height: 80px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin: -42px 0 0 -42px;
-    border: 2px solid #fff;
-    border-radius: 80px 80px 80px 80px;
-    border-right-color: transparent;
-    border-top-color: transparent; }
-  .zmiti-loading-ui a .line2 {
+  .zmiti-loading-ui .zmiti-loading-item {
     width: 100px;
-    height: 100px;
     position: absolute;
     left: 50%;
-    top: 50%;
-    margin: -52px 0 0 -52px;
-    border: 2px solid #fff;
-    border-radius: 100px 100px 100px 100px;
-    border-right-color: transparent;
-    border-left-color: transparent; }
-  .zmiti-loading-ui a .line3 {
-    width: 120px;
-    height: 120px;
+    margin-left: -50px;
+    top: 60%;
+    opacity: 0; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(1) {
+      left: 144px;
+      -webkit-animation: zmiti-move 2782ms 4972ms linear infinite;
+      animation: zmiti-move 2782ms 4972ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(2) {
+      left: 72px;
+      -webkit-animation: zmiti-move 2119ms 2587ms linear infinite;
+      animation: zmiti-move 2119ms 2587ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(3) {
+      left: 69px;
+      -webkit-animation: zmiti-move 6335ms 615ms linear infinite;
+      animation: zmiti-move 6335ms 615ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(4) {
+      left: 433px;
+      -webkit-animation: zmiti-move 6540ms 2030ms linear infinite;
+      animation: zmiti-move 6540ms 2030ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(5) {
+      left: 272px;
+      -webkit-animation: zmiti-move 3370ms 1176ms linear infinite;
+      animation: zmiti-move 3370ms 1176ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(6) {
+      left: 319px;
+      -webkit-animation: zmiti-move 6182ms 221ms linear infinite;
+      animation: zmiti-move 6182ms 221ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(7) {
+      left: 171px;
+      -webkit-animation: zmiti-move 1984ms 4861ms linear infinite;
+      animation: zmiti-move 1984ms 4861ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(8) {
+      left: 356px;
+      -webkit-animation: zmiti-move 16ms 4906ms linear infinite;
+      animation: zmiti-move 16ms 4906ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(9) {
+      left: 646px;
+      -webkit-animation: zmiti-move 3999ms 2690ms linear infinite;
+      animation: zmiti-move 3999ms 2690ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(10) {
+      left: 158px;
+      -webkit-animation: zmiti-move 890ms 4287ms linear infinite;
+      animation: zmiti-move 890ms 4287ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(11) {
+      left: 603px;
+      -webkit-animation: zmiti-move 295ms 2252ms linear infinite;
+      animation: zmiti-move 295ms 2252ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(12) {
+      left: 105px;
+      -webkit-animation: zmiti-move 6706ms 3859ms linear infinite;
+      animation: zmiti-move 6706ms 3859ms linear infinite; }
+    .zmiti-loading-ui .zmiti-loading-item:nth-of-type(13) {
+      left: 482px;
+      -webkit-animation: zmiti-move 765ms 338ms linear infinite;
+      animation: zmiti-move 765ms 338ms linear infinite; }
+  .zmiti-loading-ui .zmiti-loading-pre {
     position: absolute;
     left: 50%;
-    top: 50%;
-    margin: -62px 0 0 -62px;
-    border: 2px solid #fff;
-    border-radius: 120px 120px 120px 120px;
-    border-right-color: transparent; }
-@-webkit-keyframes line1 {
+    top: 70%;
+    font-size: 32px;
+    margin-left: -16px;
+    font-family: Georgia; }
+
+@-webkit-keyframes zmiti-move {
   0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg); }
-  20% {
-    -webkit-transform: rotate(720deg);
-    transform: rotate(720deg); }
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    opacity: 0; }
   50% {
-    -webkit-transform: rotate(1080deg);
-    transform: rotate(1080deg); }
-  75% {
-    -webkit-transform: rotate(1300deg);
-    transform: rotate(1300deg); }
+    -webkit-transform: translate3d(0, -250px, 0);
+    transform: translate3d(0, -250px, 0);
+    opacity: 1; }
   100% {
-    -webkit-transform: rotate(2500deg);
-    transform: rotate(2500deg); } }
-@keyframes line1 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg); }
-  20% {
-    -webkit-transform: rotate(720deg);
-    transform: rotate(720deg); }
-  50% {
-    -webkit-transform: rotate(1080deg);
-    transform: rotate(1080deg); }
-  75% {
-    -webkit-transform: rotate(1300deg);
-    transform: rotate(1300deg); }
-  100% {
-    -webkit-transform: rotate(2500deg);
-    transform: rotate(2500deg); } }
-  .zmiti-loading-ui a .line1 {
-    -webkit-animation: line1 14s ease-in-out 1s infinite alternate;
-    animation: line1 15s ease-in-out 1s infinite alternate; }
-@-webkit-keyframes line2 {
-  from {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg); }
-  to {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg); } }
-@keyframes line2 {
-  from {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg); }
-  to {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg); } }
-  .zmiti-loading-ui a .line2 {
-    -webkit-animation: line2 3s ease-in-out infinite;
-    animation: line2 3s ease-in-out infinite; }
-@-webkit-keyframes line3 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg); }
-  20% {
-    -webkit-transform: rotate(720deg);
-    transform: rotate(720deg); }
-  50% {
-    -webkit-transform: rotate(1080deg);
-    transform: rotate(1080deg); }
-  75% {
-    -webkit-transform: rotate(1300deg);
-    transform: rotate(1300deg); }
-  100% {
-    -webkit-transform: rotate(2500deg);
-    transform: rotate(2500deg); } }
-@keyframes line3 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg); }
-  20% {
-    -webkit-transform: rotate(720deg);
-    transform: rotate(720deg); }
-  50% {
-    -webkit-transform: rotate(1080deg);
-    transform: rotate(1080deg); }
-  75% {
-    -webkit-transform: rotate(1300deg);
-    transform: rotate(1300deg); }
-  100% {
-    -webkit-transform: rotate(2500deg);
-    transform: rotate(2500deg); } }
-  .zmiti-loading-ui a .line3 {
-    -webkit-animation: line3 20s ease-in-out infinite;
-    animation: line3 20s ease-in-out infinite; }
+    -webkit-transform: translate3d(0, -500px, 0);
+    transform: translate3d(0, -500px, 0);
+    opacity: 0; } }
 
 /*# sourceMappingURL=index.css.map */

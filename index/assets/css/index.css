@@ -29,9 +29,8 @@
   transition: 0.2s;
   z-index: 2; }
   .zmiti-index-main-ui.hide {
-    opacity: .5;
-    -webkit-transform: translate3d(-213.33333px, 0, 0);
-    transform: translate3d(-213.33333px, 0, 0); }
+    -webkit-transform: translate3d(-640px, 0, 0);
+    transform: translate3d(-640px, 0, 0); }
   .zmiti-roof {
     width: 60px;
     position: absolute;
