@@ -488,7 +488,7 @@ export class App extends Component {
 			this.state.data.shareDesc = d.shareDesc;
 			this.state.data.shareImg = d.shareImg;
 			this.state.data.type = d.type;
-			this.state.data.customList = d.customList;
+			this.state.data.customList = d.customList || [];
 
 			var redirect_uri = s.defaultShareUrl || window.location.href.split('?')[0];
 			var symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
@@ -734,92 +734,92 @@ export class App extends Component {
 
     renderPoetry(type,isOther){
     	if(type === 'custom'){//取用户读的内容.
-					var params = {};
-					if(!isOther && s.state.id && s.state.parentWxopenId){
-						params = {
-							id:s.state.id,
-							wxopenid:s.state.parentWxopenId
+			var params = {};
+			if(!isOther && s.state.id && s.state.parentWxopenId){
+				params = {
+					id:s.state.id,
+					wxopenid:s.state.parentWxopenId
+				}
+			}
+			$.ajax({
+				url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
+				data:params,
+				error(){
+					alert('get_shicioriginaltext error')
+				},
+				success(data){
+					if(data.getret === 0){
+						if(data.list.length>0){
+							s.state.userPoetryTitle = <img src={data.list[0].headimgurl} style={{width:60,borderRadius:'50%',marginBottom:20}}/>;
+							s.state.userPoetryAuthor = data.list[0].nickname;
+							s.state.userPoetryContent = data.list[0].changetext;
+							s.state.poetryContent = data.list[0].originaltext;
+							s.state.poetryTitle = data.list[0].workdatatitle;
+							s.state.poetryAuthor = data.list[0].author;
+							s.state.workdataid = data.list[0].workdataid;
+							wx.downloadVoice({
+								isShowProgressTips: 0, // 默认为1，显示进度提示
+								serverId:data.list[0].voicemedia_id,
+								fail(){
+									alert('录入过期。')
+								},
+								success(res){
+									
+									s.setState({
+										audioSrc:res.localId
+									});
+								}
+							})
+							s.forceUpdate();
+						}
+						else{
+							alert('没有获取到诗词，请刷新重试');
+						}
+					}else{
+						alert( data.getmsg )
+					}
+				}
+			})	
+		}else{//取诗
+
+			$.ajax({
+				url:'http://api.zmiti.com/v2/weixin/get_shici/',
+				data:{
+					type:0,//0诗1词2，自定义
+					worksid:s.state.worksid,
+					shicinumber:1
+				},
+				error(){
+					alert('get_shici ： 服务器返回错误')
+				},
+				success(data){
+
+					if(data.getret === 0){
+						if(data.shicilist.length>0){
+							s.state.poetryTitle = data.shicilist[0].title;
+							s.state.poetryAuthor = data.shicilist[0].author;
+							s.state.poetryContent = data.shicilist[0].originaltext;
+							
+							s.state.workdataid = data.shicilist[0].workdataid;
+
+							s.state.userPoetryContent = data.shicilist[0].originaltext;
+							
+							s.state.id = '';
+							s.state.parentWxopenId = '';
+							s.state.showShareOpen = false;
+							s.wxConfig(s.state.data.shareTitle,s.state.data.shareDesc,s.state.shareImg,s.state.wxappid);
+							s.forceUpdate();
+						}
+						else{
+							alert('没有获取到诗词，请刷新重试');
 						}
 					}
-					$.ajax({
-						url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
-						data:params,
-						error(){
-							alert('get_shicioriginaltext error')
-						},
-						success(data){
-							if(data.getret === 0){
-								if(data.list.length>0){
-									s.state.userPoetryTitle = <img src={data.list[0].headimgurl} style={{width:60,borderRadius:'50%',marginBottom:20}}/>;
-									s.state.userPoetryAuthor = data.list[0].nickname;
-									s.state.userPoetryContent = data.list[0].changetext;
-									s.state.poetryContent = data.list[0].originaltext;
-									s.state.poetryTitle = data.list[0].workdatatitle;
-									s.state.poetryAuthor = data.list[0].author;
-									s.state.workdataid = data.list[0].workdataid;
-									wx.downloadVoice({
-										isShowProgressTips: 0, // 默认为1，显示进度提示
-										serverId:data.list[0].voicemedia_id,
-										fail(){
-											alert('录入过期。')
-										},
-										success(res){
-											
-											s.setState({
-												audioSrc:res.localId
-											});
-										}
-									})
-									s.forceUpdate();
-								}
-								else{
-									alert('没有获取到诗词，请刷新重试');
-								}
-							}else{
-								alert( data.getmsg )
-							}
-						}
-					})	
-				}else{//取诗
-
-					$.ajax({
-						url:'http://api.zmiti.com/v2/weixin/get_shici/',
-						data:{
-							type:0,//0诗1词2，自定义
-							worksid:s.state.worksid,
-							shicinumber:1
-						},
-						error(){
-							alert('get_shici ： 服务器返回错误')
-						},
-						success(data){
-
-							if(data.getret === 0){
-								if(data.shicilist.length>0){
-									s.state.poetryTitle = data.shicilist[0].title;
-									s.state.poetryAuthor = data.shicilist[0].author;
-									s.state.poetryContent = data.shicilist[0].originaltext;
-									
-									s.state.workdataid = data.shicilist[0].workdataid;
-
-									s.state.userPoetryContent = data.shicilist[0].originaltext;
-									
-									s.state.id = '';
-									s.state.parentWxopenId = '';
-									s.state.showShareOpen = false;
-									s.wxConfig(s.state.data.shareTitle,s.state.data.shareDesc,s.state.shareImg,s.state.wxappid);
-									s.forceUpdate();
-								}
-								else{
-									alert('没有获取到诗词，请刷新重试');
-								}
-							}
-							else{
-								alert('data.getret = ' + data.getret + 'daat.getmsg  =' + data.getmsg);
-							}
-						}
-					})	
+					else{
+						alert('data.getret = ' + data.getret + 'daat.getmsg  =' + data.getmsg);
+					}
 				}
+			})	
+		}
     }
 
 	refreshPoetry(type,isOther){
@@ -833,7 +833,70 @@ export class App extends Component {
 				if(this.state.data.customList.length<=0){
 					this.renderPoetry(type,isOther);//如果是自定义的但是用户没有写任何的内容，就默认取诗
 				}else{
-					
+					if(type === 'custom'){
+						var params = {};
+						if(!isOther && s.state.id && s.state.parentWxopenId){
+							params = {
+								id:s.state.id,
+								wxopenid:s.state.parentWxopenId
+							}
+						}
+						$.ajax({
+							url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
+							data:params,
+							error(){
+								alert('get_shicioriginaltext error')
+							},
+							success(data){
+								if(data.getret === 0){
+									if(data.list.length>0){
+										s.state.userPoetryTitle = <img src={data.list[0].headimgurl} style={{width:60,borderRadius:'50%',marginBottom:20}}/>;
+										s.state.userPoetryAuthor = data.list[0].nickname;
+										s.state.userPoetryContent = data.list[0].changetext;
+										s.state.poetryContent = data.list[0].originaltext;
+										s.state.poetryTitle = data.list[0].workdatatitle;
+										s.state.poetryAuthor = data.list[0].author;
+										s.state.workdataid = data.list[0].workdataid;
+										wx.downloadVoice({
+											isShowProgressTips: 0, // 默认为1，显示进度提示
+											serverId:data.list[0].voicemedia_id,
+											fail(){
+												alert('录入过期。')
+											},
+											success(res){
+												
+												s.setState({
+													audioSrc:res.localId
+												});
+											}
+										})
+										s.forceUpdate();
+									}
+									else{
+										alert('没有获取到诗词，请刷新重试');
+									}
+								}else{
+									alert( data.getmsg )
+								}
+							}
+						});
+					}else{
+						var customList = s.state.data.customList;
+						var index = Math.random()* customList.length | 0;
+						s.state.poetryTitle = customList.title;
+						s.state.poetryAuthor = customList.author || '';
+						s.state.poetryContent = customList.content;
+
+						s.state.workdataid = customList.workdataid;
+
+						//s.state.userPoetryContent = customList.originaltext;
+
+						s.state.id = '';
+						s.state.parentWxopenId = '';
+						s.state.showShareOpen = false;
+						s.wxConfig(s.state.data.shareTitle,s.state.data.shareDesc,s.state.shareImg,s.state.wxappid);
+						s.forceUpdate();	
+					}
 				}
 			break;
 			case "TONGYAO":
