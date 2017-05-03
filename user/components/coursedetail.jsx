@@ -40,7 +40,7 @@ export default class ZmitiCourseDetailApp extends React.Component {
 									<img className='zmiti-headimgurl' src={item.headimgurl||'./assets/images/user/zmiti.jpg'}/>
 									<span className={'zmiti-text-overflow zmiti-courcedetail-nickname '+(i===0 ?'zmiti-first-user':'')}>{item.nickname}</span>
 									{i===0 && <span className='zmiti-first-author'>创始者</span>}
-                                    <img src='./assets/images/user/voice.png'/>
+                                    <img src='./assets/images/user/voice.png' onTouchTap={this.playAudio.bind(this,item.voicemedia_id)}/>
 								</aside>								
 								<aside>
 									<i>{item.score}分</i>
@@ -52,6 +52,22 @@ export default class ZmitiCourseDetailApp extends React.Component {
 			</section>
 		</div>
     );
+  }
+
+  playAudio(serverId){
+     wx.downloadVoice({
+          serverId, // 需要下载的音频的服务器端ID，由uploadVoice接口获得
+          isShowProgressTips: 1, // 默认为1，显示进度提示
+          fail(){
+            alert('录音失效');
+          },
+          success: function (res) {
+              var localId = res.localId; // 返回音频的本地ID
+              wx.playVoice({
+                localId
+              });
+          }
+     })
   }
 
   componentDidMount() {

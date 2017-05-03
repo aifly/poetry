@@ -15,7 +15,7 @@ class ZmitiAudioApp extends Component {
 		return (
 			<div className='zmiti-audio-main-ui'>
 				<section className='zmiti-audio-C' onTouchTap={this.playAudio.bind(this)}>
-					<aside>{this.state.pause ? <img src='./assets/images/pause.png'/> : <img src='./assets/images/pause.gif'/>}点我播放</aside>
+					<aside><img src={'./assets/images/pause.'+(this.state.pause?'png':'gif')+''}/>点我播放</aside>
 					<aside>{this.props.duration}"</aside>
 				</section>
 			</div>
@@ -24,34 +24,27 @@ class ZmitiAudioApp extends Component {
 
 	playAudio(){
 		var s = this;
-		this.pause = !this.pause;
-		if(this.pause){
-			wx.playVoice({
-			    localId: s.props.audioSrc
-			});	
-		}else{
-			wx.stopVoice({
-			    localId: s.props.audioSrc // 需要停止的音频的本地ID，由stopRecord接口获得
-			});
+		if(this.state.pause ){
+			this.setState({
+				pause:false
+			},()=>{
+				wx.playVoice({
+				    localId: s.props.audioSrc
+				});	
+				wx.onVoicePlayEnd({
+			    success: function (res) {
+			        var localId = res.localId; // 返回音频的本地ID
+			        s.setState({
+						pause:true
+					});
+				    }
+				});
+			})
 		}
-
-		this.setState({
-			pause:!this.pause
-		})
-		
 	}
 
 	componentDidMount() {
-		var s = this;
-		wx.onVoicePlayEnd({
-		    success: function (res) {
-		        var localId = res.localId; // 返回音频的本地ID
-		        s.pause = !s.pause;
-		        s.setState({
-					pause:!s.pause
-				});
-		    }
-		});
+		
 	}
 }
 

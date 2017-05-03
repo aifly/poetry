@@ -1,4 +1,7 @@
 div {
-  width: 94px; }
+  width: 48px; }
+
+body {
+  backface-visibility: hidden; }
 
 /*# sourceMappingURL=1.css.map */

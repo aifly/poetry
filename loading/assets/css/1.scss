@@ -1,3 +1,7 @@
 div{
 	width:random(100) + px;
 }
+
+body{
+    backface-visibility: hidden;
+}

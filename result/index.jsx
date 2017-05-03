@@ -79,6 +79,7 @@ class ZmitiResultApp extends Component {
 						parentwxopenid:s.props.parentwxopenid,
 						mediaid:serverId,
 						score:s.state.score,
+						duration:s.props.duration,
 						changetext:s.props.transformResult.replace(/<[^>]+>/g,""),
 						usercity:s.props.usercity,
 						longitude:s.props.longitude,
