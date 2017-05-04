@@ -52,12 +52,6 @@ class ZmitiShareApp extends Component {
 	}
 	componentDidMount() {
 		var {IScroll,obserable}= this.props;
-		this.scroll = new IScroll(this.refs['zmiti-share-scroll'],{
-			scrollbars:true
-		});
-		setTimeout(()=>{
-			this.scroll.refresh();
-		},200);
 
 		obserable.on('getScale',(data)=>{
 			this.setState({
@@ -68,6 +62,13 @@ class ZmitiShareApp extends Component {
 		obserable.on('showMainUI',()=>{
 			this.setState({
 				showMainUI:true
+			},()=>{
+				this.scroll = new IScroll(this.refs['zmiti-share-scroll'],{
+					scrollbars:true
+				});
+				setTimeout(()=>{
+					this.scroll.refresh();
+				},200);
 			});
 		})
 

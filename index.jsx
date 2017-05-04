@@ -658,8 +658,7 @@ export class App extends Component {
 					}
 				})	
 			}else{
-
-				s.refreshPoetry('custom',false);
+				s.refreshPoetry('poetry',false);
 			}
 			 
 		})
@@ -732,7 +731,9 @@ export class App extends Component {
 	       loadimg();
     }
 
+
     renderPoetry(type,isOther){
+    	var s = this;
     	if(type === 'custom'){//取用户读的内容.
 			var params = {};
 			if(!isOther && s.state.id && s.state.parentWxopenId){
@@ -781,7 +782,7 @@ export class App extends Component {
 				}
 			})	
 		}else{//取诗
-
+			
 			$.ajax({
 				url:'http://api.zmiti.com/v2/weixin/get_shici/',
 				data:{
