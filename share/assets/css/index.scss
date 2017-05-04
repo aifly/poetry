@@ -5,7 +5,7 @@ $viewW:640px;
   width:$viewW;
   background: #fff;
   @include pos(a);
-
+  
   @include transform(translate3d($viewW/3,0,0));
   @include transition(.3s);
   &.show{
@@ -16,7 +16,7 @@ $viewW:640px;
   opacity:0;
   left: 0;
   top: 0;
-  height: 100%;
+  height: 100vh;
   
   box-sizing:border-box;
   overflow: hidden;
