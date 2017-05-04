@@ -761,7 +761,7 @@ export class App extends Component {
 								isShowProgressTips: 0, // 默认为1，显示进度提示
 								serverId:data.list[0].voicemedia_id,
 								fail(){
-									alert('录入过期。')
+									alert('录音过期。')
 								},
 								success(res){
 									
