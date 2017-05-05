@@ -305,6 +305,27 @@
 							});
 
 							_jquery2['default'].ajax({
+								url: 'http://api.zmiti.com/v2/weixin/save_userview/',
+								type: 'post',
+								data: {
+									worksid: s.state.worksid,
+									wxopenid: s.openid,
+									wxname: s.nickname,
+									usercity: opt.address,
+									longitude: wx.posData.longitude,
+									latitude: wx.posData.latitude
+								}
+							}).done(function (data) {
+								if (data.getret === 0) {
+									//alert('save_userview ok')
+								} else {
+										alert('getret : ' + data.getret + ' msg : ' + data.getmsg);
+									}
+							}, function () {
+								//alert('save_userview error');
+							});
+
+							_jquery2['default'].ajax({
 								url: 'http://api.zmiti.com/v2/weixin/add_wxuser/',
 								type: 'post',
 								data: {
@@ -589,6 +610,7 @@
 											if (data.getret === 0) {}
 										}
 									});
+
 									localStorage.setItem('nickname', dt.userinfo.nickname);
 									localStorage.setItem('headimgurl', dt.userinfo.headimgurl);
 									s.nickname = dt.userinfo.nickname;
@@ -773,7 +795,7 @@
 										isShowProgressTips: 0, // 默认为1，显示进度提示
 										serverId: data.list[0].voicemedia_id,
 										fail: function fail() {
-											alert('录入过期。');
+											alert('录音过期。');
 										},
 										success: function success(res) {
 

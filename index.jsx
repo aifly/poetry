@@ -244,6 +244,27 @@ export class App extends Component {
 				   	});
 
 				   	$.ajax({
+						url:'http://api.zmiti.com/v2/weixin/save_userview/',
+						type:'post',
+						data:{
+							worksid:s.state.worksid,
+							wxopenid:s.openid,
+							wxname:s.nickname,
+							usercity:opt.address,
+							longitude:wx.posData.longitude,
+							latitude:wx.posData.latitude
+						}
+					}).done((data)=>{
+						if(data.getret === 0 ){
+							//alert('save_userview ok')
+						}else{
+							alert('getret : '+ data.getret +' msg : '+ data.getmsg)
+						}
+					},()=>{
+						//alert('save_userview error');
+					})
+
+				   	$.ajax({
 				   		url:'http://api.zmiti.com/v2/weixin/add_wxuser/',
 				   		type:'post',
 				   		data:{
@@ -567,6 +588,8 @@ export class App extends Component {
 									}
 								}
 							});
+
+
 							localStorage.setItem('nickname', dt.userinfo.nickname);
 							localStorage.setItem('headimgurl', dt.userinfo.headimgurl);
 							s.nickname = dt.userinfo.nickname;
@@ -579,6 +602,9 @@ export class App extends Component {
 								headimgurl: s.headimgurl,
 								code
 							});
+
+
+
 
 							if(id && parentWxopenId){
 								s.refreshPoetry('custom',false);
