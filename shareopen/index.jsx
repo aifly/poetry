@@ -89,7 +89,53 @@ class ZmitiShareOpenApp extends Component {
 			showPoetry:true
 		},()=>{
 			this.scroll.refresh();
-		})
+		});
+
+		$.ajax({
+	   		url:'http://api.zmiti.com/v2/weixin/add_wxuser/',
+	   		type:'post',
+	   		data:{
+	   			wxopenid:s.props.openid,
+	   			worksid:s.props.worksid,
+	   			nickname:s.props.nickname,
+	   			headimgurl:s.props.headimgurl,
+	   			longitude:s.props.longitude,
+	   			latitude:s.props.latitude,
+	   			accuracy:s.props.accuracy,
+	   			wxappid:s.props.wxappid,
+	   			integral:-10
+	   		},
+	   		error(){
+	   			alert('add_wxuser: 服务器返回错误');
+	   		},
+	   		success(data){
+	   			
+	   		}
+	   	}).done((data)=>{
+	   		/*if(data.getret === 0){
+
+   				$.ajax({
+					url:'http://api.zmiti.com/v2/weixin/get_wxuserdetaile',
+					data:{
+						wxopenid:s.props.openid
+					},
+					success(data){
+						if(data.getret === 0){
+							
+							s.score = data.wxuserinfo.totalintegral;
+							s.setState({
+								score:s.score
+							});
+						}else{
+							alert('get_wxuserdetaile : getret  : '+ data.getret + ' msg : ' + data.getmsg);	
+						}
+					}
+				})
+
+   			}else{
+   				alert('getret  : '+ data.getret + ' msg : ' + data.getmsg+ ' .....');
+   			}*/
+	   	});
 	}
 
 	gruessOther(){
@@ -105,7 +151,9 @@ class ZmitiShareOpenApp extends Component {
 			showPoetry:false
 		},()=>{
 			this.scroll.refresh();
-		})
+		});
+
+		
 	}
 
 	beginRefreshPoetry(){ //重新出题
