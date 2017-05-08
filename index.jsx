@@ -193,26 +193,6 @@ export class App extends Component {
 	}
 	
 
-	changeURLPar(destiny, par, par_value) { 
-		var pattern = par+'=([^&]*)'; 
-		var replaceText = par+'='+par_value; 
-		if (destiny.match(pattern)) { 
-			var tmp = '/\\'+par+'=[^&]*/'; 
-			tmp = destiny.replace(eval(tmp), replaceText); 
-			return (tmp); 
-		} 
-		else { 
-			if (destiny.match('[\?]')) { 
-				return destiny+'&'+ replaceText; 
-			} 
-			else { 
-				return destiny+'?'+replaceText; 
-			} 
-		} 
-		return destiny+'\n'+par+'\n'+par_value; 
-	} 
-
-
     getPos(nickname,headimgurl){
 
     	var s = this;
@@ -276,35 +256,26 @@ export class App extends Component {
 				   			latitude:wx.posData.latitude,
 				   			accuracy:wx.posData.accuracy,
 				   			wxappid:s.state.wxappid,
-				   			integral:localStorage.getItem('nickname')?0:10
+				   			integral:0
 				   		},
 				   		error(){
 				   			alert('add_wxuser: 服务器返回错误');
 				   		},
 				   		success(data){
 				   			if(data.getret === 0){
+				   				
+				   				//s.score = data.wxuserinfo.totalintegral;
+								s.setState({
+									score:data['userinfo'].totalintegral
+								});
 
-
-				   				/*wx.downloadVoice({
-								    serverId: 'CjdP4ky2Lphzi716uwa07o-JqffwyAz95_uapnqoXmoumY155QGWTsDMSqU9PcKb', // 需要下载的音频的服务器端ID，由uploadVoice接口获得
-								    isShowProgressTips: 1, // 默认为1，显示进度提示
-								    success: function (res) {
-								    	alert('download success  and begin play the audio');
-								        var localId = res.localId; // 返回音频的本地ID
-								        wx.playVoice({
-										    localId // 需要播放的音频的本地ID，由stopRecord接口获得
-										});
-								    }
-								});*/
-
-				   				$.ajax({
+				   				/*$.ajax({
 									url:'http://api.zmiti.com/v2/weixin/get_wxuserdetaile',
 									data:{
 										wxopenid:s.openid
 									},
 									success(data){
 										if(data.getret === 0){
-											
 											s.score = data.wxuserinfo.totalintegral;
 											s.setState({
 												score:s.score
@@ -314,7 +285,7 @@ export class App extends Component {
 										}
 									}
 								})
-
+*/
 				   			}else{
 				   				alert('getret  : '+ data.getret + ' msg : ' + data.getmsg+ ' .....');
 				   			}
@@ -567,6 +538,8 @@ export class App extends Component {
 
 						if (dt.getret === 0) {
 
+
+
 							s.loading(s.loadingImgArr||[],(scale)=>{
 								s.setState({
 									progress:(scale*100|0)+'%'
@@ -590,12 +563,13 @@ export class App extends Component {
 							});
 
 
-							localStorage.setItem('nickname', dt.userinfo.nickname);
-							localStorage.setItem('headimgurl', dt.userinfo.headimgurl);
+							
 							s.nickname = dt.userinfo.nickname;
 							s.headimgurl = dt.userinfo.headimgurl;
-
 							s.openid = dt.userinfo.openid;
+
+							localStorage.setItem(s.nickname, dt.userinfo.nickname);
+							localStorage.setItem(s.openid, dt.userinfo.headimgurl);
 							s.setState({
 								openid: s.openid,
 								nickname: s.nickname,

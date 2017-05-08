@@ -30,7 +30,7 @@ class ZmitiShareApp extends Component {
 			<div className={'zmiti-share-main-ui '+(this.state.showMainUI?'show':'')} ref='zmiti-share-scroll'>
 				<div>
 					<ZmitiHeaderApp {...this.props} {...headerProps}></ZmitiHeaderApp>
-					<div className='zmiti-order-btn'>
+					<div onTouchTap={this.entryUser.bind(this)}  className='zmiti-order-btn'>
 						<span></span>
 						<span></span>
 						<span></span>
@@ -49,6 +49,41 @@ class ZmitiShareApp extends Component {
 				</div>
 			</div>
 		);
+	}
+
+	entryUser(){
+		let {obserable} = this.props;
+		obserable.trigger({
+			type:'toggleUserCenter',
+			data:true
+		});
+		obserable.trigger({
+			type:'toggleUser',
+			data:true
+		});
+		var s = this;
+		$.ajax({
+			url:'http://api.zmiti.com/v2/weixin/get_userrank/',
+			data:{
+				wxopenid:s.props.openid
+			},
+			error(){
+				alert('服务器返回错误');
+			},
+			success(data){
+				if(data.getret === 0){
+					obserable.trigger({
+						type:'setIntegralRank',
+						data:{
+							integral:data.integral,
+							rank:data.rank
+						}
+					})
+				}else{
+					alert('getret  : '+ data.getret + ' msg : ' + data.getmsg);	
+				}
+			}
+		})
 	}
 	componentDidMount() {
 		var {IScroll,obserable}= this.props;
