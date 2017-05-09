@@ -81,10 +81,10 @@ export default class ZmitiUserCenterApp extends React.Component {
   		},
   		success(data){
   			if(data.getret === 0 ){
-  				obserable.trigger({
-  					type:'fillCourse',
-  					data:data.shicilist
-  				})
+    				obserable.trigger({
+    					type:'fillCourse',
+    					data:data.shicilist
+    				});
   			}
   		}
   	})

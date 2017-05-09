@@ -137,7 +137,7 @@ export class App extends Component {
 
 		return (
 			<div className={'zmiti-main-ui show'} style={{height:this.viewH}}>
-				{this.state.nickname && this.state.headimgurl  && <div>
+				{this.state.nickname && this.state.headimgurl  && true || <div>
 									<section className={'zmiti-main-C '+(this.state.showUser?'hide':'')}>
 									{this.state.showLoading && <ZmitiLoadingApp {...this.state}></ZmitiLoadingApp>}
 									{this.state.isFirst && !this.state.showLoading  &&  <ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
@@ -151,7 +151,7 @@ export class App extends Component {
 									</section>
 									<ZmitiUserApp {...this.state} {...data}></ZmitiUserApp>
 								</div>}
-				{!(this.state.nickname && this.state.headimgurl) && <div className='zmiti-auoth-page' style={auothStyle}></div>}
+				{!(this.state.nickname && this.state.headimgurl ) && false && <div className='zmiti-auoth-page' style={auothStyle}></div>}
 			</div>
 		);
 	}
@@ -236,12 +236,12 @@ export class App extends Component {
 						}
 					}).done((data)=>{
 						if(data.getret === 0 ){
-							//alert('save_userview ok')
+							//window.debug && alert('save_userview ok')
 						}else{
-							alert('getret : '+ data.getret +' msg : '+ data.getmsg)
+							window.debug && alert('getret : '+ data.getret +' msg : '+ data.getmsg)
 						}
 					},()=>{
-						//alert('save_userview error');
+						//window.debug && alert('save_userview error');
 					})
 
 				   	$.ajax({
@@ -259,7 +259,7 @@ export class App extends Component {
 				   			integral:0
 				   		},
 				   		error(){
-				   			alert('add_wxuser: 服务器返回错误');
+				   			window.debug && alert('add_wxuser: 服务器返回错误');
 				   		},
 				   		success(data){
 				   			if(data.getret === 0){
@@ -281,13 +281,13 @@ export class App extends Component {
 												score:s.score
 											});
 										}else{
-											alert('get_wxuserdetaile : getret  : '+ data.getret + ' msg : ' + data.getmsg);	
+											window.debug && alert('get_wxuserdetaile : getret  : '+ data.getret + ' msg : ' + data.getmsg);	
 										}
 									}
 								})
 */
 				   			}else{
-				   				alert('getret  : '+ data.getret + ' msg : ' + data.getmsg+ ' .....');
+				   				window.debug && alert('getret  : '+ data.getret + ' msg : ' + data.getmsg+ ' .....');
 				   			}
 				   		}
 				   	});
@@ -309,7 +309,7 @@ export class App extends Component {
 					})
 				}
 				else{
-					alert('地址信息获取失败')
+					window.debug && alert('地址信息获取失败')
 				}
 			}						        	
         })
@@ -379,6 +379,11 @@ export class App extends Component {
 			    		wx.getLocation({
 						    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
 						    fail(){
+						    	//window.debug && alert('定位失败,重新进入');
+						    	//window.location.href = window.location.href;
+						    },
+						    cancel:function(){
+						    	window.debug && alert('用户取消了地址位置授权');
 						    },
 						    success: function (res) {
 						        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
@@ -503,7 +508,7 @@ export class App extends Component {
 					state: new Date().getTime() + ''
 				},
 				error(){
-					alert('error');
+					window.debug && alert('error');
 				},
 				success(dt){
 					if (dt.getret === 0) {
@@ -511,18 +516,18 @@ export class App extends Component {
 						if (url.indexOf('&zmiti') <= -1 || url.indexOf('?zmiti') <= -1) {
 							//url = url.split('#')[0] + '&zmiti=start#' + (url.split('#')[1] || '')
 						}
-						//alert(d.wxauthurl + '======'+ dt.url );
+						//window.debug && alert(d.wxauthurl + '======'+ dt.url );
 						s.oauthurl = dt.url;
 						localStorage.setItem('oauthurl',s.oauthurl);
 						
 					}
 					else{
-						alert('data.getret = ' + data.getret + 'daat.getmsg  =' + data.getmsg);
+						window.debug && alert('data.getret = ' + data.getret + 'daat.getmsg  =' + data.getmsg);
 					}
 				}
 			})
 
-			this.wxConfig(this.state.data.shareTitle, this.state.data.shareDesc, this.state.shareImg, this.state.wxappid);
+			this.wxConfig(this.state.data.shareTitle, this.state.data.shareDesc, this.state.data.shareImg, this.state.wxappid);
 			this.forceUpdate(()=> {
 				$.ajax({
 					url: 'http://api.zmiti.com/v2/weixin/getwxuserinfo/',
@@ -532,7 +537,7 @@ export class App extends Component {
 						wxappsecret: d.wxappsecret
 					},
 					error(){
-						alert('error')
+						window.debug && alert('error')
 					},
 					success(dt){
 
@@ -577,9 +582,6 @@ export class App extends Component {
 								code
 							});
 
-
-
-
 							if(id && parentWxopenId){
 								s.refreshPoetry('custom',false);
 							}
@@ -601,8 +603,19 @@ export class App extends Component {
 								
 							}
 							else {
-								//s.refreshPoetry();
-								//alert('请在微信中打开');
+
+								s.loading(s.loadingImgArr||[],(scale)=>{
+									s.setState({
+										progress:(scale*100|0)+'%'
+									});
+								},()=>{
+									s.setState({
+										showLoading:false
+									});
+								});
+
+								s.refreshPoetry('custom');
+								//window.debug && alert('请在微信中打开');
 							}
 						}
 					}
@@ -624,6 +637,13 @@ export class App extends Component {
 		obserable.on('entryResult', (data)=> {
 			this.setState({
 				isEntryResult: data
+			})
+		});
+
+		obserable.on('updateParentInfo',(data)=>{
+			this.setState({
+				id:data.id,
+				parentWxopenId:data.parentWxopenId
 			})
 		});
 
@@ -652,7 +672,7 @@ export class App extends Component {
 								s.forceUpdate();
 							}
 							else{
-								alert('没有获取到诗词，请刷新重试');
+								window.debug && alert('没有获取到诗词，请刷新重试');
 							}
 						}
 					}
@@ -746,7 +766,7 @@ export class App extends Component {
 				url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
 				data:params,
 				error(){
-					alert('get_shicioriginaltext error')
+					window.debug && alert('get_shicioriginaltext error')
 				},
 				success(data){
 					if(data.getret === 0){
@@ -759,10 +779,10 @@ export class App extends Component {
 							s.state.poetryAuthor = data.list[0].author;
 							s.state.workdataid = data.list[0].workdataid;
 							wx.downloadVoice({
-								isShowProgressTips: 0, // 默认为1，显示进度提示
+								isShowProgressTips: 1, // 默认为1，显示进度提示
 								serverId:data.list[0].voicemedia_id,
 								fail(){
-									alert('录音过期。')
+									window.debug && alert('录音过期。');
 								},
 								success(res){
 									
@@ -774,15 +794,15 @@ export class App extends Component {
 							s.forceUpdate();
 						}
 						else{
-							alert('没有获取到诗词，请刷新重试');
+							window.debug && alert('没有获取到诗词，请刷新重试');
 						}
 					}else{
-						alert( data.getmsg )
+						window.debug && alert( data.getmsg )
 					}
 				}
 			})	
 		}else{//取诗
-			
+			 
 			$.ajax({
 				url:'http://api.zmiti.com/v2/weixin/get_shici/',
 				data:{
@@ -791,7 +811,7 @@ export class App extends Component {
 					shicinumber:1
 				},
 				error(){
-					alert('get_shici ： 服务器返回错误')
+					window.debug && alert('get_shici ： 服务器返回错误')
 				},
 				success(data){
 
@@ -812,11 +832,11 @@ export class App extends Component {
 							s.forceUpdate();
 						}
 						else{
-							alert('没有获取到诗词，请刷新重试');
+							window.debug && alert('没有获取到诗词，请刷新重试');
 						}
 					}
 					else{
-						alert('data.getret = ' + data.getret + 'daat.getmsg  =' + data.getmsg);
+						window.debug && alert('data.getret = ' + data.getret + 'daat.getmsg  =' + data.getmsg);
 					}
 				}
 			})	
@@ -826,6 +846,7 @@ export class App extends Component {
 	refreshPoetry(type,isOther){
 		var s = this;
 		var type = type || 'poetry';
+		this.state.data.type = this.state.data.type || 'SHI';
 		switch(this.state.data.type){
 			case "SHI":
 				this.renderPoetry(type,isOther);
@@ -846,7 +867,7 @@ export class App extends Component {
 							url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
 							data:params,
 							error(){
-								alert('get_shicioriginaltext error')
+								window.debug && alert('get_shicioriginaltext error')
 							},
 							success(data){
 								if(data.getret === 0){
@@ -862,7 +883,7 @@ export class App extends Component {
 											isShowProgressTips: 0, // 默认为1，显示进度提示
 											serverId:data.list[0].voicemedia_id,
 											fail(){
-												alert('录入过期。')
+												window.debug && alert('录入过期。')
 											},
 											success(res){
 												
@@ -874,10 +895,10 @@ export class App extends Component {
 										s.forceUpdate();
 									}
 									else{
-										alert('没有获取到诗词，请刷新重试');
+										window.debug && alert('没有获取到诗词，请刷新重试');
 									}
 								}else{
-									alert( data.getmsg )
+									window.debug && alert( data.getmsg )
 								}
 							}
 						});

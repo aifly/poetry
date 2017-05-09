@@ -94,11 +94,16 @@ class ZmitiResultApp extends Component {
 						if( data.getret === 0){
 
 							var id = data.id;
-				   			s.setState({
-				   				id
-				   			},()=>{
+							obserable.trigger({
+								type:'updateParentInfo',
+								data:{
+									id,
+									parentWxopenId:s.props.openid
+								}
+							})
+				   			setTimeout(()=>{
 				   				s.wxConfig(s.props.data.shareTitle,s.props.data.shareDesc,s.props.data.shareImg,s.props.wxappid);
-				   			})
+				   			},500)
 
 							var score = 10;
 							$.ajax({
@@ -149,6 +154,11 @@ class ZmitiResultApp extends Component {
 			var symbol = location.href.indexOf('?')>-1? '&' : '?';
 		   var durl = location.href.split('#')[0]+symbol+'id='+this.state.id+'&wxopenid='+ this.props.openid; //window.location;
 		        var code_durl = encodeURIComponent(durl);
+		        var redirect_uri = s.defaultShareUrl || window.location.href.split('?')[0];
+				var symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
+				if (s.props.id && s.props.parentWxopenId) {
+					code_durl = code_durl + symbol + 'id=' + s.state.id + '&wxopenid=' + s.state.parentWxopenId;
+				}
 			$.ajax({
 				type:'get',
 				url: "http://api.zmiti.com/weixin/jssdk.php?type=signature&durl="+code_durl+"&worksid="+worksid,
@@ -254,15 +264,15 @@ class ZmitiResultApp extends Component {
 				setTimeout(()=>{
 					this.scroll.refresh();
 				},500);
-				var level = 1;
+				var level = 4;
 				if(data > 40){
-					level = 2;
-				}
-				if(data > 60){
 					level = 3;
 				}
+				if(data > 60){
+					level = 2;
+				}
 				if (data > 80){
-					level = 4;
+					level = 1;
 				}
 				this.setState({
 					level

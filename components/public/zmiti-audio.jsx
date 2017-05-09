@@ -21,7 +21,6 @@ class ZmitiAudioApp extends Component {
 			</div>
 		);
 	}
-
 	playAudio(){
 		var s = this;
 		if(this.state.pause ){
@@ -32,13 +31,13 @@ class ZmitiAudioApp extends Component {
 				    localId: s.props.audioSrc
 				});	
 				wx.onVoicePlayEnd({
-			    success: function (res) {
-			        var localId = res.localId; // 返回音频的本地ID
-			        s.setState({
-						pause:true
+				    success: function (res) {
+				        var localId = res.localId; // 返回音频的本地ID
+				        s.setState({
+							pause:true
+						});
+					    }
 					});
-				    }
-				});
 			})
 		}
 	}

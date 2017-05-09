@@ -12,7 +12,8 @@ class ZmitiShareOpenApp extends Component {
 		this.state={
 			
 			isBeginRead:false,
-			poetryContent:''
+			poetryContent:'',
+			showPoetry:true
 			
 		};
 		this.viewW = document.documentElement.clientWidth;
@@ -34,23 +35,25 @@ class ZmitiShareOpenApp extends Component {
 				 	<ZmitiHeaderApp showRefreshBtn={false} {...this.props}></ZmitiHeaderApp>
 					 <div className='zmiti-poetry-C' style={poetryStyle}>
 					 	 <section>
-					 	 	<div className='zmiti-poetry-title'>{this.props.userPoetryTitle}</div>
-					 	 	<div className='zmiti-poetry-author'>{this.props.userPoetryAuthor}</div>
-						 	<article className={'zmiti-poetry-content '+(this.props.id&& this.props.parentWxopenId ? 'zmiti-custom-text':'')}>
-						 		{this.props.userPoetryContent}
-						 	</article>
+					 	 	
 						 	{this.state.showPoetry&&<div>
-						 		<div className='zmiti-shareopen-line'><img src='./assets/images/line.png'/></div>
+						 		
 							 	<div className='zmiti-poetry-title'>{this.props.poetryTitle}</div>
 						 	 	<div className='zmiti-poetry-author'>{this.props.poetryAuthor}</div>
 							 	<article className={'zmiti-poetry-content '} dangerouslySetInnerHTML={this.createMarkup()}>
 							 	</article>
 						 	</div>}
+						 	<div className='zmiti-shareopen-line'><img src='./assets/images/line.png'/></div>
+						 	<div className='zmiti-poetry-title'>{this.props.userPoetryTitle}</div>
+					 	 	<div className='zmiti-poetry-author'>{this.props.userPoetryAuthor}</div>
+						 	<article className={'zmiti-poetry-content '+(this.props.id&& this.props.parentWxopenId ? 'zmiti-custom-text':'')}>
+						 		{this.props.userPoetryContent}
+						 	</article>
 						 	<div className='zmiti-tip'>以上根据网友语音转化的文字</div>
 					 	 </section>
 
 					 </div>
-					 <div className='zmiti-open-poetry' onTouchTap={this.showPoetry.bind(this)}><img src='./assets/images/openpeotry.png'/></div>
+					 <div  className='zmiti-open-poetry'><img onTouchStart={this.showPoetry.bind(this)} src='./assets/images/openpeotry.png'/></div>
 					 <section className='zmiti-voice-content'><ZmitiAudioApp {...this.props}></ZmitiAudioApp></section>
 					 <div className='zmiti-bottom-ui'>
 					 
@@ -85,12 +88,15 @@ class ZmitiShareOpenApp extends Component {
 	}
 
 	showPoetry(){
+		
 		this.setState({
 			showPoetry:true
 		},()=>{
 			this.scroll.refresh();
 		});
-
+		
+		let {obserable} = this.props;
+		var s = this;
 		$.ajax({
 	   		url:'http://api.zmiti.com/v2/weixin/add_wxuser/',
 	   		type:'post',
@@ -104,37 +110,15 @@ class ZmitiShareOpenApp extends Component {
 	   			accuracy:s.props.accuracy,
 	   			wxappid:s.props.wxappid,
 	   			integral:-10
-	   		},
-	   		error(){
-	   			alert('add_wxuser: 服务器返回错误');
-	   		},
-	   		success(data){
-	   			
 	   		}
 	   	}).done((data)=>{
-	   		/*if(data.getret === 0){
-
-   				$.ajax({
-					url:'http://api.zmiti.com/v2/weixin/get_wxuserdetaile',
-					data:{
-						wxopenid:s.props.openid
-					},
-					success(data){
-						if(data.getret === 0){
-							
-							s.score = data.wxuserinfo.totalintegral;
-							s.setState({
-								score:s.score
-							});
-						}else{
-							alert('get_wxuserdetaile : getret  : '+ data.getret + ' msg : ' + data.getmsg);	
-						}
-					}
-				})
-
-   			}else{
-   				alert('getret  : '+ data.getret + ' msg : ' + data.getmsg+ ' .....');
-   			}*/
+	   		if(data.getret === 0){
+	   			obserable.trigger({
+	   				type:'updateIntegral',
+	   				data:-10
+	   			})
+	   		}
+	   	},()=>{
 	   	});
 	}
 
@@ -184,7 +168,7 @@ class ZmitiShareOpenApp extends Component {
 				 
 			}
 			catch(e){
-				alert('开始录音了 + error')
+			 	window.debug && alert('开始录音了 + error')
 			}
 			
 			this.timer = setInterval(()=>{
@@ -194,8 +178,6 @@ class ZmitiShareOpenApp extends Component {
 					s.stopRecord();
 					return;
 				}
-
-
 
 				obserable.trigger({
 					type:'countdownDuration'
@@ -220,7 +202,7 @@ class ZmitiShareOpenApp extends Component {
 		clearInterval(s.timer);
 		wx.stopRecord({
 			fail(){
-				alert('end error');
+			 	window.debug && alert('end error');
 			},
 			success: function (res) {
 
@@ -238,7 +220,7 @@ class ZmitiShareOpenApp extends Component {
 				    	s.setState({
 				    		isBeginRead:false
 				    	});
-				    	alert('转文字失败，请重新再试');
+				     	window.debug && alert('转文字失败，请重新再试');
 				    },
 				    success: function (res) {//转成功了。 
 
