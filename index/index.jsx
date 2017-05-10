@@ -67,28 +67,20 @@ class ZmitiIndexApp extends Component {
 		let {obserable} = this.props;
 		var s = this;
 		if(!this.state.isBeginRead){
-			wx.startRecord({
-				success(){
-					this.timer = setInterval(()=>{
+			wx.startRecord();//开始朗读
 
-					if(60- this.props.duration<=0){
-						//录音时间结束.进入结果页面
-						s.stopRecord();
-						return;
-					}
+			s.timer = setInterval(()=>{
 
-					obserable.trigger({
-						type:'countdownDuration'
-					});
-				},1000)
-				/*obserable.trigger({
-					type:'entryResult'
-				})*/
-				},
-				cancel(){
-					s.cancelRecord = true;
+				if(60- s.props.duration<=0){
+					//录音时间结束.进入结果页面
+					s.stopRecord();
+					return;
 				}
-			});//开始朗读
+
+				obserable.trigger({
+					type:'countdownDuration'
+				});
+			},1000)
 			
 		}
 		else{

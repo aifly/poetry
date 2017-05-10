@@ -133,11 +133,9 @@ export class App extends Component {
 		var id = s.getQueryString('id'),
 			parentWxopenId  = s.getQueryString('wxopenid');
 
-
-
 		return (
 			<div className={'zmiti-main-ui show'} style={{height:this.viewH}}>
-				{this.state.nickname && this.state.headimgurl  && true || <div>
+				{this.state.nickname && this.state.headimgurl  &&  <div>
 									<section className={'zmiti-main-C '+(this.state.showUser?'hide':'')}>
 									{this.state.showLoading && <ZmitiLoadingApp {...this.state}></ZmitiLoadingApp>}
 									{this.state.isFirst && !this.state.showLoading  &&  <ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
@@ -151,7 +149,7 @@ export class App extends Component {
 									</section>
 									<ZmitiUserApp {...this.state} {...data}></ZmitiUserApp>
 								</div>}
-				{!(this.state.nickname && this.state.headimgurl ) && false && <div className='zmiti-auoth-page' style={auothStyle}></div>}
+				{!(this.state.nickname && this.state.headimgurl )  && <div className='zmiti-auoth-page' style={auothStyle}></div>}
 			</div>
 		);
 	}
@@ -461,7 +459,6 @@ export class App extends Component {
 			code = s.getQueryString('code'),
 			zmiti = s.getQueryString('zmiti');
 
-
 		this.setState({
 			isFirst: !(id && parentWxopenId) ,//!(id && parentWxopenId),
 			id,
@@ -762,6 +759,7 @@ export class App extends Component {
 					wxopenid:s.state.parentWxopenId
 				}
 			}
+
 			$.ajax({
 				url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
 				data:params,

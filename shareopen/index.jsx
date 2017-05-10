@@ -10,11 +10,9 @@ class ZmitiShareOpenApp extends Component {
 	constructor(props) {
 		super(props);
 		this.state={
-			
 			isBeginRead:false,
 			poetryContent:'',
-			showPoetry:true
-			
+			showPoetry:false
 		};
 		this.viewW = document.documentElement.clientWidth;
 		this.viewH = document.documentElement.clientHeight;

@@ -194,7 +194,7 @@
 				return _react2['default'].createElement(
 					'div',
 					{ className: 'zmiti-main-ui show', style: { height: this.viewH } },
-					this.state.nickname && this.state.headimgurl && true || _react2['default'].createElement(
+					this.state.nickname && this.state.headimgurl && _react2['default'].createElement(
 						'div',
 						null,
 						_react2['default'].createElement(
@@ -214,7 +214,7 @@
 						),
 						_react2['default'].createElement(_userIndexJsx2['default'], _extends({}, this.state, data))
 					),
-					!(this.state.nickname && this.state.headimgurl) && false && _react2['default'].createElement('div', { className: 'zmiti-auoth-page', style: auothStyle })
+					!(this.state.nickname && this.state.headimgurl) && _react2['default'].createElement('div', { className: 'zmiti-auoth-page', style: auothStyle })
 				);
 			}
 		}, {
@@ -774,6 +774,7 @@
 							wxopenid: s.state.parentWxopenId
 						};
 					}
+
 					_jquery2['default'].ajax({
 						url: 'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
 						data: params,
@@ -35335,33 +35336,23 @@
 
 				var s = this;
 				if (!this.state.isBeginRead) {
-					wx.startRecord({
-						success: function success() {
-							var _this = this;
+					wx.startRecord(); //开始朗读
 
-							this.timer = setInterval(function () {
+					s.timer = setInterval(function () {
 
-								if (60 - _this.props.duration <= 0) {
-									//录音时间结束.进入结果页面
-									s.stopRecord();
-									return;
-								}
-
-								obserable.trigger({
-									type: 'countdownDuration'
-								});
-							}, 1000);
-							/*obserable.trigger({
-	      	type:'entryResult'
-	      })*/
-						},
-						cancel: function cancel() {
-							s.cancelRecord = true;
+						if (60 - s.props.duration <= 0) {
+							//录音时间结束.进入结果页面
+							s.stopRecord();
+							return;
 						}
-					}); //开始朗读
+
+						obserable.trigger({
+							type: 'countdownDuration'
+						});
+					}, 1000);
 				} else {
-						!s.cancelRecord && s.stopRecord();
-					}
+					!s.cancelRecord && s.stopRecord();
+				}
 				this.setState({
 					isBeginRead: !this.state.isBeginRead
 				});
@@ -35833,11 +35824,9 @@
 
 			_get(Object.getPrototypeOf(ZmitiShareOpenApp.prototype), 'constructor', this).call(this, props);
 			this.state = {
-
 				isBeginRead: false,
 				poetryContent: '',
-				showPoetry: true
-
+				showPoetry: false
 			};
 			this.viewW = document.documentElement.clientWidth;
 			this.viewH = document.documentElement.clientHeight;
@@ -36509,16 +36498,21 @@
 								if (data.getret === 0) {
 
 									var id = data.id;
-									obserable.trigger({
-										type: 'updateParentInfo',
-										data: {
-											id: id,
-											parentWxopenId: s.props.openid
-										}
+									/*obserable.trigger({
+	        	type:'updateParentInfo',
+	        	data:{
+	        		id,
+	        		parentWxopenId:s.props.openid
+	        	}
+	        });*/
+
+									s.setState({
+										id: id
+									}, function () {
+										setTimeout(function () {
+											s.wxConfig(s.props.data.shareTitle, s.props.data.shareDesc, s.props.data.shareImg, s.props.wxappid);
+										}, 500);
 									});
-									setTimeout(function () {
-										s.wxConfig(s.props.data.shareTitle, s.props.data.shareDesc, s.props.data.shareImg, s.props.wxappid);
-									}, 500);
 
 									var score = 10;
 									_jquery2['default'].ajax({
@@ -36558,20 +36552,43 @@
 				/**/
 			}
 		}, {
+			key: 'changeURLPar',
+			value: function changeURLPar(destiny, par, par_value) {
+				var pattern = par + '=([^&]*)';
+				var replaceText = par + '=' + par_value;
+				if (destiny.match(pattern)) {
+					var tmp = '/\\' + par + '=[^&]*/';
+					tmp = destiny.replace(eval(tmp), replaceText);
+					return tmp;
+				} else {
+					if (destiny.match('[\?]')) {
+						return destiny + '&' + replaceText;
+					} else {
+						return destiny + '?' + replaceText;
+					}
+				}
+				return destiny + '\n' + par + '\n' + par_value;
+			}
+		}, {
 			key: 'wxConfig',
 			value: function wxConfig(title, desc, img) {
 				var appId = arguments.length <= 3 || arguments[3] === undefined ? 'wxfacf4a639d9e3bcc' : arguments[3];
 				var worksid = arguments.length <= 4 || arguments[4] === undefined ? this.props.worksid : arguments[4];
 
 				var s = this;
-				var symbol = location.href.indexOf('?') > -1 ? '&' : '?';
-				var durl = location.href.split('#')[0] + symbol + 'id=' + this.state.id + '&wxopenid=' + this.props.openid; //window.location;
+
+				var durl = location.href.split('#')[0]; //+symbol+'id='+this.state.id+'&wxopenid='+ this.props.openid; //window.location;
+				durl = s.changeURLPar(durl, 'id', s.state.id);
+				durl = s.changeURLPar(durl, 'wxopenid', s.props.openid);
+
+				//durl = durl + symbol + 'id=' + s.state.id + '&wxopenid=' + s.props.openid;
 				var code_durl = encodeURIComponent(durl);
-				var redirect_uri = s.defaultShareUrl || window.location.href.split('?')[0];
-				var symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
-				if (s.props.id && s.props.parentWxopenId) {
-					code_durl = code_durl + symbol + 'id=' + s.state.id + '&wxopenid=' + s.state.parentWxopenId;
-				}
+				/*if (s.props.id && s.props.parentWxopenId) {
+	   	
+	   }*/
+
+				alert(s.props.openid);
+
 				_jquery2['default'].ajax({
 					type: 'get',
 					url: "http://api.zmiti.com/weixin/jssdk.php?type=signature&durl=" + code_durl + "&worksid=" + worksid,

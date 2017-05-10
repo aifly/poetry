@@ -94,16 +94,21 @@ class ZmitiResultApp extends Component {
 						if( data.getret === 0){
 
 							var id = data.id;
-							obserable.trigger({
+							/*obserable.trigger({
 								type:'updateParentInfo',
 								data:{
 									id,
 									parentWxopenId:s.props.openid
 								}
-							})
-				   			setTimeout(()=>{
-				   				s.wxConfig(s.props.data.shareTitle,s.props.data.shareDesc,s.props.data.shareImg,s.props.wxappid);
-				   			},500)
+							});*/
+
+							s.setState({
+								id
+							},()=>{
+								setTimeout(()=>{
+					   				s.wxConfig(s.props.data.shareTitle,s.props.data.shareDesc,s.props.data.shareImg,s.props.wxappid);
+					   			},500)
+							});
 
 							var score = 10;
 							$.ajax({
@@ -149,16 +154,41 @@ class ZmitiResultApp extends Component {
 		/**/
 	}
 
+	 changeURLPar(destiny, par, par_value) { 
+		var pattern = par+'=([^&]*)'; 
+		var replaceText = par+'='+par_value; 
+		if (destiny.match(pattern)) { 
+			var tmp = '/\\'+par+'=[^&]*/'; 
+			tmp = destiny.replace(eval(tmp), replaceText); 
+			return (tmp); 
+		} 
+		else { 
+			if (destiny.match('[\?]')) { 
+				return destiny+'&'+ replaceText; 
+			} 
+			else { 
+				return destiny+'?'+replaceText; 
+			} 
+		} 
+		return destiny+'\n'+par+'\n'+par_value; 
+	} 
+
 	wxConfig(title,desc,img,appId='wxfacf4a639d9e3bcc',worksid=this.props.worksid){
 			var s = this;
-			var symbol = location.href.indexOf('?')>-1? '&' : '?';
-		   var durl = location.href.split('#')[0]+symbol+'id='+this.state.id+'&wxopenid='+ this.props.openid; //window.location;
+
+		   var durl = location.href.split('#')[0];//+symbol+'id='+this.state.id+'&wxopenid='+ this.props.openid; //window.location;
+		   	durl = s.changeURLPar(durl,'id',s.state.id);
+		   	durl = s.changeURLPar(durl,'wxopenid',s.props.openid);
+
+		   		//durl = durl + symbol + 'id=' + s.state.id + '&wxopenid=' + s.props.openid;
 		        var code_durl = encodeURIComponent(durl);
-		        var redirect_uri = s.defaultShareUrl || window.location.href.split('?')[0];
-				var symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
-				if (s.props.id && s.props.parentWxopenId) {
-					code_durl = code_durl + symbol + 'id=' + s.state.id + '&wxopenid=' + s.state.parentWxopenId;
-				}
+				/*if (s.props.id && s.props.parentWxopenId) {
+					
+				}*/
+
+				alert(s.props.openid)
+
+				
 			$.ajax({
 				type:'get',
 				url: "http://api.zmiti.com/weixin/jssdk.php?type=signature&durl="+code_durl+"&worksid="+worksid,
