@@ -35974,6 +35974,10 @@
 
 				var obserable = this.props.obserable;
 
+				this.isShowPoetry = this.isShowPoetry === undefined ? false : true;
+				if (this.isShowPoetry) {
+					return;
+				}
 				var s = this;
 				_jquery2['default'].ajax({
 					url: 'http://api.zmiti.com/v2/weixin/add_wxuser/',

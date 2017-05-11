@@ -92,8 +92,13 @@ class ZmitiShareOpenApp extends Component {
 		},()=>{
 			this.scroll.refresh();
 		});
-		
+
 		let {obserable} = this.props;
+
+		this.isShowPoetry = this.isShowPoetry === undefined ? false : true;
+		if(this.isShowPoetry){
+			return;
+		}
 		var s = this;
 		$.ajax({
 	   		url:'http://api.zmiti.com/v2/weixin/add_wxuser/',
