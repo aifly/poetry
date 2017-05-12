@@ -36,6 +36,83 @@
     width: 60px;
     position: absolute;
     top: 100px; }
+  .zmiti-shareopen-main-ui .zmiti-confirm-C {
+    position: absolute;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.5);
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 640px;
+    display: -webkit-box;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    -webkit-box-orient: horizontal; }
+    .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content {
+      width: 520px;
+      padding: 20px 0;
+      background: #fff;
+      position: relative; }
+      .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content:before, .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content:after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 100%;
+        background: #999999;
+        border-radius: 6px;
+        top: 0;
+        left: -20px;
+        -webkit-transform: scale(1, 1.3);
+        transform: scale(1, 1.3); }
+      .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content:after {
+        right: -20px;
+        left: auto; }
+      .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content header {
+        width: 40%;
+        margin: 20px auto; }
+      .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content .zmiti-confirm-score {
+        width: 50%;
+        margin: 20px auto;
+        text-align: center; }
+        .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content .zmiti-confirm-score span {
+          font-size: 44px;
+          margin-right: 20px; }
+      .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content .zmiti-confirm-my-score {
+        width: 50%;
+        color: #b4a79e;
+        font-size: 24px;
+        margin: 20px auto; }
+        .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content .zmiti-confirm-my-score img {
+          width: 30px;
+          margin: 0 6px;
+          vertical-align: middle; }
+      .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content .zmiti-confirm-btns {
+        display: -webkit-box;
+        -webkit-box-align: center;
+        -webkit-box-pack: center;
+        -webkit-box-orient: horizontal;
+        width: 80%;
+        margin: 20px auto 0;
+        font-size: 34px; }
+        .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content .zmiti-confirm-btns > aside {
+          -webkit-box-flex: 1;
+          -webkit-transition: -webkit-transform 0.15s;
+          transition: -webkit-transform 0.15s;
+          transition: transform 0.15s;
+          transition: transform 0.15s, -webkit-transform 0.15s;
+          text-align: center; }
+          .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content .zmiti-confirm-btns > aside.active {
+            -webkit-transform: scale(0.95);
+            transform: scale(0.95); }
+          .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content .zmiti-confirm-btns > aside:last-of-type {
+            position: relative; }
+            .zmiti-shareopen-main-ui .zmiti-confirm-C .zmiti-confirm-content .zmiti-confirm-btns > aside:last-of-type:before {
+              content: "";
+              position: absolute;
+              width: 1px;
+              height: 100%;
+              background: #ccc;
+              left: 0; }
   .zmiti-shareopen-main-ui .zmiti-open-poetry {
     position: absolute;
     width: 40px;

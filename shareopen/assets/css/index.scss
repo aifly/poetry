@@ -17,6 +17,85 @@ $viewW:640px;
       top: 100px;
     }
 
+    .zmiti-confirm-C{
+      @include pos(a);
+      z-index: 1000;
+      background: rgba(0,0,0,.5);
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: $viewW;
+      @include displayBox(horizontal);
+      .zmiti-confirm-content{
+          width: $viewW - 120;
+          padding: 20px 0;
+          background: #fff;
+          @include pos(r);
+          &:before,&:after{
+            content:'';
+            @include pos(a);
+            width: 20px;
+            height: 100%;
+            background: #999999;
+            @include br(6px);
+            top: 0;
+            left: -20px;
+            @include transform(scale(1,1.3));;
+
+          }
+          &:after{
+            right: -20px;
+            left: auto;
+          }
+
+          header{
+             width: 40%;
+             margin: 20px auto;
+          }
+          .zmiti-confirm-score{
+            width: 50%;
+            margin: 20px auto;
+            text-align: center;
+            span{
+              font-size: 44px;
+              margin-right: 20px;
+            }
+          }
+          .zmiti-confirm-my-score{
+            width: 50%;
+            color:#b4a79e;
+            font-size: 24px;
+            margin: 20px auto;
+            img{width: 30px;margin: 0 6px;vertical-align: middle;}
+          }
+          .zmiti-confirm-btns{
+            @include displayBox(horizontal);
+            width: 80%;
+            margin: 20px auto 0;
+            font-size: 34px;
+            &>aside{
+               -webkit-box-flex:1;
+               @include transition_transform(.15s);
+               &.active{
+                  @include transform(scale(.95));
+               }
+               &:last-of-type{
+                  @include pos(r);
+                  &:before{
+                    content:"";
+                    @include pos(a);
+                    width: 1px;
+                    height: 100%;
+                    background: #ccc;
+                    left: 0;
+                  }
+               }
+               text-align: center;
+            }
+          }
+      }
+    }
+
 
     .zmiti-open-poetry{
         @include pos(a);

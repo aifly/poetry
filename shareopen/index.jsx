@@ -12,7 +12,8 @@ class ZmitiShareOpenApp extends Component {
 		this.state={
 			isBeginRead:false,
 			poetryContent:'',
-			showPoetry:false
+			showPoetry:false,
+			showConfirm:false
 		};
 		this.viewW = document.documentElement.clientWidth;
 		this.viewH = document.documentElement.clientHeight;
@@ -51,7 +52,7 @@ class ZmitiShareOpenApp extends Component {
 					 	 </section>
 
 					 </div>
-					 <div  className='zmiti-open-poetry'><img onTouchStart={this.showPoetry.bind(this)} src='./assets/images/openpeotry.png'/></div>
+					 <div  className='zmiti-open-poetry'><img onTouchStart={this.showConfirm.bind(this)} src='./assets/images/openpeotry.png'/></div>
 					 <section className='zmiti-voice-content'><ZmitiAudioApp {...this.props}></ZmitiAudioApp></section>
 					 <div className='zmiti-bottom-ui'>
 					 
@@ -80,25 +81,59 @@ class ZmitiShareOpenApp extends Component {
 					 <section className='zmiti-seal'>
 					 	<img src='./assets/images/seal.png'/>
 					 </section>
+
+					  {this.state.showConfirm && <section className='zmiti-confirm-C'>
+					  					 	<section className='zmiti-confirm-content'>
+					  					 		<header><img src='./assets/images/tip.png'/></header>
+					  					 		<section className='zmiti-confirm-score'><span>10</span>积分</section>
+					  					 		<section className='zmiti-confirm-my-score'>我当前的积分<img src='./assets/images/user/currency.png'/>{this.props.score}</section>
+					  					 		<section className='zmiti-confirm-btns'>
+					  					 			<aside className={this.state.closeConfirm?'active':''} onTouchTap={this.closeConfirm.bind(this)}>再想想</aside>
+					  					 			<aside onTouchTap={this.showPoetry.bind(this)}>确定</aside>
+					  					 		</section>
+					  					 	</section>
+					  					 </section>}
 				 </div>
+
 			</div>
 		);
 	}
 
-	showPoetry(){
-		
-		this.setState({
-			showPoetry:true
-		},()=>{
-			this.scroll.refresh();
-		});
-
-		let {obserable} = this.props;
-
+	showConfirm(){
 		this.isShowPoetry = this.isShowPoetry === undefined ? false : true;
 		if(this.isShowPoetry){
 			return;
 		}
+		this.setState({
+			showConfirm:true
+		});
+
+	}
+	closeConfirm(){
+		this.setState({
+			closeConfirm:true
+		});
+		setTimeout(()=>{
+			this.setState({
+				closeConfirm:false,
+				showConfirm:false
+			});
+			this.isShowPoetry = undefined;
+		},150);
+
+	}
+	showPoetry(){
+		
+		this.setState({
+			showPoetry:true,
+			showConfirm:false
+		},()=>{
+			this.scroll.refresh();
+		});
+		let {obserable} = this.props;
+
+		
+
 		var s = this;
 		$.ajax({
 	   		url:'http://api.zmiti.com/v2/weixin/add_wxuser/',

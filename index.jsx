@@ -135,7 +135,7 @@ export class App extends Component {
 
 		return (
 			<div className={'zmiti-main-ui show'} style={{height:this.viewH}}>
-				{this.state.nickname && this.state.headimgurl  &&  <div>
+				{this.state.nickname && this.state.headimgurl  &&   <div>
 									<section className={'zmiti-main-C '+(this.state.showUser?'hide':'')}>
 									{this.state.showLoading && <ZmitiLoadingApp {...this.state}></ZmitiLoadingApp>}
 									{this.state.isFirst && !this.state.showLoading  &&  <ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
@@ -149,7 +149,7 @@ export class App extends Component {
 									</section>
 									<ZmitiUserApp {...this.state} {...data}></ZmitiUserApp>
 								</div>}
-				{!(this.state.nickname && this.state.headimgurl )  && <div className='zmiti-auoth-page' style={auothStyle}></div>}
+					{!(this.state.nickname && this.state.headimgurl )  && <div className='zmiti-auoth-page' style={auothStyle}></div>}
 			</div>
 		);
 	}

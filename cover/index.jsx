@@ -28,7 +28,7 @@ class ZmitiCoverApp extends Component {
 					<img src='./assets/images/index-text.png'/>
 				</div>
 
-				<div className={'zmiti-cover-shici '+(this.state.showCanvas?'active':'')}>
+				<div onTouchTap={()=>{this.setState({showRule:true})}} className={'zmiti-cover-shici '+(this.state.showCanvas?'active':'')}>
 					<img src='./assets/images/index-shici.png'/>
 				</div>
 
@@ -40,6 +40,9 @@ class ZmitiCoverApp extends Component {
 				<div className='zmiti-cover-bottom'>
 					<img src='./assets/images/index-bottom.png'/>
 				</div>
+				{this.state.showRule&& <section onTouchStart={()=>{this.setState({showRule:false})}} className='zmiti-cover-rule'>
+					<img src='./assets/images/rule.png'/>
+				</section>}
 			</div>
 		);
 	}
@@ -51,7 +54,7 @@ class ZmitiCoverApp extends Component {
 		let {obserable} = this.props;
 		obserable.trigger({
 			type:'entryChooseApp'
-		})
+		});
 		
 	}
 	componentDidMount() {
