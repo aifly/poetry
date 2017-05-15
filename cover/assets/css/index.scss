@@ -22,6 +22,7 @@ $viewW:640px;
     height: 100%;
     z-index: 1000;
     text-align: center;
+    @include transform(translate3d(0,0,10px));
     img{
       width: 500px;
       @include pos(r);
@@ -102,7 +103,7 @@ $viewW:640px;
        img{
           @include transition(.5s 1.2s);  
           @include transitionTimingFunction(cubic-bezier(0.11, 1.07, 0.82, 1.07));
-          @include transform(translate3d(0,0,10px));    
+          @include transform(translate3d(0,0,0));    
        }
       @include transition(.5s .5s);
       @include transform(translate3d(-50%,-50%,0) scale(1));

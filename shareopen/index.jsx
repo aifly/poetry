@@ -13,7 +13,8 @@ class ZmitiShareOpenApp extends Component {
 			isBeginRead:false,
 			poetryContent:'',
 			showPoetry:false,
-			showConfirm:false
+			showConfirm:false,
+			pause:true
 		};
 		this.viewW = document.documentElement.clientWidth;
 		this.viewH = document.documentElement.clientHeight;
@@ -22,7 +23,7 @@ class ZmitiShareOpenApp extends Component {
 	render() {
 
 		var poetryStyle ={
-			background:'url(./assets/images/main-bg.jpg) no-repeat center bottom '
+			background:'url(./assets/images/main-bg1.png) no-repeat center bottom '
 		}
 
 		var s = this;
@@ -39,12 +40,32 @@ class ZmitiShareOpenApp extends Component {
 						 		
 							 	<div className='zmiti-poetry-title'>{this.props.poetryTitle}</div>
 						 	 	<div className='zmiti-poetry-author'>{this.props.poetryAuthor}</div>
+						 	 	<div className='zmiti-yuanwen'><img src='./assets/images/yuanwen.png'/></div>
 							 	<article className={'zmiti-poetry-content '} dangerouslySetInnerHTML={this.createMarkup()}>
 							 	</article>
+
+							 	<div className='zmiti-shareopen-line'></div>
+							 	 <div className='zmiti-poetry-title zmiti-user-title'>
+ 							 		{this.props.userPoetryTitle} {this.props.userPoetryAuthor}
+ 							 	    <span className='zmiti-poetry-user-voice' onTouchTap={this.playAudio.bind(this)}><img src={'./assets/images/pause.'+(this.state.pause?'png':'gif')+''}/></span>
+ 							 	</div>
 						 	</div>}
-						 	<div className='zmiti-shareopen-line'><img src='./assets/images/line.png'/></div>
-						 	<div className='zmiti-poetry-title'>{this.props.userPoetryTitle}</div>
-					 	 	<div className='zmiti-poetry-author'>{this.props.userPoetryAuthor}</div>
+						 	
+
+						 	{!this.state.showPoetry &&
+						 		<div>
+						 			<div className='zmiti-poetry-title zmiti-user-title'>
+								 		{this.props.userPoetryTitle} 
+								 		<section  className='zmiti-voice-content'><ZmitiAudioApp {...this.props} className='zmiti-audio-custom'></ZmitiAudioApp></section>
+								 	</div>
+								 	<div className='zmiti-poetry-text'>
+	 							 		<span className='zmiti-text-overflow'>{this.props.userPoetryAuthor}</span>
+	 							 		<img src='./assets/images/text.png'/>
+	 							 	</div>
+						 		</div>
+						 	 }
+						 	
+					 	 	
 						 	<article className={'zmiti-poetry-content '+(this.props.id&& this.props.parentWxopenId ? 'zmiti-custom-text':'')}>
 						 		{this.props.userPoetryContent}
 						 	</article>
@@ -53,7 +74,7 @@ class ZmitiShareOpenApp extends Component {
 
 					 </div>
 					 <div  className='zmiti-open-poetry'><img onTouchStart={this.showConfirm.bind(this)} src='./assets/images/openpeotry.png'/></div>
-					 <section className='zmiti-voice-content'><ZmitiAudioApp {...this.props}></ZmitiAudioApp></section>
+					 
 					 <div className='zmiti-bottom-ui'>
 					 
 					 	{this.state.isBeginRead && <div className='zmiti-voice'>
@@ -94,10 +115,33 @@ class ZmitiShareOpenApp extends Component {
 					  					 	</section>
 					  					 </section>}
 				 </div>
-
+				 <div className={'zmiti-msg '+ ( this.state.showMsg ? 'active':' ')}>{this.state.msg || '您的积分不够/(ㄒoㄒ)/~~'}</div>
 			</div>
 		);
 	}
+
+
+	playAudio(){
+		var s = this;
+		if(this.state.pause ){
+			this.setState({
+				pause:false
+			},()=>{
+				wx.playVoice({
+				    localId: s.props.audioSrc
+				});	
+				wx.onVoicePlayEnd({
+				    success: function (res) {
+				        var localId = res.localId; // 返回音频的本地ID
+				        s.setState({
+							pause:true
+						});
+					    }
+					});
+			})
+		}
+	}
+
 
 	showConfirm(){
 		this.isShowPoetry = this.isShowPoetry === undefined ? false : true;
@@ -123,16 +167,28 @@ class ZmitiShareOpenApp extends Component {
 
 	}
 	showPoetry(){
+
+		if(this.props.score < 10){//积分不够
+			this.setState({
+				showMsg:true
+			});
+
+			setTimeout(()=>{
+				this.setState({
+					showMsg : false
+				});
+			},2000);
+			return;
+		}
 		
 		this.setState({
 			showPoetry:true,
 			showConfirm:false
 		},()=>{
+
 			this.scroll.refresh();
 		});
 		let {obserable} = this.props;
-
-		
 
 		var s = this;
 		$.ajax({

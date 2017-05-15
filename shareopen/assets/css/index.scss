@@ -18,12 +18,12 @@ $viewW:640px;
     }
 
     .zmiti-confirm-C{
-      @include pos(a);
+      @include pos(f);
       z-index: 1000;
       background: rgba(0,0,0,.5);
       left: 0;
-      top: 0;
-      height: 100%;
+      top: -20px;
+      height: 100vh;
       width: $viewW;
       @include displayBox(horizontal);
       .zmiti-confirm-content{
@@ -96,6 +96,12 @@ $viewW:640px;
       }
     }
 
+    .zmiti-yuanwen{
+       @include pos(a);
+       width: 6rem;
+       right: 1rem;
+       z-index:0;
+    }
 
     .zmiti-open-poetry{
         @include pos(a);
@@ -124,10 +130,14 @@ $viewW:640px;
       .zmiti-poetry-author{
         margin-top: 10px;
         width: $poetryW;
+        display: inline-block;
       }
       .zmiti-shareopen-line{
-        width: $viewW;
-        margin: 20px 0;
+        width: $viewW - 200;
+        margin: 40px auto;
+        font-weight: bold;
+        letter-spacing: 3px;
+        border:1px dashed #333;
       }
       .zmiti-tip{
         @include pos(a);
@@ -139,9 +149,57 @@ $viewW:640px;
         @include transform(translate3d(-50%,0,0));
       }
       .zmiti-poetry-title{
-        width: $poetryW;
+        width: $poetryW ;
         font-size:30px;
         @include transform(scale(1.5));
+        
+      }
+
+      .zmiti-user-title,.zmiti-user-author{
+        display: inline-block;
+        width: $poetryW - 200;
+        margin: 0 20px;
+        font-size:32px;
+        height: 60px;
+        line-height: 60px;
+        img{vertical-align: top;}
+        text-align: left;
+        @include pos(r);
+      }
+
+      .zmiti-poetry-text{
+         width: 90%;
+         margin: 40px auto;
+         @include pos(r);
+         span{
+          width: 160px;
+          @include pos(a);
+          max-width: 160px;
+          text-align: center;
+          left: 2em;
+          top: -4px;
+          font-size:28px;
+         }
+      }
+
+      .zmiti-poetry-user-voice{
+         @include pos(a);
+         border:1px solid #9bb1a5;
+         width: 50px;
+         height: 50px;
+         padding: 20px;
+         box-sizing:border-box;
+         text-align: center;
+         @include br(50%);
+         top: 5px;
+         right: .5rem;
+         img{
+           width: 36px;
+           @include pos(a);
+           top: 13px;
+           left: 11px;
+           vertical-align: middle;
+         }
       }
 
       
@@ -152,10 +210,11 @@ $viewW:640px;
         @include transform(scale(1.2)); 
         width:300px;
         margin: 50px auto 0;
-        
+        @include pos(r);
+        z-index: 1;
         line-height: 40px;
         &.zmiti-custom-text{
-          width:400px;
+          width:380px;
           text-align: left;
 
         }
@@ -169,9 +228,11 @@ $viewW:640px;
     }
 
     .zmiti-voice-content{
-      width: 100%;
-      height: 60px;
-      top: 660px;
+      width: 220px;
+      height: 40px;
+      @include pos(a);
+      top: 5px;
+      right: 0;
     }
 
     .zmiti-bottom-ui{
@@ -215,7 +276,7 @@ $viewW:640px;
     }
     .zmiti-begin-read{
       width:464px;
-      margin: 13px auto;
+      margin: 30px auto;
       @include pos(r);
       font-size: 30px;
     }
@@ -237,6 +298,23 @@ $viewW:640px;
           text-align: right;;
         }
       }
+    }
+
+    .zmiti-msg{
+       @include pos(f);
+         top:2rem;
+        font-size: 24px;
+        left: 50%;
+        -webkit-transform:translate3d(-50%,-4rem,0);
+        padding: 5px 10px;
+        &.active{
+          -webkit-transform:translate3d(-50%,0,0);
+        }
+        border-radius: 8px;
+        color:#f00;
+        background: #fff;
+        -webkit-transition:.2s;
+        z-index: 100000;
     }
 }
 

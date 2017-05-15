@@ -13,10 +13,10 @@ class ZmitiAudioApp extends Component {
 
 	render() {
 		return (
-			<div className='zmiti-audio-main-ui'>
+			<div className={'zmiti-audio-main-ui '+ (this.props.className||'')}>
 				<section className='zmiti-audio-C' onTouchTap={this.playAudio.bind(this)}>
-					<aside><img src={'./assets/images/pause.'+(this.state.pause?'png':'gif')+''}/>点我播放</aside>
-					<aside>{this.props.duration}"</aside>
+					<aside><img src={'./assets/images/pause.'+(this.state.pause?'png':'gif')+''}/>点我收听</aside>
+					<aside>{this.props.duration|| 0}'</aside>
 				</section>
 			</div>
 		);

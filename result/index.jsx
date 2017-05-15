@@ -59,7 +59,7 @@ class ZmitiResultApp extends Component {
 		    localId:s.props.audioSrc, // 需要上传的音频的本地ID，由stopRecord接口获得
 		    isShowProgressTips: 1, // 默认为1，显示进度提示
 		    fail(){
-		    	alert('上传失败');
+		    	window.debug && alert('上传失败');
 		    },
 	        success: function (res) {
 		        var serverId = res.serverId; // 返回音频的服务器端ID
@@ -88,7 +88,7 @@ class ZmitiResultApp extends Component {
 						workdatatitle:s.props.poetryTitle
 					},
 					error(){
-						alert('post_shiciresult error 接口错误');
+						window.debug && alert('post_shiciresult error 接口错误');
 					},
 					success(data){
 						if( data.getret === 0){
@@ -106,7 +106,7 @@ class ZmitiResultApp extends Component {
 								id
 							},()=>{
 								setTimeout(()=>{
-					   				s.wxConfig(s.props.data.shareTitle,s.props.data.shareDesc,s.props.data.shareImg,s.props.wxappid);
+					   				s.wxConfig(s.props.nickname+'为你朗读了一首诗','千山万水总是情，为你读诗行不行。远方的朋友用家乡话为你读了首诗，你能猜出原诗吗？',s.props.data.shareImg,s.props.wxappid);
 					   			},500)
 							});
 
@@ -126,7 +126,7 @@ class ZmitiResultApp extends Component {
 						   			integral:score
 						   		},
 						   		error(){
-						   			alert('add_wxuser 服务器返回错误');
+						   			window.debug && alert('add_wxuser 服务器返回错误');
 						   		},
 						   		success(data){
 						   			
@@ -185,9 +185,6 @@ class ZmitiResultApp extends Component {
 				/*if (s.props.id && s.props.parentWxopenId) {
 					
 				}*/
-
-				alert(s.props.openid)
-
 				
 			$.ajax({
 				type:'get',
@@ -197,7 +194,7 @@ class ZmitiResultApp extends Component {
 			    jsonpCallback: "jsonFlickrFeed",
 			    success(data){
 			    	wx.config({
-							    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+							    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端window.debug && alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
 							    appId:appId, // 必填，公众号的唯一标识
 							    timestamp:'1488558145' , // 必填，生成签名的时间戳
 							    nonceStr: 'Wm3WZYTPz0wzccnW', // 必填，生成签名的随机串

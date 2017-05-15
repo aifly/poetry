@@ -96,7 +96,7 @@ export class App extends Component {
 			 "./assets/images/loading11.png",
 			 "./assets/images/loading12.png",
 			 "./assets/images/loading13.png",
-			 "./assets/images/main-bg.jpg",
+			 "./assets/images/main-bg1.png",
 			 "./assets/images/main-bg.png",
 			 "./assets/images/openpeotry.png",
 			 "./assets/images/pause.gif",
@@ -135,7 +135,8 @@ export class App extends Component {
 
 		return (
 			<div className={'zmiti-main-ui show'} style={{height:this.viewH}}>
-				{this.state.nickname && this.state.headimgurl  &&   <div>
+
+				{this.state.nickname && this.state.headimgurl  &&  <div>
 									<section className={'zmiti-main-C '+(this.state.showUser?'hide':'')}>
 									{this.state.showLoading && <ZmitiLoadingApp {...this.state}></ZmitiLoadingApp>}
 									{this.state.isFirst && !this.state.showLoading  &&  <ZmitiCoverApp {...this.state} {...data}></ZmitiCoverApp>}
@@ -148,6 +149,24 @@ export class App extends Component {
 										</section>
 									</section>
 									<ZmitiUserApp {...this.state} {...data}></ZmitiUserApp>
+									{this.state.showPoetryLoading&&<div className='zmiti-get-poetry-loading'>
+										<div>
+											<div className="sk-fading-circle">
+											  <div className="sk-circle1 sk-circle"></div>
+											  <div className="sk-circle2 sk-circle"></div>
+											  <div className="sk-circle3 sk-circle"></div>
+											  <div className="sk-circle4 sk-circle"></div>
+											  <div className="sk-circle5 sk-circle"></div>
+											  <div className="sk-circle6 sk-circle"></div>
+											  <div className="sk-circle7 sk-circle"></div>
+											  <div className="sk-circle8 sk-circle"></div>
+											  <div className="sk-circle9 sk-circle"></div>
+											  <div className="sk-circle10 sk-circle"></div>
+											  <div className="sk-circle11 sk-circle"></div>
+											  <div className="sk-circle12 sk-circle"></div>
+											</div>
+										</div>
+									</div>}
 								</div>}
 					{!(this.state.nickname && this.state.headimgurl )  && <div className='zmiti-auoth-page' style={auothStyle}></div>}
 			</div>
@@ -450,6 +469,25 @@ export class App extends Component {
         return null;
     }
 
+     changeURLPar(destiny, par, par_value) { 
+		var pattern = par+'=([^&]*)'; 
+		var replaceText = par+'='+par_value; 
+		if (destiny.match(pattern)) { 
+			var tmp = '/\\'+par+'=[^&]*/'; 
+			tmp = destiny.replace(eval(tmp), replaceText); 
+			return (tmp); 
+		} 
+		else { 
+			if (destiny.match('[\?]')) { 
+				return destiny+'&'+ replaceText; 
+			} 
+			else { 
+				return destiny+'?'+replaceText; 
+			} 
+		} 
+		return destiny+'\n'+par+'\n'+par_value; 
+	} 
+
 
 	componentDidMount() {
 
@@ -468,6 +506,10 @@ export class App extends Component {
 			zmiti
 		});
 
+		
+		
+		 
+		
 
 		$.getJSON('./assets/js/data.json', (d)=> {
 
@@ -483,6 +525,7 @@ export class App extends Component {
 			this.state.data.shareImg = d.shareImg;
 			this.state.data.type = d.type;
 			this.state.data.customList = d.customList || [];
+
 
 			var redirect_uri = s.defaultShareUrl || window.location.href.split('?')[0];
 			var symbol = redirect_uri.indexOf('?') > -1 ? '&' : '?';
@@ -523,6 +566,7 @@ export class App extends Component {
 					}
 				}
 			})
+			
 
 			this.wxConfig(this.state.data.shareTitle, this.state.data.shareDesc, this.state.data.shareImg, this.state.wxappid);
 			this.forceUpdate(()=> {
@@ -580,7 +624,7 @@ export class App extends Component {
 							});
 
 							if(id && parentWxopenId){
-								s.refreshPoetry('custom',false);
+								s.refreshPoetry('custom',false,false);
 							}
 
 							if (wx.posData && wx.posData.longitude) {
@@ -591,9 +635,8 @@ export class App extends Component {
 
 							if (s.isWeiXin()) {
 									
-								var url = s.oauthurl || window.localStorage.getItem('oauthurl');
-								window.location.href = url;
-
+									var url = s.oauthurl || window.localStorage.getItem('oauthurl');
+							    	window.location.href = url;
 
 								//var redirect_uri = window.location.href.replace(/^code$/ig, 'zmiti');
 
@@ -611,7 +654,7 @@ export class App extends Component {
 									});
 								});
 
-								s.refreshPoetry('custom');
+								//s.refreshPoetry('custom');
 								//window.debug && alert('请在微信中打开');
 							}
 						}
@@ -749,8 +792,15 @@ export class App extends Component {
     }
 
 
-    renderPoetry(type,isOther){
+    renderPoetry(type,isOther,isShowLoading){
     	var s = this;
+
+    	if(isShowLoading){
+    		this.setState({
+	    		showPoetryLoading:true
+	    	});
+    	}
+    	
     	if(type === 'custom'){//取用户读的内容.
 			var params = {};
 			if(!isOther && s.state.id && s.state.parentWxopenId){
@@ -764,9 +814,14 @@ export class App extends Component {
 				url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
 				data:params,
 				error(){
+					s.setState({
+			    		showPoetryLoading:false
+			    	});
 					window.debug && alert('get_shicioriginaltext error')
 				},
 				success(data){
+
+					
 					if(data.getret === 0){
 						if(data.list.length>0){
 							s.state.userPoetryTitle = <img src={data.list[0].headimgurl} style={{width:60,borderRadius:'50%',marginBottom:20}}/>;
@@ -775,6 +830,7 @@ export class App extends Component {
 							s.state.poetryContent = data.list[0].originaltext;
 							s.state.poetryTitle = data.list[0].workdatatitle;
 							s.state.poetryAuthor = data.list[0].author;
+							s.state.duration = data.list[0].duration;
 							s.state.workdataid = data.list[0].workdataid;
 							wx.downloadVoice({
 								isShowProgressTips: 1, // 默认为1，显示进度提示
@@ -789,7 +845,11 @@ export class App extends Component {
 									});
 								}
 							})
-							s.forceUpdate();
+
+							setTimeout(()=>{
+						    	s.state.showPoetryLoading = false;
+								s.forceUpdate();
+							},500)
 						}
 						else{
 							window.debug && alert('没有获取到诗词，请刷新重试');
@@ -809,10 +869,13 @@ export class App extends Component {
 					shicinumber:1
 				},
 				error(){
-					window.debug && alert('get_shici ： 服务器返回错误')
+					window.debug && alert('get_shici ： 服务器返回错误');
+					s.setState({
+			    		showPoetryLoading:false
+			    	});
 				},
 				success(data){
-
+					 
 					if(data.getret === 0){
 						if(data.shicilist.length>0){
 							s.state.poetryTitle = data.shicilist[0].title;
@@ -820,6 +883,7 @@ export class App extends Component {
 							s.state.poetryContent = data.shicilist[0].originaltext;
 							
 							s.state.workdataid = data.shicilist[0].workdataid;
+							
 
 							s.state.userPoetryContent = data.shicilist[0].originaltext;
 							
@@ -827,7 +891,10 @@ export class App extends Component {
 							s.state.parentWxopenId = '';
 							s.state.showShareOpen = false;
 							s.wxConfig(s.state.data.shareTitle,s.state.data.shareDesc,s.state.shareImg,s.state.wxappid);
-							s.forceUpdate();
+							setTimeout(()=>{
+						    	s.state.showPoetryLoading = false;
+								s.forceUpdate();
+							},500)
 						}
 						else{
 							window.debug && alert('没有获取到诗词，请刷新重试');
@@ -841,17 +908,17 @@ export class App extends Component {
 		}
     }
 
-	refreshPoetry(type,isOther){
+	refreshPoetry(type,isOther,isShowLoading=true){
 		var s = this;
 		var type = type || 'poetry';
 		this.state.data.type = this.state.data.type || 'SHI';
 		switch(this.state.data.type){
 			case "SHI":
-				this.renderPoetry(type,isOther);
+				this.renderPoetry(type,isOther,isShowLoading);
 			break;
 			case "CUSTOM":
 				if(this.state.data.customList.length<=0){
-					this.renderPoetry(type,isOther);//如果是自定义的但是用户没有写任何的内容，就默认取诗
+					this.renderPoetry(type,isOther,isShowLoading);//如果是自定义的但是用户没有写任何的内容，就默认取诗
 				}else{
 					if(type === 'custom'){
 						var params = {};
