@@ -568,7 +568,7 @@ export class App extends Component {
 			})
 			
 
-			this.wxConfig(this.state.data.shareTitle, this.state.data.shareDesc, this.state.data.shareImg, this.state.wxappid);
+			
 			this.forceUpdate(()=> {
 				$.ajax({
 					url: 'http://api.zmiti.com/v2/weixin/getwxuserinfo/',
@@ -623,6 +623,8 @@ export class App extends Component {
 								code
 							});
 
+							s.wxConfig(s.state.data.shareTitle.replace(/{username}/ig,s.nickname), s.state.data.shareDesc.replace(/{username}/ig,s.state.nickname).replace(/{username}/ig,s.nickname), s.state.data.shareImg, s.state.wxappid);
+
 							if(id && parentWxopenId){
 								s.refreshPoetry('custom',false,false);
 							}
@@ -635,7 +637,7 @@ export class App extends Component {
 
 							if (s.isWeiXin()) {
 									
-									var url = s.oauthurl || window.localStorage.getItem('oauthurl');
+								var url = s.oauthurl || window.localStorage.getItem('oauthurl');
 							    	window.location.href = url;
 
 								//var redirect_uri = window.location.href.replace(/^code$/ig, 'zmiti');
@@ -700,7 +702,6 @@ export class App extends Component {
 					success(data){
 						if(data.getret === 0){
 							if(data.list.length>0){
-								console.log(data.list);
 								s.state.userPoetryTitle = <img src={data.list[0].headimgurl} style={{width:60,borderRadius:'50%',marginBottom:20}}/>;
 								s.state.userPoetryAuthor = data.list[0].nickname;
 								s.state.userPoetryContent = data.list[0].changetext;
@@ -806,7 +807,8 @@ export class App extends Component {
 			if(!isOther && s.state.id && s.state.parentWxopenId){
 				params = {
 					id:s.state.id,
-					wxopenid:s.state.parentWxopenId
+					wxopenid:s.state.parentWxopenId,
+					workdataid:s.state.workdataid
 				}
 			}
 
@@ -890,7 +892,7 @@ export class App extends Component {
 							s.state.id = '';
 							s.state.parentWxopenId = '';
 							s.state.showShareOpen = false;
-							s.wxConfig(s.state.data.shareTitle,s.state.data.shareDesc,s.state.shareImg,s.state.wxappid);
+							s.wxConfig(s.state.data.shareTitle.replace(/{username}/ig,s.state.nickname),s.state.data.shareDesc.replace(/{username}/ig,s.state.nickname),s.state.shareImg,s.state.wxappid);
 							setTimeout(()=>{
 						    	s.state.showPoetryLoading = false;
 								s.forceUpdate();
@@ -981,7 +983,7 @@ export class App extends Component {
 						s.state.id = '';
 						s.state.parentWxopenId = '';
 						s.state.showShareOpen = false;
-						s.wxConfig(s.state.data.shareTitle,s.state.data.shareDesc,s.state.shareImg,s.state.wxappid);
+						s.wxConfig(s.state.data.shareTitle.replace(/{username}/ig,s.state.nickname),s.state.data.shareDesc.replace(/{username}/ig,s.state.nickname),s.state.shareImg,s.state.wxappid);
 						s.forceUpdate();	
 					}
 				}
