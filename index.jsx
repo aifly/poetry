@@ -211,7 +211,6 @@ export class App extends Component {
 	
 
     getPos(nickname,headimgurl){
-
     	var s = this;
     	 $.ajax({
         	url:`http://restapi.amap.com/v3/geocode/regeo?key=10df4af5d9266f83b404c007534f0001&location=${wx.posData.longitude},${wx.posData.latitude}&poitype=&radius=100&extensions=base&batch=false&roadlevel=1`+'',
@@ -259,7 +258,10 @@ export class App extends Component {
 						}
 					},()=>{
 						//window.debug && alert('save_userview error');
-					})
+					});
+
+
+
 
 				   	$.ajax({
 				   		url:'http://api.zmiti.com/v2/weixin/add_wxuser/',
@@ -276,33 +278,15 @@ export class App extends Component {
 				   			integral:0
 				   		},
 				   		error(){
-				   			window.debug && alert('add_wxuser: 服务器返回错误');
+				   			window.degub &&  alert('add_wxuser: 服务器返回错误~~');
 				   		},
 				   		success(data){
 				   			if(data.getret === 0){
 				   				
-				   				//s.score = data.wxuserinfo.totalintegral;
 								s.setState({
 									score:data['userinfo'].totalintegral
 								});
 
-				   				/*$.ajax({
-									url:'http://api.zmiti.com/v2/weixin/get_wxuserdetaile',
-									data:{
-										wxopenid:s.openid
-									},
-									success(data){
-										if(data.getret === 0){
-											s.score = data.wxuserinfo.totalintegral;
-											s.setState({
-												score:s.score
-											});
-										}else{
-											window.debug && alert('get_wxuserdetaile : getret  : '+ data.getret + ' msg : ' + data.getmsg);	
-										}
-									}
-								})
-*/
 				   			}else{
 				   				window.debug && alert('getret  : '+ data.getret + ' msg : ' + data.getmsg+ ' .....');
 				   			}
@@ -318,7 +302,11 @@ export class App extends Component {
 							content:JSON.stringify(opt),
 							to:opt.to||''
 						},
+						error(){
+							alert('send_msg error');
+						},
 						success(data){
+							alert('data.getret ' + data.getret + data.germsg );
 							s.state.showUI = true;
 							s.forceUpdate();
 							//console.log(data);
@@ -513,6 +501,7 @@ export class App extends Component {
 
 		$.getJSON('./assets/js/data.json', (d)=> {
 
+
 			s.wxappid = d.wxappid;
 
 			this.state.worksid = d.worksid;
@@ -520,8 +509,8 @@ export class App extends Component {
 
 			this.state.data.shareUrl = d.viewpath;
 			this.defaultShareUrl = d.viewpath;
-			this.state.data.shareTitle = d.shareTitle;
-			this.state.data.shareDesc = d.shareDesc;
+			this.state.data.shareTitle = d.shareTitle || '';
+			this.state.data.shareDesc = d.shareDesc || '';
 			this.state.data.shareImg = d.shareImg;
 			this.state.data.type = d.type;
 			this.state.data.customList = d.customList || [];
@@ -537,6 +526,8 @@ export class App extends Component {
 			if (!s.getQueryString('zmiti')) {
 				//redirect_uri += symbol + 'zmiti=start';
 			}
+
+			
 			 
 			$.ajax({
 				url: 'http://api.zmiti.com/v2/weixin/getoauthurl/',
@@ -551,6 +542,7 @@ export class App extends Component {
 					window.debug && alert('error');
 				},
 				success(dt){
+
 					if (dt.getret === 0) {
 						var url = dt.url;
 						if (url.indexOf('&zmiti') <= -1 || url.indexOf('?zmiti') <= -1) {
@@ -582,8 +574,8 @@ export class App extends Component {
 					},
 					success(dt){
 
-						if (dt.getret === 0) {
 
+						if (dt.getret === 0) {
 
 
 							s.loading(s.loadingImgArr||[],(scale)=>{
@@ -628,8 +620,8 @@ export class App extends Component {
 							if(id && parentWxopenId){
 								s.refreshPoetry('custom',false,false);
 							}
-
 							if (wx.posData && wx.posData.longitude) {
+
 								s.getPos(dt.userinfo.nickname, dt.userinfo.headimgurl);
 							}
 						}
@@ -804,11 +796,11 @@ export class App extends Component {
     	
     	if(type === 'custom'){//取用户读的内容.
 			var params = {};
-			if(!isOther && s.state.id && s.state.parentWxopenId){
+			if(s.state.id && s.state.parentWxopenId){
 				params = {
 					id:s.state.id,
 					wxopenid:s.state.parentWxopenId,
-					workdataid:s.state.workdataid
+					worksid:s.state.worksid,
 				}
 			}
 
@@ -816,6 +808,7 @@ export class App extends Component {
 				url:'http://api.zmiti.com/v2/weixin/get_shicioriginaltext',
 				data:params,
 				error(){
+
 					s.setState({
 			    		showPoetryLoading:false
 			    	});
@@ -823,11 +816,11 @@ export class App extends Component {
 				},
 				success(data){
 
-					
 					if(data.getret === 0){
 						if(data.list.length>0){
 							s.state.userPoetryTitle = <img src={data.list[0].headimgurl} style={{width:60,borderRadius:'50%',marginBottom:20}}/>;
 							s.state.userPoetryAuthor = data.list[0].nickname;
+							
 							s.state.userPoetryContent = data.list[0].changetext;
 							s.state.poetryContent = data.list[0].originaltext;
 							s.state.poetryTitle = data.list[0].workdatatitle;
@@ -851,7 +844,7 @@ export class App extends Component {
 							setTimeout(()=>{
 						    	s.state.showPoetryLoading = false;
 								s.forceUpdate();
-							},500)
+							},1000)
 						}
 						else{
 							window.debug && alert('没有获取到诗词，请刷新重试');

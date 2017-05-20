@@ -225,6 +225,7 @@ class ZmitiShareOpenApp extends Component {
 				isOther:true
 			}
 		});
+		this.isShowPoetry = undefined;
 		this.setState({
 			showPoetry:false
 		},()=>{
