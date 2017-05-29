@@ -76,7 +76,7 @@ class ZmitiResultApp extends Component {
 						worksid:s.props.worksid,
 						workdataid:s.props.workdataid,
 						wxopenid:s.props.openid,
-						parentwxopenid:s.props.parentwxopenid,
+						parentwxopenid:s.props.parentWxopenid,
 						mediaid:serverId,
 						score:s.state.score,
 						duration:s.props.duration,
