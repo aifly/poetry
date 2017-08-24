@@ -297,7 +297,7 @@ class ZmitiShareOpenApp extends Component {
 		clearInterval(s.timer);
 		wx.stopRecord({
 			fail(){
-			 	window.debug && alert('end error');
+				window.debug && alert('end error');
 			},
 			success: function (res) {
 

@@ -1,5 +1,9 @@
-import React, { Component } from 'react';
-import {PubCom} from '../components/public/pub.jsx';
+import React, {
+	Component
+} from 'react';
+import {
+	PubCom
+} from '../components/public/pub.jsx';
 import './assets/css/index.css';
 import $ from 'jquery';
 
@@ -8,11 +12,11 @@ import ZmitiHeaderApp from '../components/public/zmiti-header.jsx'
 class ZmitiIndexApp extends Component {
 	constructor(props) {
 		super(props);
-		this.state={
-		
-			isBeginRead:false,
-			poetryContent:''
-			
+		this.state = {
+
+			isBeginRead: false,
+			poetryContent: ''
+
 		};
 		this.viewW = document.documentElement.clientWidth;
 		this.viewH = document.documentElement.clientHeight;
@@ -20,12 +24,12 @@ class ZmitiIndexApp extends Component {
 
 	render() {
 
-		var poetryStyle ={
-			background:'url(./assets/images/main-bg.jpg) no-repeat center bottom '
+		var poetryStyle = {
+			background: 'url(./assets/images/main-bg.jpg) no-repeat center bottom '
 		}
 
 		var s = this;
-		s.state.poetryContent = s.props.poetryContent.replace(/>amp;nbsp;/g,'').replace(/\n/ig,'<br/>');
+		s.state.poetryContent = s.props.poetryContent.replace(/>amp;nbsp;/g, '').replace(/\n/ig, '<br/>');
 
 		return (
 			<div className={'zmiti-index-main-ui '+ (this.props.isEntryResult?'hide':'')}>
@@ -57,110 +61,120 @@ class ZmitiIndexApp extends Component {
 		);
 	}
 
-	createMarkup(){
-		 return {__html:  this.state.poetryContent};
+	createMarkup() {
+		return {
+			__html: this.state.poetryContent
+		};
 	}
 
-	beginRead(){
+	beginRead() {
 
 
-		let {obserable} = this.props;
+		let {
+			obserable
+		} = this.props;
 		var s = this;
-		if(!this.state.isBeginRead){
-			wx.startRecord();//开始朗读
+		if (!this.state.isBeginRead) {
+			wx.startRecord(); //开始朗读
 
-			s.timer = setInterval(()=>{
+			s.timer = setInterval(() => {
 
-				if(60- s.props.duration<=0){
+				if (60 - s.props.duration <= 0) {
 					//录音时间结束.进入结果页面
 					s.stopRecord();
 					return;
 				}
 
 				obserable.trigger({
-					type:'countdownDuration'
+					type: 'countdownDuration'
 				});
-			},1000)
-			
-		}
-		else{
+			}, 1000)
+
+		} else {
 			!s.cancelRecord && s.stopRecord();
 		}
 		this.setState({
-			isBeginRead:!this.state.isBeginRead
+			isBeginRead: !this.state.isBeginRead
 		});
 	}
 
-	stopRecord(){
-		let {obserable} = this.props;
+	stopRecord() {
 
-		var s = this;//结束朗读
+
+		let {
+			obserable
+		} = this.props;
+
+		var s = this; //结束朗读
 		clearInterval(s.timer);
 		wx.stopRecord({
-			fail(){
+			fail() {
 				alert('end error');
 			},
-			success: function (res) {
+			success: function(res) {
 
-				
-				s.localId =	res.localId;
+
+				s.localId = res.localId;
 				obserable.trigger({
-					type:'getLocalId',
-					data:s.localId
+					type: 'getLocalId',
+					data: s.localId
 				});
 				//开始转文字。
 				wx.translateVoice({
-				    localId: s.localId, // 需要识别的音频的本地Id，由录音相关接口获得
-				    isShowProgressTips: 1, // 默认为1，显示进度提示
-				    fail(){
-				    	s.setState({
-				    		isBeginRead:false
-				    	});
-				    	alert('转文字失败，请重新再试');
-				    },
-				    success: function (res) {//转成功了。 
+					localId: s.localId, // 需要识别的音频的本地Id，由录音相关接口获得
+					isShowProgressTips: 1, // 默认为1，显示进度提示
+					fail() {
+						s.setState({
+							isBeginRead: false
+						});
+						alert('转文字失败，请重新再试');
+					},
+					success: function(res) { //转成功了。 
 
-				    	var poetryContent = s.props.poetryContent.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig,'');
+						var poetryContent = s.props.poetryContent.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig, '');
 
-				    	var dataArr = res.translateResult.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig,'').split('');
+						var dataArr = res.translateResult.replace(/[\u3002|\uff1f|\uff01|\uff0c|\u3001|\uff1b|\uff1a|\u201c|\u201d|\u2018|\u2019|\uff08|\uff09|\u300a|\u300b|\u3008|\u3009|\u3010|\u3011|\u300e|\u300f|\u300c|\u300d|\ufe43|\ufe44|\u3014|\u3015|\u2026|\u2014|\uff5e|\ufe4f|\uffe5]/ig, '').split('');
 						//dataArr.length = poetryContent.length;
 						var rightWords = 0;
 
 						var resultHtml = '';
 						var score = 0;
-						dataArr.map((da,k)=>{
+						dataArr.map((da, k) => {
 
-							if(poetryContent.indexOf(da)>-1){
+							if (poetryContent.indexOf(da) > -1) {
 								rightWords++;
-								resultHtml += '<span style="color:green">'+da+'</span>'
-							}else{
-								resultHtml+=da;
+								resultHtml += '<span style="color:green">' + da + '</span>'
+							} else {
+								resultHtml += da;
 							}
 						});
 
-						var score  =( rightWords / poetryContent.length * 100 ) | 0;
-						if(res.translateResult.length > poetryContent.length && score>=100 ){
-							score  = 99;
+						var score = (rightWords / poetryContent.length * 100) | 0;
+						if (res.translateResult.length > poetryContent.length && score >= 100) {
+							score = 99;
 						}
-						obserable.trigger({type:'updateScore',data:score});
-				    	obserable.trigger({
-				    		type:'getTransformResult',
-				    		data:resultHtml
-				    	});
+						obserable.trigger({
+							type: 'updateScore',
+							data: score
+						});
+						obserable.trigger({
+							type: 'getTransformResult',
+							data: resultHtml
+						});
 
 
 
 						obserable.trigger({
-							type:'entryResult',
-							data:true
+							type: 'entryResult',
+							data: true
 						});
-				    }
+					}
 				});
-			} 
+			}
 		});
 	}
 	componentDidMount() {
-		
+
 	}
 }
 export default PubCom(ZmitiIndexApp);
